@@ -11,6 +11,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 // import Dashboard from './components/Dashboard/Dashboard'
 import LoginPage from './components/Login/LoginPage'
+import DashboardPage from './components/Dashboard/DashboardPage'
 // /* eslint-disable prettier/prettier */
 
 // import Tasks from './components/Tasks/Tasks'
@@ -26,6 +27,7 @@ function App() {
         <ActivityProvider>
           <Switch>
             <Route exact path='/login' component={LoginPage} />
+            <Route exact path='/dashboard' component={DashboardPage} />
           </Switch>
         </ActivityProvider>
       </BrowserRouter>
