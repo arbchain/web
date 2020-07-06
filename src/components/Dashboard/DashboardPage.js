@@ -19,47 +19,96 @@ import {
 import { IconNotifications } from '@aragon/ui'
 import { FaBeer } from 'react-icons/fa'
 import { IoIosNotifications } from 'react-icons/io'
+import DashboardMain from './DashboardMain'
+import BrandLogo from '../../assets/arbchainlogo.svg'
+import '../../reset.css'
 
 function DashboardPage() {
+  function handleClick() {
+    console.log('click')
+    return <DashboardMain />
+  }
   return (
     <>
       <Main layout={false}>
-        <Header
-          primary='(icon)Arbchain'
-          secondary={
-            <>
-              <IoIosNotifications color='purple' size='2rem' />
-              <IconNotifications side='large' />
-              <DropDown placeholder='Logout' items={['Log In', 'Log Out']} />
-            </>
-          }
-        />
+        <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
+          <Header
+            primary={
+              <div
+                style={{
+                  display: 'flex',
+                }}
+              >
+                <div>
+                  <img style={{ width: '70%' }} src={BrandLogo} />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    fontSize: '1.5rem',
+                    letterSpacing: '1px',
+                  }}
+                >
+                  Arbchain
+                </div>
+              </div>
+            }
+            secondary={
+              <div style={{ backgroundColor: '' }}>
+                <DropDown
+                  placeholder='Consenso Corp'
+                  items={['Log In', 'Log Out']}
+                />
+              </div>
+            }
+          />
+        </div>
 
         <div style={{ display: 'flex' }}>
           <div
             style={{
-              backgroundColor: 'pink',
+              // backgroundColor: 'pink',
               width: '20%',
               textAlign: 'left',
-              height: '86vh',
+              height: '86.8vh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
             }}
           >
-            <ul style={{ textAlign: 'left', color: 'red' }}>
-              <li>
-                <Button color={'red'} wide>
-                  DASHBOARD
-                </Button>
-              </li>
-              <li>
-                <Button wide>ARBITRATIONS</Button>
-              </li>
-              <li>
-                <Button wide>PROFILE</Button>
-              </li>
-            </ul>
+            <div style={{ marginTop: '0rem' }}>
+              <ul>
+                <li>
+                  <Button
+                    onClick={() => {
+                      console.log('Clicked')
+                    }}
+                    wide
+                  >
+                    DASHBOARD
+                  </Button>
+                </li>
+                <li>
+                  <Button wide>ARBITRATIONS</Button>
+                </li>
+                <li>
+                  <Button wide>PROFILE</Button>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <ul>
+                <li>
+                  <Button wide>Settings</Button>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div style={{ backgroundColor: 'yellow', width: '80%' }}>
-            <p>hello world</p>
+          <div style={{ backgroundColor: '#FBFCFD', width: '80%' }}>
+            <DashboardMain />
           </div>
         </div>
       </Main>
