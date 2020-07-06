@@ -21,6 +21,8 @@ import { FaBeer } from 'react-icons/fa'
 import { IoIosNotifications } from 'react-icons/io'
 import DashboardMain from './DashboardMain'
 import BrandLogo from '../../assets/arbchainlogo.svg'
+import Notification from '../../assets/notification.svg'
+import Avatar from '../../assets/avatar.svg'
 import '../../reset.css'
 
 function DashboardPage() {
@@ -56,11 +58,50 @@ function DashboardPage() {
               </div>
             }
             secondary={
-              <div style={{ backgroundColor: '' }}>
-                <DropDown
-                  placeholder='Consenso Corp'
-                  items={['Log In', 'Log Out']}
-                />
+              <div style={{ display: 'flex' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    marginLeft: '1.5rem',
+                    marginRight: '1.5rem',
+                  }}
+                >
+                  <img
+                    style={{ width: '70%' }}
+                    alt='notification'
+                    src={Notification}
+                  />
+                </div>
+
+                <div style={{ display: 'flex' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <img
+                      style={{ width: '70%' }}
+                      alt='notification'
+                      src={Avatar}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <DropDown
+                      placeholder='Consenso Corp'
+                      items={['LogIn', 'LogOut']}
+                    />
+                  </div>
+                </div>
               </div>
             }
           />
