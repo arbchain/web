@@ -26,6 +26,8 @@ function App() {
       <BrowserRouter>
         <ActivityProvider>
           <Switch>
+            <Route exact path='/' component={LoginPage} />
+
             <Route exact path='/login' component={LoginPage} />
             <Route exact path='/dashboard' component={DashboardPage} />
           </Switch>
