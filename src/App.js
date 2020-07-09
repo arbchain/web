@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import Error from './Error'
 // import { Main } from '@aragon/ui'
 
 // import theme from './theme-court'
@@ -27,9 +28,9 @@ function App() {
         <ActivityProvider>
           <Switch>
             <Route exact path='/' component={LoginPage} />
-
             <Route exact path='/login' component={LoginPage} />
             <Route exact path='/dashboard' component={DashboardPage} />
+            <Route component={Error} />
           </Switch>
         </ActivityProvider>
       </BrowserRouter>
