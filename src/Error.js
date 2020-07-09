@@ -16,6 +16,8 @@ import {
   DropDown,
   IdentityBadge,
 } from '@aragon/ui'
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+
 var primary = '#52006F'
 
 function Error() {
@@ -56,7 +58,10 @@ function Error() {
               font-weight: 100;
             `}
           >
-            Goto <span style={{ color: primary, fontWeight: '900' }}>home</span>
+            Goto{' '}
+            <span style={{ color: primary, fontWeight: '900' }}>
+              <Link to='/login'>home</Link>
+            </span>
           </div>
         </div>
       </Main>
