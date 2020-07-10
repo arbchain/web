@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React from 'react'
+import ArbitrationsPage from '../Arbitrations/ArbitrationsPage'
 import {
   Main,
   Header,
@@ -19,19 +20,13 @@ import {
 import { IconNotifications } from '@aragon/ui'
 import { FaBeer } from 'react-icons/fa'
 import { IoIosNotifications } from 'react-icons/io'
-import DashboardMain from './DashboardMain'
 import BrandLogo from '../../assets/arbchainlogo.svg'
 import Notification from '../../assets/notification.svg'
 import Avatar from '../../assets/avatar.svg'
+import '../../reset.css'
 import { Link } from 'react-router-dom'
 
-import '../../reset.css'
-
-function DashboardPage() {
-  function handleClick() {
-    console.log('click')
-    return <DashboardMain />
-  }
+function Arbitrations() {
   return (
     <>
       <Main layout={false}>
@@ -135,6 +130,7 @@ function DashboardPage() {
                 </li>
                 <li>
                   <Button wide>
+                    {' '}
                     <Link to='/arbitrations'> ARBITRATIONS</Link>
                   </Button>
                 </li>
@@ -153,7 +149,7 @@ function DashboardPage() {
             </div>
           </div>
           <div style={{ backgroundColor: '#FBFCFD', width: '80%' }}>
-            <DashboardMain />
+            <ArbitrationsPage />
           </div>
         </div>
       </Main>
@@ -161,4 +157,4 @@ function DashboardPage() {
   )
 }
 
-export default DashboardPage
+export default Arbitrations
