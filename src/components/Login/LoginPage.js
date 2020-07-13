@@ -18,8 +18,10 @@ import LoginBanner from '../../assets/login-page-banner.png'
 import BrandLogo from '../../assets/arbchainlogo.svg'
 
 const LoginBannerStyle = {
-  maxWidth: '100%',
-  height: 'auto',
+  objectFit: 'contain',
+  height: '100%',
+  width: '100%',
+  backgroundSize: '100px 100px',
 }
 var primary = '#52006F'
 
