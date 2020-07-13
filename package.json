@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aragon/ui": "^1.2.0",
+    "chart.js": "^2.9.3",
     "clipboard-polyfill": "^2.8.6",
     "dayjs": "^1.8.14",
     "github-api": "^3.3.0",
@@ -13,6 +14,7 @@
     "node-sass": "^4.12.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-icons": "^3.10.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-spring": "^8.0.27",

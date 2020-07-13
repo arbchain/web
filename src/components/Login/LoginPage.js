@@ -15,6 +15,7 @@ import {
   textStyle,
 } from '@aragon/ui'
 import profile from '../../assets/login-page-banner.png'
+import BrandLogo from '../../assets/arbchainlogo.svg'
 
 const loginstyle = {
   color: 'red',
@@ -22,6 +23,8 @@ const loginstyle = {
   display: 'flex',
   justifyContent: 'space-between',
 }
+var primary = '#52006F'
+
 function LoginPage() {
   return (
     <Main layout={false}>
@@ -45,8 +48,22 @@ function LoginPage() {
               justify-content: center;
             `}
           >
-            <div>(icon)</div>
-            <div>Arbchain</div>
+            <div>
+              <img style={{ width: '70%' }} src={BrandLogo} />
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                fontSize: '1.5rem',
+                letterSpacing: '1px',
+                fontWeight: '900',
+                color: primary,
+              }}
+            >
+              Arbchain
+            </div>
           </div>
           <div
             css={`
