@@ -40,8 +40,15 @@ function DashboardPage() {
   return (
     <>
       <Main layout={false}>
-        <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
+        <div
+          style={{
+            paddingLeft: '2rem',
+            paddingRight: '2rem',
+            borderBottom: '0.5px solid #e5e5e5',
+          }}
+        >
           <Header
+            style={{ paddingTop: '1rem', paddingBottom: '1rem' }}
             primary={
               <div
                 style={{
@@ -57,7 +64,7 @@ function DashboardPage() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     fontSize: '1.5rem',
-                    letterSpacing: '1px',
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Arbchain
