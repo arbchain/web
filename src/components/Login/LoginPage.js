@@ -14,14 +14,12 @@ import {
   Layout,
   textStyle,
 } from '@aragon/ui'
-import profile from '../../assets/login-page-banner.png'
+import LoginBanner from '../../assets/login-page-banner.png'
 import BrandLogo from '../../assets/arbchainlogo.svg'
 
-const loginstyle = {
-  color: 'red',
-  backgroundColor: 'pink',
-  display: 'flex',
-  justifyContent: 'space-between',
+const LoginBannerStyle = {
+  maxWidth: '100%',
+  height: 'auto',
 }
 var primary = '#52006F'
 
@@ -126,18 +124,15 @@ function LoginPage() {
           }}
         >
           <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}
+          // style={{
+          //   width: '100%',
+          //   display: 'flex',
+          //   justifyContent: 'center',
+          //   alignItems: 'center',
+          //   overflow: 'hidden',
+          // }}
           >
-            <img
-              style={{ flexShrink: '0', maxHeight: '40%' }}
-              src={require('../../assets/login-page-banner.png')}
-            />
+            <img style={LoginBannerStyle} src={LoginBanner} />
           </div>
         </div>
       </div>

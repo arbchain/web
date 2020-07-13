@@ -13,12 +13,20 @@ import {
   GU,
   Layout,
   textStyle,
+  ContextMenu,
+  ContextMenuItem,
+  Tabs,
 } from '@aragon/ui'
+import { useState } from 'react'
+
 import Refresh from '../../assets/refresh.svg'
+import Card from '@aragon/ui/dist/Card'
 
 const element = <img src={Refresh} />
 
 function ArbitrationsPage() {
+  const [selected, setSelected] = useState(0)
+
   return (
     <>
       <div
@@ -49,6 +57,16 @@ function ArbitrationsPage() {
           <p>{element}</p>
         </div>
       </div>
+
+      <Card>
+        <div>
+          <Tabs
+            items={['All requests', 'My claims']}
+            selected={selected}
+            onChange={setSelected}
+          />
+        </div>
+      </Card>
     </>
   )
 }
