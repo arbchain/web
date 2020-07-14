@@ -48,7 +48,10 @@ function DashboardPage() {
           }}
         >
           <Header
-            style={{ paddingTop: '1rem', paddingBottom: '1rem' }}
+            style={{
+              paddingTop: '1rem',
+              paddingBottom: '1rem',
+            }}
             primary={
               <div
                 style={{
@@ -124,16 +127,20 @@ function DashboardPage() {
         <div style={{ display: 'flex' }}>
           <div
             style={{
-              // backgroundColor: 'pink',
               width: '20%',
               textAlign: 'left',
               height: '86.8vh',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              borderRight: '0.5px solid #e5e5e5',
             }}
           >
-            <div style={{ marginTop: '0rem' }}>
+            <div
+              style={{
+                marginTop: '0rem',
+              }}
+            >
               <ul>
                 <li>
                   <div

@@ -119,14 +119,7 @@ function Arbitrations() {
             <div style={{ marginTop: '0rem' }}>
               <ul>
                 <li>
-                  <Button
-                    onClick={() => {
-                      console.log('Clicked')
-                    }}
-                    wide
-                  >
-                    DASHBOARD
-                  </Button>
+                  <Button wide>DASHBOARD</Button>
                 </li>
                 <li>
                   <Button wide>
