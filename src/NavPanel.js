@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Main,
   Header,
@@ -31,12 +31,35 @@ import ArbitrationsIcon from './assets/ArbitrationsIcon.svg'
 import DashboardIcon from './assets/DashboardIcon.svg'
 import ProfileIcon from './assets/ProfileIcon.svg'
 import SettingsIcon from './assets/SettingsIcon.svg'
+import DashboardMain from './components/Dashboard/DashboardMain'
+import ArbitrationsPage from './components/Arbitrations/ArbitrationsPage'
 
 import '../src/reset.css'
 
 function NavPanel() {
-  function handleClick() {
-    console.log('clicked')
+  const [navSettings, setNavSettings] = useState('unset')
+  const [navDashboard, setNavDashboard] = useState('unset')
+  const [navArbitrations, setNavArbitrations] = useState('unset')
+
+  function handleClickDashboard() {
+    console.log('click')
+    setNavDashboard('set')
+    setNavSettings('unset')
+    setNavArbitrations('unset')
+  }
+
+  function handleClickSettings() {
+    console.log('click')
+    setNavSettings('set')
+    setNavDashboard('unset')
+    setNavArbitrations('unset')
+  }
+
+  function handleClickArbitrations() {
+    console.log('click')
+    setNavArbitrations('set')
+    setNavDashboard('unset')
+    setNavSettings('unset')
   }
 
   return (
@@ -170,6 +193,7 @@ function NavPanel() {
                       />
                     </div>
                     <div
+                      onClick={handleClickDashboard}
                       style={{
                         display: 'flex',
                         justifyContent: 'flex-start',
@@ -206,6 +230,7 @@ function NavPanel() {
                       />
                     </div>
                     <div
+                      onClick={handleClickArbitrations}
                       style={{
                         display: 'flex',
                         justifyContent: 'flex-start',
@@ -259,7 +284,7 @@ function NavPanel() {
               <ul>
                 <li>
                   <div
-                    onClick={handleClick}
+                    onClick={handleClickSettings}
                     style={{
                       display: 'grid',
                       gridTemplateColumns: '1fr 3fr',
@@ -303,7 +328,13 @@ function NavPanel() {
           </div>
           <div style={{ backgroundColor: '#FBFCFD', width: '80%' }}>
             {/* //// */}
-
+            {navSettings === 'set' ? (
+              <h1>This is a settings page</h1>
+            ) : (
+              <p>{null}</p>
+            )}
+            {navDashboard === 'set' ? <DashboardMain /> : <p>{null}</p>}
+            {navArbitrations === 'set' ? <ArbitrationsPage /> : <p>{null}</p>}
             {/* //// */}
           </div>
         </div>
