@@ -40,19 +40,21 @@ function ArbitrationsPage() {
         <div
           css={`
             ${textStyle('title1')};
-            margin-top: 0rem;
+            margin-top: 1rem;
             margin-left: 1rem;
             margin-right: 1rem;
           `}
         >
           Arbitrations
         </div>
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', marginTop: '1rem' }}>
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button>+ NEW AGREEMENT</Button>
           </div>
           <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
-            <Button>+ ADD REQUEST</Button>
+            <Button style={{ backgroundColor: '#52006F', color: 'white' }}>
+              + ADD REQUEST
+            </Button>
           </div>
           <p>{element}</p>
         </div>
