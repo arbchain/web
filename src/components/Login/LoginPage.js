@@ -1,21 +1,20 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Main,
-  Header,
   Button,
-  IconPlus,
-  Tag,
-  SidePanel,
-  Split,
-  DataView,
-  Box,
-  GU,
+  DropDown,
+  Modal,
   Layout,
   textStyle,
 } from '@aragon/ui'
 import profile from '../../assets/login-page-banner.png'
 import BrandLogo from '../../assets/arbchainlogo.svg'
+import {Web3Contract} from '../../utils/web3-contracts.js'
+
+const ContractAbi = require("../../build/Counter.json");
+const { orion, besu } = require("../../wallet/keys");
+const ContractReceipt = require("../../build/Counter_receipt.json");
 
 const loginstyle = {
   color: 'red',
@@ -23,9 +22,40 @@ const loginstyle = {
   display: 'flex',
   justifyContent: 'space-between',
 }
-var primary = '#52006F'
+let primary = '#52006F';
 
 function LoginPage() {
+
+    const [walletModal, setWalletModal] = useState(false)
+    const [networkModal, setNetworkModal] = useState(false)
+    const [selected, setSelected] = useState(0)
+
+    const openNetwork = () => setNetworkModal(true)
+    const openWallet = () => setWalletModal(true)
+    const closeNetwork = () => setNetworkModal(false)
+    const closeWallet = () => setWalletModal(false)
+
+    // TODO: Fix await warning
+    useEffect( () => {
+
+        async function connectUser() {
+
+            let web3Contract = new Web3Contract()
+            await web3Contract.create(ContractAbi, ContractReceipt.contractAddress, [], ContractReceipt.privacyGroupId)
+            await web3Contract.call('increaseCounter',[20])
+            console.log(await web3Contract.call('getCounter'))
+        }
+
+        if (!walletModal && !networkModal) {
+            connectUser()
+        }
+
+
+
+    });
+
+
+
   return (
     <Main layout={false}>
       <div
@@ -36,6 +66,49 @@ function LoginPage() {
           justify-content: space-between;
         `}
       >
+          <Modal visible={walletModal} onClose={closeWallet}>
+              <div
+                  style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      fontSize: '1.5rem',
+                      letterSpacing: '1px',
+                      fontWeight: '900',
+                      color: primary,
+                  }}
+              >
+              Select an account:
+
+              <DropDown
+                  items={Object.keys(orion).map(node => {return `${node} (${orion[node].publicKey})`})}
+                  selected={selected}
+                  onChange={setSelected}
+              />
+              </div>
+
+          </Modal>
+          <Modal visible={networkModal} onClose={closeNetwork}>
+              <div
+                  style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      fontSize: '1.5rem',
+                      letterSpacing: '1px',
+                      fontWeight: '900',
+                      color: primary,
+                  }}
+              >
+                  Select a network:
+
+                  <DropDown
+                      items={Object.keys(besu).map(node => {return besu[node].url})}
+                      selected={selected}
+                      onChange={setSelected}
+                  />
+              </div>
+          </Modal>
         <div
           style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}
         >
@@ -81,7 +154,7 @@ function LoginPage() {
               marginRight: '10%',
             }}
           >
-            <Button wide>Manually setup a node</Button>
+            <Button wide onClick={openNetwork}>Select a network</Button>
           </div>
           <div
             style={{
@@ -91,7 +164,7 @@ function LoginPage() {
               marginTop: '5%',
             }}
           >
-            <p>OR</p>
+            <p>AND</p>
           </div>
           <div
             style={{
@@ -101,8 +174,8 @@ function LoginPage() {
               marginRight: '10%',
             }}
           >
-            <Button wide style={{ backgroundColor: '#52006F', color: 'white' }}>
-              Detect a local node
+            <Button wide style={{ backgroundColor: '#52006F', color: 'white' }} onClick={openWallet}>
+              Select an account
             </Button>
           </div>
           <div style={{ textAlign: 'center', marginTop: '3%' }}>
