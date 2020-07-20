@@ -8,13 +8,18 @@ import {
   Layout,
   textStyle,
 } from '@aragon/ui'
-import profile from '../../assets/login-page-banner.png'
+import Connection from './Connection.js'
 import BrandLogo from '../../assets/arbchainlogo.svg'
 import {Web3Contract} from '../../utils/web3-contracts.js'
+import {fetchCount, increaseCounter} from '../../lib/contracts/Counter.js'
 
 const ContractAbi = require("../../build/Counter.json");
-const { orion, besu } = require("../../wallet/keys");
+const accounts = require("../../wallet/keys");
+const networks = require("../../wallet/network");
 const ContractReceipt = require("../../build/Counter_receipt.json");
+
+const NODES = Object.keys(networks).map(node => {return `${networks[node].host}:${networks[node].port}`})
+const ACCOUNTS = accounts.map(node => {return `${node.name} - (${node.orionPublicKey})`})
 
 const loginstyle = {
   color: 'red',
@@ -29,31 +34,18 @@ function LoginPage() {
     const [walletModal, setWalletModal] = useState(false)
     const [networkModal, setNetworkModal] = useState(false)
     const [selected, setSelected] = useState(0)
+    const [account, setAccount] = useState(0)
 
     const openNetwork = () => setNetworkModal(true)
     const openWallet = () => setWalletModal(true)
     const closeNetwork = () => setNetworkModal(false)
     const closeWallet = () => setWalletModal(false)
 
-    // TODO: Fix await warning
-    useEffect( () => {
+    // This is an action to be invoked onclick
+    const increaseCount = () => increase( 20, accounts[account])
 
-        async function connectUser() {
-
-            let web3Contract = new Web3Contract()
-            await web3Contract.create(ContractAbi, ContractReceipt.contractAddress, [], ContractReceipt.privacyGroupId)
-            await web3Contract.call('increaseCounter',[20])
-            console.log(await web3Contract.call('getCounter'))
-        }
-
-        if (!walletModal && !networkModal) {
-            connectUser()
-        }
-
-
-
-    });
-
+    const {connected, increase} = increaseCounter(NODES[selected])
+    fetchCount(NODES[selected], accounts[account]).then(value=> console.log(value))
 
 
   return (
@@ -81,9 +73,9 @@ function LoginPage() {
               Select an account:
 
               <DropDown
-                  items={Object.keys(orion).map(node => {return `${node} (${orion[node].publicKey})`})}
-                  selected={selected}
-                  onChange={setSelected}
+                  items={ACCOUNTS}
+                  selected={account}
+                  onChange={setAccount}
               />
               </div>
 
@@ -103,7 +95,7 @@ function LoginPage() {
                   Select a network:
 
                   <DropDown
-                      items={Object.keys(besu).map(node => {return besu[node].url})}
+                      items={NODES}
                       selected={selected}
                       onChange={setSelected}
                   />
@@ -154,7 +146,9 @@ function LoginPage() {
               marginRight: '10%',
             }}
           >
-            <Button wide onClick={openNetwork}>Select a network</Button>
+              <Connection status={connected}/>
+
+            <Button wide onClick={openNetwork}><b>Change network</b></Button>
           </div>
           <div
             style={{
