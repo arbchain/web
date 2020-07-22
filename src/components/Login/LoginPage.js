@@ -10,13 +10,11 @@ import {
 } from '@aragon/ui'
 import Connection from './Connection.js'
 import BrandLogo from '../../assets/arbchainlogo.svg'
-import {Web3Contract} from '../../utils/web3-contracts.js'
 import {fetchCount, increaseCounter} from '../../lib/contracts/Counter.js'
+import {useAccount} from '../../wallet/Account.js'
 
-const ContractAbi = require("../../build/Counter.json");
 const accounts = require("../../wallet/keys");
 const networks = require("../../wallet/network");
-const ContractReceipt = require("../../build/Counter_receipt.json");
 
 const NODES = Object.keys(networks).map(node => {return `${networks[node].host}:${networks[node].port}`})
 const ACCOUNTS = accounts.map(node => {return `${node.name} - (${node.orionPublicKey})`})
@@ -36,7 +34,7 @@ function LoginPage() {
     const [selected, setSelected] = useState(0)
     const [account, setAccount] = useState(0)
 
-    const openNetwork = () => setNetworkModal(true)
+    const openNetwork = () => { setNetworkModal(true); increaseCount()}
     const openWallet = () => setWalletModal(true)
     const closeNetwork = () => setNetworkModal(false)
     const closeWallet = () => setWalletModal(false)
@@ -46,7 +44,11 @@ function LoginPage() {
 
     const {connected, increase} = increaseCounter(NODES[selected])
     const count = fetchCount(NODES[selected], accounts[account])
-    console.log(count)
+
+    //Update the account context by using a callback function
+     const walletAccount = useAccount()
+    walletAccount.changeAccount(account)
+
 
 
   return (

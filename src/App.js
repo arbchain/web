@@ -7,11 +7,11 @@ import Error from './Error'
 import LoginPage from './components/Login/LoginPage'
 import DashboardPage from './components/Dashboard/DashboardPage'
 
-import { WalletProvider } from './providers/Wallet'
+import {AccountProvider} from './wallet/Account.js'
 
 function App() {
   return (
-    <WalletProvider>
+    <AccountProvider>
       <BrowserRouter>
           <Switch>
             <Route exact path='/' component={LoginPage} />
@@ -20,7 +20,7 @@ function App() {
             <Route component={Error} />
           </Switch>
       </BrowserRouter>
-    </WalletProvider>
+    </AccountProvider>
   )
 }
 
