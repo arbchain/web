@@ -6,9 +6,6 @@ const ContractReceipt = require("../../build/Counter_receipt.json");
 
 import { retryMax } from '../../utils/retry-max'
 
-const Web3 = require("web3");
-const EEAClient = require("web3-besu");
-
 const web3Contract = new Web3Contract()
 
 
@@ -41,13 +38,29 @@ const web3Contract = new Web3Contract()
 
     }
 
-    export async function fetchCount(nodeSelected, account) {
+    export function fetchCount(nodeSelected, account) {
 
      let {connected} = useContract(nodeSelected)
+     const [count, setCount] = useState(0)
 
-        if (connected) {
-            return await web3Contract.call('getCounter', [], account)
-        }
+        useEffect( () => {
+
+            async function countCall() {
+                try {
+                    if (connected) {
+
+                        const c = await web3Contract.call('getCounter', [], account)
+                        setCount(c[0])
+
+                    }
+                } catch (err) {
+                    return false
+                }
+            }
+            countCall()
+            }, [connected])
+
+        return count
 
     }
 

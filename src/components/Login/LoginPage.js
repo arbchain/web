@@ -45,7 +45,8 @@ function LoginPage() {
     const increaseCount = () => increase( 20, accounts[account])
 
     const {connected, increase} = increaseCounter(NODES[selected])
-    fetchCount(NODES[selected], accounts[account]).then(value=> console.log(value))
+    const count = fetchCount(NODES[selected], accounts[account])
+    console.log(count)
 
 
   return (
