@@ -1,5 +1,5 @@
-import { getNetworkName } from './lib/web3-utils'
-import env from './environment'
+import { getNetworkName } from '../lib/web3-utils'
+import env from '../environment'
 
 export const extendError = (name, { defaultMessage }) =>
   class extends Error {

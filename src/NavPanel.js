@@ -1,45 +1,16 @@
 /* eslint-disable */
-import React, { useState } from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-
-import {
-  Main,
-  Header,
-  Button,
-  IconPlus,
-  Tag,
-  SidePanel,
-  Split,
-  DataView,
-  Box,
-  GU,
-  Layout,
-  textStyle,
-  DropDown,
-  IdentityBadge,
-  color,
-  ContextMenu,
-  ContextMenuItem,
-} from '@aragon/ui'
-import { IconNotifications } from '@aragon/ui'
-import { FaBeer } from 'react-icons/fa'
-import { IoIosNotifications } from 'react-icons/io'
-// import DashboardMain from './DashboardMain'
-import BrandLogo from './assets/arbchainlogo.svg'
-import Notification from './assets/notification.svg'
-import Avatar from './assets/avatar.svg'
-import { Link } from 'react-router-dom'
+import React from 'react'
+import { useState } from 'react'
 import ArbitrationsIcon from './assets/ArbitrationsIcon.svg'
 import DashboardIcon from './assets/DashboardIcon.svg'
 import ProfileIcon from './assets/ProfileIcon.svg'
 import SettingsIcon from './assets/SettingsIcon.svg'
-import DashboardMain from './components/Dashboard/DashboardMain'
-import ArbitrationsPage from './components/Arbitrations/ArbitrationsPage'
 
-import '../src/reset.css'
-var primary = '#52006F'
+export default function NavPanel() {
+  console.log(window.location)
+  var primary = '#52006F'
 
-function NavPanel(props) {
+  /////
   const [navSettings, setNavSettings] = useState('unset')
   const [navDashboard, setNavDashboard] = useState('unset')
   const [navArbitrations, setNavArbitrations] = useState('unset')
@@ -77,291 +48,180 @@ function NavPanel(props) {
     setNavArbitrations('unset')
   }
 
-  console.log(props.link)
   return (
     <>
-      <div>
-        <Main layout={false}>
-          <div
-            style={{
-              paddingLeft: '2rem',
-              paddingRight: '2rem',
-              borderBottom: '0.5px solid #e5e5e5',
-            }}
-          >
-            <Header
-              style={{
-                paddingTop: '1rem',
-                paddingBottom: '1rem',
-              }}
-              primary={
+      <div
+        style={{
+          backgroundColor: 'white',
+          width: '18%',
+          textAlign: 'left',
+          height: '90vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          // borderRight: '0.5px solid #e5e5e5',
+          marginTop: '35px',
+        }}
+      >
+        <div
+          style={{
+            marginTop: '0rem',
+          }}
+        >
+          <ul>
+            <li>
+              <div
+                style={{
+                  backgroundColor: 'yellow',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 3fr',
+                  // backgroundColor: '#E2F3F5',
+                  backgroundColor: toggleBackgroundColor1,
+                  cursor: 'pointer',
+                  gridColumnGap: '1rem',
+                  padding: '0.5rem 0rem',
+                  color: toggleColor1,
+                }}
+              >
                 <div
                   style={{
                     display: 'flex',
+                    justifyContent: 'flex-end',
                   }}
                 >
-                  <div>
-                    <img style={{ width: '70%' }} src={BrandLogo} />
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      fontSize: '1.5rem',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    Arbchain
-                  </div>
+                  <img
+                    style={{ alignSelf: 'center', justifySelf: 'end' }}
+                    src={DashboardIcon}
+                  />
                 </div>
-              }
-              secondary={
-                <div style={{ display: 'flex' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      marginLeft: '1.5rem',
-                      marginRight: '1.5rem',
-                    }}
-                  >
-                    <img
-                      style={{ width: '70%' }}
-                      alt='notification'
-                      src={Notification}
-                    />
-                  </div>
-
-                  <div style={{ display: 'flex' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <img
-                        style={{ width: '70%' }}
-                        alt='notification'
-                        src={Avatar}
-                      />
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <ContextMenu>
-                        <ContextMenuItem>Log In</ContextMenuItem>
-                        <ContextMenuItem>Log Out</ContextMenuItem>
-                      </ContextMenu>
-                    </div>
-                  </div>
+                <div
+                  onClick={handleClickDashboard}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    paddingTop: '4px',
+                  }}
+                >
+                  DASHBOARD
                 </div>
-              }
-            />
-          </div>
-
-          <div style={{ display: 'flex' }}>
-            <div
-              style={{
-                width: '18%',
-                textAlign: 'left',
-                height: '86.8vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                borderRight: '0.5px solid #e5e5e5',
-              }}
-            >
+              </div>
+            </li>
+            <li>
               <div
                 style={{
-                  marginTop: '0rem',
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 3fr',
+                  cursor: 'pointer',
+                  backgroundColor: toggleBackgroundColor2,
+                  color: toggleColor2,
+                  gridColumnGap: '1rem',
+                  padding: '0.5rem 0rem',
                 }}
               >
-                <ul>
-                  <li>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 3fr',
-                        // backgroundColor: '#E2F3F5',
-                        backgroundColor: toggleBackgroundColor1,
-                        cursor: 'pointer',
-                        gridColumnGap: '1rem',
-                        padding: '0.5rem 0rem',
-                        color: toggleColor1,
-                      }}
-                    >
-                      <div
-                        style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                        }}
-                      >
-                        <img
-                          style={{ alignSelf: 'center', justifySelf: 'end' }}
-                          src={DashboardIcon}
-                        />
-                      </div>
-                      <div
-                        onClick={handleClickDashboard}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          paddingTop: '4px',
-                        }}
-                      >
-                        DASHBOARD
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 3fr',
-                        cursor: 'pointer',
-                        backgroundColor: toggleBackgroundColor2,
-                        color: toggleColor2,
-                        gridColumnGap: '1rem',
-                        padding: '0.5rem 0rem',
-                      }}
-                    >
-                      <div
-                        style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                        }}
-                      >
-                        <img
-                          style={{ alignSelf: 'center', justifySelf: 'end' }}
-                          src={ArbitrationsIcon}
-                        />
-                      </div>
-                      <div
-                        onClick={handleClickArbitrations}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          paddingTop: '4px',
-                        }}
-                      >
-                        ARBITRATION
-                      </div>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 3fr',
-                        cursor: 'pointer',
-
-                        gridColumnGap: '1rem',
-                        padding: '0.5rem 0rem',
-                      }}
-                    >
-                      <div
-                        style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                        }}
-                      >
-                        <img
-                          style={{ alignSelf: 'center', justifySelf: 'end' }}
-                          src={ProfileIcon}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          paddingTop: '4px',
-                        }}
-                      >
-                        PROFILE
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <img
+                    style={{ alignSelf: 'center', justifySelf: 'end' }}
+                    src={ArbitrationsIcon}
+                  />
+                </div>
+                <div
+                  onClick={handleClickArbitrations}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    paddingTop: '4px',
+                  }}
+                >
+                  ARBITRATION
+                </div>
               </div>
+            </li>
+            <li>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 3fr',
+                  cursor: 'pointer',
 
-              <div>
-                <ul>
-                  <li>
-                    <div
-                      onClick={handleClickSettings}
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 3fr',
-                        cursor: 'pointer',
-
-                        gridColumnGap: '1rem',
-                        padding: '0.5rem 0rem',
-                      }}
-                    >
-                      <div
-                        style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
-
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <img
-                          style={{ alignSelf: 'center', justifySelf: 'end' }}
-                          src={SettingsIcon}
-                        />
-                      </div>
-
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          cursor: 'pointer',
-                          paddingTop: '4px',
-                        }}
-                      >
-                        SETTINGS
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                  gridColumnGap: '1rem',
+                  padding: '0.5rem 0rem',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <img
+                    style={{ alignSelf: 'center', justifySelf: 'end' }}
+                    src={ProfileIcon}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    paddingTop: '4px',
+                  }}
+                >
+                  PROFILE
+                </div>
               </div>
-            </div>
-            <div style={{ backgroundColor: '#FBFCFD', width: '80%' }}>
-              {/* //// */}
-              {navSettings === 'set' ? (
-                <h1>This is a settings page</h1>
-              ) : (
-                <p>{null}</p>
-              )}
-              {navDashboard === 'set' ? <DashboardMain /> : <p>{null}</p>}
-              {navArbitrations === 'set' ? <ArbitrationsPage /> : <p>{null}</p>}
-              {/* //// */}
-            </div>
-          </div>
-        </Main>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <ul>
+            <li>
+              <div
+                onClick={handleClickSettings}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 3fr',
+                  cursor: 'pointer',
+
+                  gridColumnGap: '1rem',
+                  padding: '0.5rem 0rem',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <img
+                    style={{ alignSelf: 'center', justifySelf: 'end' }}
+                    src={SettingsIcon}
+                  />
+                </div>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    cursor: 'pointer',
+                    paddingTop: '4px',
+                  }}
+                >
+                  SETTINGS
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <p>hello world</p>
       </div>
     </>
   )
 }
-
-export default NavPanel

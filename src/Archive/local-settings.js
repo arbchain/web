@@ -1,4 +1,4 @@
-import env from './environment'
+import env from '../environment'
 import { IPFS_ENDPOINT } from './endpoints'
 
 const DEFAULT_ETH_NODE = 'DEFAULT_ETH_NODE'
