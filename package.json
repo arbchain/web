@@ -13,6 +13,7 @@
     "js-sha3": "^0.8.0",
     "node-sass": "^4.12.0",
     "react": "^16.12.0",
+    "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.12.0",
     "react-icons": "^3.10.0",
     "react-router-dom": "^5.1.2",
@@ -24,7 +25,7 @@
     "urql": "^1.6.3",
     "use-wallet": "^0.4.4",
     "web3": "1.2.6",
-    "web3-eea": "^0.9.0"
+    "web3-besu": "^0.9.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
