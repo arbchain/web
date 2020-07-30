@@ -8,7 +8,6 @@ export default function Layout() {
     <React.Fragment>
       <Main layout={false}>
         <HeaderPanel />
-        <p>hello worldld</p>
         <NavPanel />
       </Main>
     </React.Fragment>
