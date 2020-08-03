@@ -52,12 +52,13 @@ function ArbitrationsPage() {
 
   return (
     <>
+    <Main layout={false}>
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          marginRight: '2rem',
-          marginLeft: '2rem',
+          // marginRight: '2rem',
+          // marginLeft: '2rem',
         }}
       >
         <div
@@ -122,6 +123,7 @@ function ArbitrationsPage() {
 
         {/* /////////////// */}
       </div>
+      </Main>
     </>
   )
 }

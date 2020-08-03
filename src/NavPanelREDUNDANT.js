@@ -51,8 +51,7 @@ function NavPanel(props) {
   const [toggleColor2, setToggleColor2] = useState('black')
 
   function handleClickDashboard() {
-    console.log('click')
-    setNavDashboard('true')
+    setNavDashboard(true)
     setNavSettings(false)
     setNavArbitrations(false)
     setToggleBackgroundColor1(active)
@@ -62,8 +61,7 @@ function NavPanel(props) {
   }
 
   function handleClickArbitrations() {
-    console.log('click')
-    setNavArbitrations('true')
+    setNavArbitrations(true)
     setNavDashboard(false)
     setNavSettings(false)
     setToggleBackgroundColor2(active)
@@ -73,7 +71,6 @@ function NavPanel(props) {
   }
 
   function handleClickSettings() {
-    console.log('click')
     setNavSettings(true)
     setNavDashboard(false)
     setNavArbitrations(false)
@@ -121,9 +118,6 @@ function NavPanel(props) {
                     >
                       <div
                         style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
                           display: 'flex',
                           justifyContent: 'flex-end',
                         }}
@@ -268,10 +262,10 @@ function NavPanel(props) {
                 </ul>
               </div>
             </div>
-            <div style={{ backgroundColor: '#FBFCFD', width: '80%' }}>
+            <div style={{ backgroundColor: '#FBFCFD', width: '100%' }}>
               
               {
-                navSettings ? <h1>This is settings page</h1> : (<p>{null}</p>)
+                navSettings ? <h1>This is settings page</h1> : <p>{null}</p>
               }
               {navDashboard ? <DashboardMain /> : <p>{null}</p>}
               {navArbitrations ? <ArbitrationsPage /> : <p>{null}</p>}
