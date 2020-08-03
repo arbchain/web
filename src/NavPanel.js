@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react'
 import { useState } from 'react'
+import { Main } from '@aragon/ui'
 import ArbitrationsIcon from './assets/ArbitrationsIcon.svg'
 import DashboardIcon from './assets/DashboardIcon.svg'
 import ProfileIcon from './assets/ProfileIcon.svg'
@@ -50,23 +51,22 @@ export default function NavPanel() {
 
   return (
     <>
+    <Main layout={false}>
       <div
         style={{
           backgroundColor: 'white',
-          width: '18%',
+          width: '18vw',
           textAlign: 'left',
           height: '90vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          // borderRight: '0.5px solid #e5e5e5',
-          marginTop: '35px',
+          borderRight: '0.5px solid #e5e5e5',
+          marginTop: '10vh',
         }}
       >
         <div
-          style={{
-            marginTop: '0rem',
-          }}
+          
         >
           <ul>
             <li>
@@ -75,7 +75,6 @@ export default function NavPanel() {
                   backgroundColor: 'yellow',
                   display: 'grid',
                   gridTemplateColumns: '1fr 3fr',
-                  // backgroundColor: '#E2F3F5',
                   backgroundColor: toggleBackgroundColor1,
                   cursor: 'pointer',
                   gridColumnGap: '1rem',
@@ -217,11 +216,15 @@ export default function NavPanel() {
               </div>
             </li>
           </ul>
+          
         </div>
       </div>
+
       <div>
-        <p>hello world</p>
+
+       
       </div>
+      </Main>
     </>
   )
 }

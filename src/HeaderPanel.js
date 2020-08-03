@@ -62,7 +62,7 @@ function HeaderPanel() {
       <div
         style={{
           backgroundColor: 'white',
-          height: '60px',
+          height: '10vh',
           position: 'fixed',
           display: 'flex',
           paddingLeft: '4rem',
@@ -73,6 +73,7 @@ function HeaderPanel() {
           justifyContent: 'space-between',
           borderBottom: '2px solid #E5E5E5',
           opacity: '1',
+          
         }}
       >
         <div

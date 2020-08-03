@@ -16,19 +16,24 @@ import React from 'react'
 // import Arbitrations from './components/Arbitrations/Arbitrations'
 // import ArbitrationsPage from './components/Arbitrations/ArbitrationsPage'
 // // /* eslint-disable prettier/prettier */
+ // import DashboardMain from './components/Dashboard/DashboardMain'
 
 // // import Tasks from './components/Tasks/Tasks'
 // // import Sample from './components/Sample/Sample'
 // // import Disputes from './components/Disputes/Disputes'
 // import { WalletProvider } from './providers/Wallet'
 // import { ActivityProvider } from './components/Activity/ActivityProvider'
-// import NavPanel from './NavPanel'
-// import HeaderPanel from './HeaderPanel'
-import Layout from './Layout'
+ // import NavPanel from './NavPanel'
+ // import HeaderPanel from './HeaderPanel'
+ // import Layout from './Layout'
+ import NavPanelREDUNDANT from './NavPanelREDUNDANT'
 
 function App() {
   return (
-    <Layout />
+    <>
+   <NavPanelREDUNDANT />
+    {/* <DashboardMain /> */}
+    </>
     // <NavPanel />
     // <BrowserRouter>
     //   <Switch>

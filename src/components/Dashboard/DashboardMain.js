@@ -33,12 +33,11 @@ var primary = '#52006F'
 function DashboardMain() {
   return (
     <>
+    <main style={{marginLeft : "20vw" , marginTop : "15vh"}}>
       <div
         css={`
           ${textStyle('title1')};
-          margin-top: 0rem;
-          margin-left: 1rem;
-          margin-right: 1rem;
+           margin-left: 1rem;
         `}
       >
         Dashboard
@@ -180,6 +179,7 @@ function DashboardMain() {
           </Box>
         </div>
       </div>
+      </main>
     </>
   )
 }

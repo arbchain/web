@@ -35,14 +35,15 @@ import ProfileIcon from './assets/ProfileIcon.svg'
 import SettingsIcon from './assets/SettingsIcon.svg'
 import DashboardMain from './components/Dashboard/DashboardMain'
 import ArbitrationsPage from './components/Arbitrations/ArbitrationsPage'
+import HeaderPanel from './HeaderPanel'
 
 import '../src/reset.css'
 var primary = '#52006F'
 
 function NavPanel(props) {
-  const [navSettings, setNavSettings] = useState('unset')
-  const [navDashboard, setNavDashboard] = useState('unset')
-  const [navArbitrations, setNavArbitrations] = useState('unset')
+  const [navSettings, setNavSettings] = useState(false)
+  const [navDashboard, setNavDashboard] = useState(false)
+  const [navArbitrations, setNavArbitrations] = useState(false)
   const [toggleBackgroundColor1, setToggleBackgroundColor1] = useState(null)
   const [toggleColor1, setToggleColor1] = useState('black')
   const [toggleBackgroundColor2, setToggleBackgroundColor2] = useState(null)
@@ -50,9 +51,9 @@ function NavPanel(props) {
 
   function handleClickDashboard() {
     console.log('click')
-    setNavDashboard('set')
-    setNavSettings('unset')
-    setNavArbitrations('unset')
+    setNavDashboard('true')
+    setNavSettings(false)
+    setNavArbitrations(false)
     setToggleBackgroundColor1(primary)
     setToggleColor1('white')
     setToggleBackgroundColor2(null)
@@ -61,9 +62,9 @@ function NavPanel(props) {
 
   function handleClickArbitrations() {
     console.log('click')
-    setNavArbitrations('set')
-    setNavDashboard('unset')
-    setNavSettings('unset')
+    setNavArbitrations('true')
+    setNavDashboard(false)
+    setNavSettings(false)
     setToggleBackgroundColor2(primary)
     setToggleColor2('white')
     setToggleBackgroundColor1(null)
@@ -72,110 +73,30 @@ function NavPanel(props) {
 
   function handleClickSettings() {
     console.log('click')
-    setNavSettings('set')
-    setNavDashboard('unset')
-    setNavArbitrations('unset')
+    setNavSettings(true)
+    setNavDashboard(false)
+    setNavArbitrations(false)
   }
 
   console.log(props.link)
   return (
     <>
-      <div>
-        <Main layout={false}>
-          <div
-            style={{
-              paddingLeft: '2rem',
-              paddingRight: '2rem',
-              borderBottom: '0.5px solid #e5e5e5',
-            }}
-          >
-            <Header
-              style={{
-                paddingTop: '1rem',
-                paddingBottom: '1rem',
-              }}
-              primary={
-                <div
-                  style={{
-                    display: 'flex',
-                  }}
-                >
-                  <div>
-                    <img style={{ width: '70%' }} src={BrandLogo} />
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      fontSize: '1.5rem',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    Arbchain
-                  </div>
-                </div>
-              }
-              secondary={
-                <div style={{ display: 'flex' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      marginLeft: '1.5rem',
-                      marginRight: '1.5rem',
-                    }}
-                  >
-                    <img
-                      style={{ width: '70%' }}
-                      alt='notification'
-                      src={Notification}
-                    />
-                  </div>
-
-                  <div style={{ display: 'flex' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <img
-                        style={{ width: '70%' }}
-                        alt='notification'
-                        src={Avatar}
-                      />
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <ContextMenu>
-                        <ContextMenuItem>Log In</ContextMenuItem>
-                        <ContextMenuItem>Log Out</ContextMenuItem>
-                      </ContextMenu>
-                    </div>
-                  </div>
-                </div>
-              }
-            />
-          </div>
+    <Main layout={false}>
+      <HeaderPanel />
 
           <div style={{ display: 'flex' }}>
             <div
               style={{
-                width: '18%',
+                width: '18vw',
                 textAlign: 'left',
-                height: '86.8vh',
+                marginTop : "10vh",
+                backgroundColor : "white",
+                height: '90vh',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 borderRight: '0.5px solid #e5e5e5',
+                position : "fixed"
               }}
             >
               <div
@@ -347,21 +268,17 @@ function NavPanel(props) {
               </div>
             </div>
             <div style={{ backgroundColor: '#FBFCFD', width: '80%' }}>
-              {/* //// */}
-              {navSettings === 'set' ? (
-                <h1>This is a settings page</h1>
-              ) : (
-                <p>{null}</p>
-              )}
-              {navDashboard === 'set' ? <DashboardMain /> : <p>{null}</p>}
-              {navArbitrations === 'set' ? <ArbitrationsPage /> : <p>{null}</p>}
+              
+              {
+                navSettings ? <h1>This is settings page</h1> : (<p>{null}</p>)
+              }
+              {navDashboard ? <DashboardMain /> : <p>{null}</p>}
+              {navArbitrations ? <ArbitrationsPage /> : <p>{null}</p>}
               {/* //// */}
             </div>
           </div>
         </Main>
-      </div>
-    </>
-  )
-}
+      </>
+  )}
 
 export default NavPanel
