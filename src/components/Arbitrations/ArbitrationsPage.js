@@ -89,7 +89,7 @@ function ArbitrationsPage() {
         </div>
       </div>
 
-      <div style={{ marginLeft: '3rem', marginTop: '2rem' }}>
+      <div style={{ marginLeft: '3rem', marginTop: '2rem', marginLeft : "20vw", marginRight : "4vw" }}>
         <Tabs
           items={['All requests', 'My claims']}
           selected={selected}
@@ -102,6 +102,7 @@ function ArbitrationsPage() {
             backgroundColor: '#F5F5F5',
             height: '0.5px',
             borderColor: '#F5F5F5',
+            // marginLeft : "18vw"
           }}
         />
         <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -118,8 +119,9 @@ function ArbitrationsPage() {
         </div>
 
         {/* ///////// CARDS SECTION RENDERING//////// */}
-
-        <Card />
+        
+          <Card />
+        
 
         {/* /////////////// */}
       </div>

@@ -76,7 +76,6 @@ function NavPanel(props) {
     setNavArbitrations(false)
   }
 
-  console.log(props.link)
   return (
     <>
     <Main layout={false}>
@@ -232,10 +231,6 @@ function NavPanel(props) {
                     >
                       <div
                         style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
-
                           display: 'flex',
                           justifyContent: 'flex-end',
                           cursor: 'pointer',
@@ -263,13 +258,9 @@ function NavPanel(props) {
               </div>
             </div>
             <div style={{ backgroundColor: '#FBFCFD', width: '100%' }}>
-              
-              {
-                navSettings ? <h1>This is settings page</h1> : <p>{null}</p>
-              }
+              {navSettings ? <h1>This is settings page</h1> : <p>{null}</p>}
               {navDashboard ? <DashboardMain /> : <p>{null}</p>}
               {navArbitrations ? <ArbitrationsPage /> : <p>{null}</p>}
-              {/* //// */}
             </div>
           </div>
         </Main>
