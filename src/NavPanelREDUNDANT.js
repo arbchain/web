@@ -39,6 +39,7 @@ import HeaderPanel from './HeaderPanel'
 
 import '../src/reset.css'
 var primary = '#52006F'
+var active = '#E3F2FD'
 
 function NavPanel(props) {
   const [navSettings, setNavSettings] = useState(false)
@@ -54,8 +55,8 @@ function NavPanel(props) {
     setNavDashboard('true')
     setNavSettings(false)
     setNavArbitrations(false)
-    setToggleBackgroundColor1(primary)
-    setToggleColor1('white')
+    setToggleBackgroundColor1(active)
+    setToggleColor1('black')
     setToggleBackgroundColor2(null)
     setToggleColor2('black')
   }
@@ -65,8 +66,8 @@ function NavPanel(props) {
     setNavArbitrations('true')
     setNavDashboard(false)
     setNavSettings(false)
-    setToggleBackgroundColor2(primary)
-    setToggleColor2('white')
+    setToggleBackgroundColor2(active)
+    setToggleColor2('black')
     setToggleBackgroundColor1(null)
     setToggleColor1('black')
   }
