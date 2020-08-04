@@ -1,6 +1,8 @@
 /*eslint-disable */
 import React from 'react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+
 import ArbitrationsIcon from './assets/ArbitrationsIcon.svg'
 import DashboardIcon from './assets/DashboardIcon.svg'
 import ProfileIcon from './assets/ProfileIcon.svg'
@@ -117,9 +119,10 @@ function NavPanelNew(){
                           display: 'flex',
                           justifyContent: 'flex-start',
                           paddingTop: '4px',
+                          textDecoration : "none"
                         }}
                       >
-                        DASHBOARD
+                        <Link to="/dashboard">Dashboard</Link>
                       </div>
                     </div>
                   </li>
@@ -157,7 +160,7 @@ function NavPanelNew(){
                           paddingTop: '4px',
                         }}
                       >
-                        ARBITRATION
+                        <Link to="/arbitration">Arbitration</Link>
                       </div>
                     </div>
                   </li>
@@ -174,9 +177,7 @@ function NavPanelNew(){
                     >
                       <div
                         style={{
-                          // justifySelf: 'end',
-                          // alignSelf: 'center',
-                          // textAlign: 'center',
+                          
                           display: 'flex',
                           justifyContent: 'flex-end',
                         }}
@@ -193,7 +194,7 @@ function NavPanelNew(){
                           paddingTop: '4px',
                         }}
                       >
-                        PROFILE
+                       <Link to="/profile">Profile</Link>
                       </div>
                     </div>
                   </li>
