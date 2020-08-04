@@ -71,9 +71,8 @@ function HeaderPanel() {
           zIndex: '9',
           width: '100%',
           justifyContent: 'space-between',
-          borderBottom: '2px solid #E5E5E5',
+          borderBottom: '1px solid #E5E5E5',
           opacity: '1',
-          
         }}
       >
         <div
