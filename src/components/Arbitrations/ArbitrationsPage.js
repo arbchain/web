@@ -48,7 +48,6 @@ function ArbitrationsPage() {
     end: null,
   })
 
-  var primary = '#52006F'
 
   return (
     <>
@@ -57,15 +56,12 @@ function ArbitrationsPage() {
         style={{
           display: 'flex',
           justifyContent: 'space-between',
-          // marginRight: '2rem',
-          // marginLeft: '2rem',
         }}
       >
         <div
           css={`
             ${textStyle('title1')};
             margin-top: 1rem;
-            margin-left: 1rem;
             margin-right: 1rem;
           `}
         >
@@ -89,7 +85,7 @@ function ArbitrationsPage() {
         </div>
       </div>
 
-      <div style={{ marginLeft: '3rem', marginTop: '2rem', marginLeft : "20vw", marginRight : "4vw" }}>
+      <div style={{ marginLeft: '3rem', marginTop: '2rem',  marginRight : "4vw" }}>
         <Tabs
           items={['All requests', 'My claims']}
           selected={selected}

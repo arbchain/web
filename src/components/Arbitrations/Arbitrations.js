@@ -8,14 +8,14 @@ import ArbitrationsPage from '../Arbitrations/ArbitrationsPage'
 function Arbitrations(){
   return(
     <>
-       <Main layout={false}>
+      <Main layout={false}>
       <HeaderPanel />
       <NavPanelNew />
       
           <div style={{ display: 'flex' }}>
             
-            <div style={{ backgroundColor: '#FBFCFD', width: '100%' }}>
-                <ArbitrationsPage />
+            <div style={{ backgroundColor: '#FBFCFD' , marginLeft : "16vw" }}>
+                 <ArbitrationsPage />  
             </div>
           </div>
         </Main>
