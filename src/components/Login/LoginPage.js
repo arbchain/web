@@ -1,21 +1,23 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Main,
-  Header,
   Button,
-  IconPlus,
-  Tag,
-  SidePanel,
-  Split,
-  DataView,
-  Box,
-  GU,
+  DropDown,
+  Modal,
   Layout,
   textStyle,
 } from '@aragon/ui'
-import LoginBanner from '../../assets/login-page-banner.png'
+import Connection from './Connection.js'
 import BrandLogo from '../../assets/arbchainlogo.svg'
+import {fetchCount, increaseCounter} from '../../lib/contracts/Counter.js'
+import {useAccount} from '../../wallet/Account.js'
+
+const accounts = require("../../wallet/keys");
+const networks = require("../../wallet/network");
+
+const NODES = Object.keys(networks).map(node => {return `${networks[node].host}:${networks[node].port}`})
+const ACCOUNTS = accounts.map(node => {return `${node.name} - (${node.orionPublicKey})`})
 
 const LoginBannerStyle = {
   objectFit: 'contain',
@@ -23,9 +25,32 @@ const LoginBannerStyle = {
   width: '100%',
   backgroundSize: '100px 100px',
 }
-var primary = '#52006F'
+let primary = '#52006F';
 
 function LoginPage() {
+
+    const [walletModal, setWalletModal] = useState(false)
+    const [networkModal, setNetworkModal] = useState(false)
+    const [selected, setSelected] = useState(0)
+    const [account, setAccount] = useState(0)
+
+    const openNetwork = () => { setNetworkModal(true); increaseCount()}
+    const openWallet = () => setWalletModal(true)
+    const closeNetwork = () => setNetworkModal(false)
+    const closeWallet = () => setWalletModal(false)
+
+    // This is an action to be invoked onclick
+    const increaseCount = () => increase( 20, accounts[account])
+
+    const {connected, increase} = increaseCounter(NODES[selected])
+    const count = fetchCount(NODES[selected], accounts[account])
+
+    //Update the account context by using a callback function
+     const walletAccount = useAccount()
+    walletAccount.changeAccount(account)
+
+
+
   return (
     <Main layout={false}>
       <div
@@ -36,6 +61,49 @@ function LoginPage() {
           justify-content: space-between;
         `}
       >
+          <Modal visible={walletModal} onClose={closeWallet}>
+              <div
+                  style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      fontSize: '1.5rem',
+                      letterSpacing: '1px',
+                      fontWeight: '900',
+                      color: primary,
+                  }}
+              >
+              Select an account:
+
+              <DropDown
+                  items={ACCOUNTS}
+                  selected={account}
+                  onChange={setAccount}
+              />
+              </div>
+
+          </Modal>
+          <Modal visible={networkModal} onClose={closeNetwork}>
+              <div
+                  style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      fontSize: '1.5rem',
+                      letterSpacing: '1px',
+                      fontWeight: '900',
+                      color: primary,
+                  }}
+              >
+                  Select a network:
+
+                  <DropDown
+                      items={NODES}
+                      selected={selected}
+                      onChange={setSelected}
+                  />
+              </div>
+          </Modal>
         <div
           style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}
         >
@@ -81,7 +149,9 @@ function LoginPage() {
               marginRight: '10%',
             }}
           >
-            <Button wide>Manually setup a node</Button>
+              <Connection status={connected}/>
+
+            <Button wide onClick={openNetwork}><b>Change network</b></Button>
           </div>
           <div
             style={{
@@ -91,7 +161,7 @@ function LoginPage() {
               marginTop: '5%',
             }}
           >
-            <p>OR</p>
+            <p>AND</p>
           </div>
           <div
             style={{
@@ -101,8 +171,8 @@ function LoginPage() {
               marginRight: '10%',
             }}
           >
-            <Button wide style={{ backgroundColor: '#52006F', color: 'white' }}>
-              Detect a local node
+            <Button wide style={{ backgroundColor: '#52006F', color: 'white' }} onClick={openWallet}>
+              Select an account
             </Button>
           </div>
           <div style={{ textAlign: 'center', marginTop: '3%' }}>

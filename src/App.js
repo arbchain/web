@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Dashboard from './components/Dashboard/Dashboard'
 import Arbitrations from './components/Arbitrations/Arbitrations'
 import ErrorPage from './ErrorPage'
-// import Details from './components/Arbitrations/ArbitrationDetails'
+
 
 function App() {
   return (
@@ -18,6 +18,8 @@ function App() {
     </BrowserRouter>  
    
    </>
+
+
   )
 }
 
