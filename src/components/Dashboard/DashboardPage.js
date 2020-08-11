@@ -23,6 +23,13 @@ import DashboardMain from './DashboardMain'
 import BrandLogo from '../../assets/arbchainlogo.svg'
 import Notification from '../../assets/notification.svg'
 import Avatar from '../../assets/avatar.svg'
+import { Link } from 'react-router-dom'
+
+import ArbitrationsIcon from '../../assets/ArbitrationsIcon.svg'
+import DashboardIcon from '../../assets/DashboardIcon.svg'
+import ProfileIcon from '../../assets/ProfileIcon.svg'
+import SettingsIcon from '../../assets/SettingsIcon.svg'
+
 import '../../reset.css'
 
 function DashboardPage() {
@@ -33,8 +40,18 @@ function DashboardPage() {
   return (
     <>
       <Main layout={false}>
-        <div style={{ marginLeft: '5rem', marginRight: '5rem' }}>
+        <div
+          style={{
+            paddingLeft: '2rem',
+            paddingRight: '2rem',
+            borderBottom: '0.5px solid #e5e5e5',
+          }}
+        >
           <Header
+            style={{
+              paddingTop: '1rem',
+              paddingBottom: '1rem',
+            }}
             primary={
               <div
                 style={{
@@ -50,7 +67,7 @@ function DashboardPage() {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     fontSize: '1.5rem',
-                    letterSpacing: '1px',
+                    letterSpacing: '0.5px',
                   }}
                 >
                   Arbchain
@@ -110,32 +127,122 @@ function DashboardPage() {
         <div style={{ display: 'flex' }}>
           <div
             style={{
-              // backgroundColor: 'pink',
               width: '20%',
               textAlign: 'left',
               height: '86.8vh',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
+              borderRight: '0.5px solid #e5e5e5',
             }}
           >
-            <div style={{ marginTop: '0rem' }}>
+            <div
+              style={{
+                marginTop: '0rem',
+              }}
+            >
               <ul>
                 <li>
-                  <Button
-                    onClick={() => {
-                      console.log('Clicked')
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 3fr',
+
+                      gridColumnGap: '1rem',
+                      padding: '1rem 0rem',
                     }}
-                    wide
                   >
-                    DASHBOARD
-                  </Button>
+                    <div
+                      style={{
+                        // justifySelf: 'end',
+                        // alignSelf: 'center',
+                        // textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      <img
+                        style={{ alignSelf: 'center', justifySelf: 'end' }}
+                        src={DashboardIcon}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      DASHBOARD
+                    </div>
+                  </div>
                 </li>
                 <li>
-                  <Button wide>ARBITRATIONS</Button>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 3fr',
+
+                      gridColumnGap: '1rem',
+                      padding: '1rem 0rem',
+                    }}
+                  >
+                    <div
+                      style={{
+                        // justifySelf: 'end',
+                        // alignSelf: 'center',
+                        // textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      <img
+                        style={{ alignSelf: 'center', justifySelf: 'end' }}
+                        src={ArbitrationsIcon}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      ARBITRATION
+                    </div>
+                  </div>
                 </li>
                 <li>
-                  <Button wide>PROFILE</Button>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 3fr',
+
+                      gridColumnGap: '1rem',
+                      padding: '1rem 0rem',
+                    }}
+                  >
+                    <div
+                      style={{
+                        // justifySelf: 'end',
+                        // alignSelf: 'center',
+                        // textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      <img
+                        style={{ alignSelf: 'center', justifySelf: 'end' }}
+                        src={ProfileIcon}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      PROFILE
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>
@@ -143,7 +250,38 @@ function DashboardPage() {
             <div>
               <ul>
                 <li>
-                  <Button wide>Settings</Button>
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 3fr',
+
+                      gridColumnGap: '1rem',
+                      padding: '1rem 0rem',
+                    }}
+                  >
+                    <div
+                      style={{
+                        // justifySelf: 'end',
+                        // alignSelf: 'center',
+                        // textAlign: 'center',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      <img
+                        style={{ alignSelf: 'center', justifySelf: 'end' }}
+                        src={SettingsIcon}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                      }}
+                    >
+                      SETTINGS
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>

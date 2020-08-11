@@ -19,11 +19,11 @@ const networks = require("../../wallet/network");
 const NODES = Object.keys(networks).map(node => {return `${networks[node].host}:${networks[node].port}`})
 const ACCOUNTS = accounts.map(node => {return `${node.name} - (${node.orionPublicKey})`})
 
-const loginstyle = {
-  color: 'red',
-  backgroundColor: 'pink',
-  display: 'flex',
-  justifyContent: 'space-between',
+const LoginBannerStyle = {
+  objectFit: 'contain',
+  height: '100%',
+  width: '100%',
+  backgroundSize: '100px 100px',
 }
 let primary = '#52006F';
 
@@ -196,18 +196,15 @@ function LoginPage() {
           }}
         >
           <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              overflow: 'hidden',
-            }}
+          // style={{
+          //   width: '100%',
+          //   display: 'flex',
+          //   justifyContent: 'center',
+          //   alignItems: 'center',
+          //   overflow: 'hidden',
+          // }}
           >
-            <img
-              style={{ flexShrink: '0', maxHeight: '40%' }}
-              src={require('../../assets/login-page-banner.png')}
-            />
+            <img style={LoginBannerStyle} src={LoginBanner} />
           </div>
         </div>
       </div>

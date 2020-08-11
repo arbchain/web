@@ -1,26 +1,25 @@
-/* eslint-disable prettier/prettier */
-
+/* eslint-disable  */
 import React from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import Error from './Error'
+import Dashboard from './components/Dashboard/Dashboard'
+import Arbitrations from './components/Arbitrations/Arbitrations'
+import ErrorPage from './ErrorPage'
 
-import LoginPage from './components/Login/LoginPage'
-import DashboardPage from './components/Dashboard/DashboardPage'
-
-import {AccountProvider} from './wallet/Account.js'
 
 function App() {
   return (
-    <AccountProvider>
-      <BrowserRouter>
-          <Switch>
-            <Route exact path='/' component={LoginPage} />
-            <Route exact path='/login' component={LoginPage} />
-            <Route exact path='/dashboard' component={DashboardPage} />
-            <Route component={Error} />
-          </Switch>
-      </BrowserRouter>
-    </AccountProvider>
+    <>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path='/dashboard' component={Dashboard} />
+        <Route exact path='/arbitration' component={Arbitrations} />
+        <Route component={ErrorPage} />  
+      </Switch> 
+    </BrowserRouter>  
+   
+   </>
+
+
   )
 }
 

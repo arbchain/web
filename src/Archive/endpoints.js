@@ -1,6 +1,6 @@
-import environment from './environment'
+import environment from '../environment'
 
-import { isLocalOrUnknownNetwork, getNetworkType } from './lib/web3-utils'
+import { isLocalOrUnknownNetwork, getNetworkType } from '../lib/web3-utils'
 
 const CHAIN_ID = environment('CHAIN_ID')
 const SUBGRAPH_NAME = environment('SUBGRAPH_NAME')
