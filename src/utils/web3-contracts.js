@@ -101,7 +101,7 @@ export class Web3Contract {
 
     }
 
-    async documentSigning(name, args, account) {
+    async documentSigning(name, args, accountArgs) {
 
         const functionAbi = this.Contract._jsonInterface.find(e => {
             return e.name === name;
@@ -111,7 +111,7 @@ export class Web3Contract {
             return e.name === "replayNonce"
         })
 
-        const account = await this.web3.eth.accounts.privateKeyToAccount(`0x{account.privateKey}`)
+        const account = await this.web3.eth.accounts.privateKeyToAccount(`0x{accountArgs.privateKey}`)
 
         const nonceFunctionArgs = this.web3.eth.abi.encodeParameters(nonceFunctionAbi.inputs, [account.address]).slice(2);
 
@@ -155,11 +155,11 @@ export class Web3Contract {
              privacyGroupId: this.privacyGroupId
          };
 
-         const transactionHash = await this.web3.eea.sendRawTransaction(functionCall);
-         const result = await this.web3.priv.getTransactionReceipt(transactionHash, account.orionPublicKey);
+         const transactionHash_doc = await this.web3.eea.sendRawTransaction(functionCall);
+         const result_doc = await this.web3.priv.getTransactionReceipt(transactionHash_doc, account.orionPublicKey);
 
-         if(parseInt(result.output)) {
-             return this.web3.eth.abi.decodeParameters(functionAbi.outputs, result.output);
+         if(parseInt(result_doc.output)) {
+             return this.web3.eth.abi.decodeParameters(functionAbi.outputs, result_doc.output);
          }
     }
 
