@@ -55,7 +55,7 @@ export default function NavPanel() {
       <div
         style={{
           backgroundColor: 'white',
-          width: '18vw',
+          width: '208rem',
           textAlign: 'left',
           height: '90vh',
           display: 'flex',
