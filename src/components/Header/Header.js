@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { ButtonIcon, GU, IconMenu } from '@aragon/ui'
-import AccountModule from '../Account/AccountModule'
 import ActivityButton from '../Activity/ActivityButton'
 import GlobalPreferencesButton from '../GlobalPreferences/GlobalPreferencesButton'
 import HeaderLogo from './HeaderLogo'
@@ -55,9 +54,7 @@ const Header = React.memo(function Header({
             display: flex;
             height: 100%;
           `}
-        >
-          <AccountModule />
-        </div>
+        />
         <div
           css={`
             display: flex;

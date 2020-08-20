@@ -7,9 +7,12 @@ import { ButtonBase, GU, springs, textStyle, useTheme } from '@aragon/ui'
 import { Spring, animated } from 'react-spring/renderprops'
 import HeaderLogo from './Header/HeaderLogo'
 
-import dashboardMenuIcon from '../assets/dashboardMenuIcon.svg'
-import tasksMenuIcon from '../assets/tasksMenuIcon.svg'
-import disputesMenuIcon from '../assets/disputesMenuIcon.svg'
+import dashboardMenuIcon from '../assets/DashboardIcon.svg'
+import dashboardIconDark from '../assets/dashboardIconDark.svg'
+import profileIcon from '../assets/ProfileIcon.svg'
+import profileIconDark from '../assets/profileIconDark.svg'
+import arbitrationsIcon from '../assets/ArbitrationsIcon.svg'
+import arbitrationsIconDark from '../assets/arbitrationsIconDark.svg'
 import { lerp } from '../lib/math-utils'
 
 export const MENU_PANEL_SHADOW_WIDTH = 3
@@ -58,34 +61,31 @@ function MenuPanel({ showHeaderLogo, onOpenPage }) {
         </h2>
         <MenuItem
           to='/dashboard'
-          icon={disputesMenuIcon}
+          icon={dashboardMenuIcon}
+          darkIcon={dashboardIconDark}
           label='Dashboard'
           onActivate={onOpenPage}
         />
         <MenuItem
-          to='/leaderboard'
-          icon={tasksMenuIcon}
-          label='Leaderboard'
+          to='/arbitrations'
+          icon={arbitrationsIcon}
+          darkIcon={arbitrationsIconDark}
+          label='Arbitrations'
           onActivate={onOpenPage}
         />
         <MenuItem
           to='/profile'
-          icon={dashboardMenuIcon}
+          icon={profileIcon}
+          darkIcon= {profileIconDark}
           label='Profile'
           onActivate={onOpenPage}
-        />
-        <MenuItem
-            to='/sample'
-            icon={dashboardMenuIcon}
-            label='Sample'
-            onActivate={onOpenPage}
         />
       </div>
     </nav>
   )
 }
 
-function MenuItem({ to, icon, label, onActivate }) {
+function MenuItem({ to, icon, darkIcon, label, onActivate }) {
   const history = useHistory()
   const theme = useTheme()
   const active = useRouteMatch(to) !== null
@@ -106,7 +106,7 @@ function MenuItem({ to, icon, label, onActivate }) {
         padding: 0 ${2 * GU}px 0 ${3 * GU}px;
         border-radius: 0;
         text-align: left;
-        background: ${active ? theme.surfacePressed : 'transparent'};
+        background: ${active ? '#E3F2FD' : 'transparent'};
         &:active {
           background: ${theme.surfacePressed};
         }
@@ -128,14 +128,15 @@ function MenuItem({ to, icon, label, onActivate }) {
         `}
       />
 
-      <img src={icon} alt='' />
+      <img src={active ? darkIcon : icon} alt=''/>
       <span
         css={`
           margin-left: ${1 * GU}px;
           overflow: hidden;
           text-overflow: ellipsis;
           ${textStyle('body2')};
-          font-weight: ${active ? '600' : '400'};
+          font-weight: ${active ? '600' : '700'};
+          color: ${active ?theme.selected: ''}
         `}
       >
         {label}

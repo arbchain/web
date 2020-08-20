@@ -1,10 +1,12 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 import { GU, textStyle } from '@aragon/ui'
-import headerLogoSvg from '../../assets/HeaderLogo.svg'
+import headerLogoSvg from '../../assets/arbchainLogo.png'
 
 function HeaderLogo() {
   return (
+      <NavLink to="/" style={{ textDecoration: 'none' }}>
     <div
       css={`
         display: flex;
@@ -14,7 +16,7 @@ function HeaderLogo() {
       <img
         alt=''
         src={headerLogoSvg}
-        width={4 * GU}
+        width={7 * GU}
         css={`
           margin-right: ${1 * GU}px;
         `}
@@ -27,9 +29,10 @@ function HeaderLogo() {
           ${textStyle('body1')};
         `}
       >
-        GitFunded
+Arbchain
       </h1>
     </div>
+</NavLink>
   )
 }
 

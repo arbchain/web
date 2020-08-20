@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable */
 import React, {
   useCallback,
   useContext,
@@ -89,8 +91,9 @@ async function getActivityFinalStatus(
 function ActivityProvider({ children }) {
   const [activities, setActivities] = useState([])
   const storedList = useRef(null)
-  const wallet = useWallet()
-  const { account, ethers } = wallet
+  // const wallet = useWallet()
+  const account = null
+  const ethers = null
 
   // Update the activities, ensuring the activities
   // are updated in the stored list and in the state.
