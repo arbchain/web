@@ -1,8 +1,5 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable */
-
 import React from 'react'
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { Main } from '@aragon/ui'
 
 import theme from './theme-court'
@@ -10,28 +7,33 @@ import theme from './theme-court'
 import MainView from './components/MainView'
 import ErrorPage from './ErrorPage'
 
+import LoginPage from './components/Login/LoginPage'
 import Dashboard from './components/Dashboard/Dashboard'
 import Profile from './components/Profile/Profile'
-import Disputes from './components/Disputes/Disputes'
+import Arbitrations from './components/Arbitrations/Arbitrations'
 import { ActivityProvider } from './components/Activity/ActivityProvider'
+import { AccountProvider } from './wallet/Account.js'
 
 function App() {
   return (
+    <AccountProvider>
       <BrowserRouter>
         <ActivityProvider>
-        <Main layout={false} theme={theme}>
-          <MainView>
-            <Switch>
-              <Route exact path='/' component={Dashboard} />
-              <Route exact path='/dashboard' component={Dashboard} />
-              <Route exact path='/arbitrations' component={Disputes} />
-              <Route path='/profile' component={Profile} />
-              <Route component={ErrorPage} />
-            </Switch>
-          </MainView>
-        </Main>
+          <Route exact path="/login" component={LoginPage} />
+          <Main layout={false} theme={theme}>
+            <MainView>
+              <Switch>
+                <Route exact path="/" component={Dashboard} />
+                <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/arbitrations" component={Arbitrations} />
+                <Route path="/profile" component={Profile} />
+                <Route component={ErrorPage} />
+              </Switch>
+            </MainView>
+          </Main>
         </ActivityProvider>
       </BrowserRouter>
+    </AccountProvider>
   )
 }
 

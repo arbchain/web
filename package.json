@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@aragon/ui": "^1.2.0",
+    "chart.js": "^2.9.3",
     "clipboard-polyfill": "^2.8.6",
     "dayjs": "^1.8.14",
     "github-api": "^3.3.0",
@@ -22,7 +23,7 @@
     "urql": "^1.6.3",
     "use-wallet": "^0.4.4",
     "web3": "1.2.6",
-    "web3-eea": "^0.9.0"
+    "web3-besu": "^0.9.1"
   },
   "scripts": {
     "start": "react-app-rewired start",

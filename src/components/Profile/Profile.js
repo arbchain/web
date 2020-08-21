@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 import React from 'react'
-import ProfileHeader from "../Dashboard/ProfileHeader";
+import ProfileHeader from "./ProfileHeader";
 import active from "../../assets/active.svg";
 
 import {
