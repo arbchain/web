@@ -23,7 +23,7 @@ function DisputeEvidences({ evidences }) {
                   `}
                   color={theme.surfaceIcon}
                 />
-                <span>Evidence #{index + 1}</span>
+                <span>Argument #{index + 1}</span>
               </div>,
               <div
                 css={`

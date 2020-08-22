@@ -1,13 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { Header } from '@aragon/ui'
 
-import DisputeDetail from './DisputeDetail'
+import ArbitrationDetail from './ArbitrationDetail'
 import ArbitrationList from './ArbitrationList'
 
 import { disputes } from '../../mock-data'
+import { arbitrations } from '../../arbitrations-mock-data'
 
 function Arbitrations() {
-  const [selectedDispute, selectDispute] = useSelectedDispute(disputes)
+  const [selectedDispute, selectDispute] = useSelectedDispute(arbitrations)
 
   const handleBack = useCallback(() => {
     selectDispute(-1)
@@ -17,10 +18,11 @@ function Arbitrations() {
     <React.Fragment>
       <Header primary="Arbitrations" />
       {selectedDispute ? (
-        <DisputeDetail dispute={selectedDispute} onBack={handleBack} />
+        <ArbitrationDetail arbitration={selectedDispute} onBack={handleBack} />
       ) : (
         <ArbitrationList
           disputes={disputes}
+          arbitrations={arbitrations}
           selectDispute={selectDispute}
           // filteredDisputes={filteredDisputes}
           // disputeStatusFilter={disputeStatusFilter}

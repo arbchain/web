@@ -17,7 +17,7 @@ import DisputeCard from './DisputeCard'
 
 import ArbitrationCard from './ArbitrationCard.js'
 
-function ArbitrationList({ disputes, selectDispute }) {
+function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme()
   const [selected, setSelected] = useState(0)
   return (
@@ -75,8 +75,8 @@ function ArbitrationList({ disputes, selectDispute }) {
           `}
         >
           <DropDown
-            header="Disputes"
-            placeholder="Disputes"
+            header="Status"
+            placeholder="Status"
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -97,17 +97,8 @@ function ArbitrationList({ disputes, selectDispute }) {
                 </span>
               </div>,
               'Open',
-              'Appeal',
               'Closed',
             ]}
-            width="128px"
-          />
-          <DropDown
-            header="Status"
-            placeholder="Status"
-            // selected={disputeStatusFilter}
-            // onChange={handleDisputeStatusFilterChange}
-            items={[]}
             width="128px"
           />
           <DateRangePicker
@@ -132,7 +123,15 @@ function ArbitrationList({ disputes, selectDispute }) {
           })}
         </CardLayout>
       ) : (
-        <ArbitrationCard />
+        arbitrations.map(arbitration => {
+          return (
+            <ArbitrationCard
+              key={arbitration.id}
+              arbitration={arbitration}
+              selectDispute={selectDispute}
+            />
+          )
+        })
       )}
     </div>
   )
