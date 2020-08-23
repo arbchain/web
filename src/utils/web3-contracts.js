@@ -2,9 +2,6 @@
 const Web3 = require("web3");
 const EEAClient = require("web3-besu");
 
-const { orion, besu } = require("../wallet/keys");
-
-
 export class Web3Contract {
 
      async connect(url) {
@@ -19,12 +16,13 @@ export class Web3Contract {
 
     }
 
-    async createPrivacyGroup(participants) {
+    async createPrivacyGroup(participants, account) {
+         console.log(account)
         let privacyGroup = await this.web3.privx.createPrivacyGroup({
-            participants: participants,
-            enclaveKey: orion.node1.publicKey,
-            privateFrom: orion.node1.publicKey,
-            privateKey: besu.node1.privateKey
+            participants: [account.orionPublicKey],
+            enclaveKey: account.orionPublicKey,
+            privateFrom: account.orionPublicKey,
+            privateKey: account.privateKey
         });
 
         return privacyGroup;
@@ -67,6 +65,38 @@ export class Web3Contract {
          if(parseInt(result.output)) {
              return this.web3.eth.abi.decodeParameters(functionAbi.outputs, result.output);
          }
+
+    }
+
+    async deploy(contractAbi, contractBin, args, participants, account ) {
+
+        let privacyGroup = await this.createPrivacyGroup(participants, account);
+        let privacyGroupId = privacyGroup.privacyGroupId;
+        this.Contract = new this.web3.eth.Contract(contractAbi);
+
+        const constructorAbi = this.Contract._jsonInterface.find(e => {
+            return e.type === "constructor";
+        })
+
+        let constructorArgs = ''
+
+        if(constructorAbi && args.length){
+            constructorArgs = web3.eth.abi
+                .encodeParameters(constructorAbi.inputs, args)
+                .slice(2);
+        }
+
+        const contractOptions = {
+            data: `0x${contractBin}${constructorArgs}`,
+            privateFrom: account.orionPublicKey,
+            privacyGroupId,
+            privateKey: account.privateKey,
+        };
+
+        const transactionHash = await this.web3.eea.sendRawTransaction(contractOptions);
+        const result = await this.web3.priv.getTransactionReceipt(transactionHash, account.orionPublicKey);
+
+        return result
 
     }
 

@@ -9,7 +9,7 @@ function useAccountAugmented() {
 
 function AccountAugmented({ children }) {
 
-  const [account, setaccount] = useState(false)
+  const [account, setaccount] = useState(0)
 
   //Call back context function to update the selected account
   function changeAccount(value) {

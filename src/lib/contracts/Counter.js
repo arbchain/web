@@ -58,7 +58,7 @@ const web3Contract = new Web3Contract()
                 }
             }
             countCall()
-            }, [connected])
+            }, [connected, account])
 
         return count
 

@@ -9,7 +9,7 @@ module.exports = [
     {
       name: 'node2',
       privateKey: "c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3",
-      orionPublicKey: "Ko2bVqD+nNlNYL5EE7y3IdOnviftjiizpjRt+HTuFBs=",
+      orionPublicKey: "A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=",
       url: 'http://testnet.besu.consensolabs.com:20001'
     },
     {
