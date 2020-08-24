@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import React from 'react'
 import { Box, GU, useViewport } from '@aragon/ui'
 import TaskAmounts from './TasksAmounts'

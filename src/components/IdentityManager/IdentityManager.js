@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Subject } from 'rxjs'

@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import React from 'react'
 import PropTypes from 'prop-types'
 import { IconLabel, GU } from '@aragon/ui'

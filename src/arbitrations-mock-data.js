@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import {
   DISPUTE_STATUS_OPEN,
   DISPUTE_STATUS_CLOSED,
@@ -66,8 +64,10 @@ export const arbitrations = [
     claimant: 'Consenso Labs',
     respondent: 'Apple Inc',
     arbitratorCount: 2,
-    arguments: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.']
+    arguments: [
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ],
   },
   {
     id: 1,
@@ -79,8 +79,10 @@ export const arbitrations = [
     claimant: 'Microsoft Inc',
     respondent: 'Samung Inc',
     arbitratorCount: 3,
-    arguments: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.']
+    arguments: [
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    ],
   },
   {
     id: 2,

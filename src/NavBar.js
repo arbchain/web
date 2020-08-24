@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import React from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { ButtonBase, GU, useTheme, textStyle } from '@aragon/ui'
