@@ -12,9 +12,10 @@ const antIcon = (
 )
 
 const counterParties = [
-  'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
-  'k2zXEin4Ip/qBGlRkJejnGWdP9cjkK+DAvKNW31L2C8=',
+  '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
+  '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
 ]
+const languages = ['English', 'French', 'Spanish']
 
 export default function AgreementForm({
   agreementModal,
@@ -27,7 +28,7 @@ export default function AgreementForm({
   const [disputeType, setDisputeType] = useState(0)
   const [language, setLanguage] = useState(0)
   const [counterParty, setCounterParty] = useState(0)
-  const [seat, setSeat] = useState('England')
+  const [seat, setSeat] = useState('London')
   const [docHash, setDocHash] = useState(Web3.utils.keccak256('Sample Doc'))
   const [agreementSubmit, setAgreementSubmit] = useState(false)
 
@@ -145,7 +146,7 @@ export default function AgreementForm({
             <div style={{ flexBasis: '100%' }}> Arbitration Language:</div>
             <DropDown
               style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={['English', 'French', 'Spanish']}
+              items={languages}
               selected={language}
               onChange={(index, items) => {
                 setLanguage(index)
@@ -203,7 +204,17 @@ export default function AgreementForm({
             }}
             onClick={() => {
               setAgreementSubmit(true)
-              create(account)
+              create(account, [
+                2,
+                seat,
+                languages[language],
+                'LCIA',
+                'Consenso Labs',
+                counterParties[counterParty],
+                'Apple Inc',
+                disputeType + 1,
+                docHash,
+              ])
             }}
           />
         </div>
