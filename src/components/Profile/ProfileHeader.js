@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from 'react'
 
 import { Box, Button, GU, textStyle, useViewport } from '@aragon/ui'
@@ -6,7 +5,6 @@ import { Box, Button, GU, textStyle, useViewport } from '@aragon/ui'
 import ProfileIcon from '../../assets/profile.png'
 import ANJBadgeIcon from '../../assets/anjBadge.svg'
 import IconCheck from '../../assets/IconCheck.svg'
-
 
 export default function ProfileHeader({ active }) {
   const { below } = useViewport()
@@ -40,11 +38,11 @@ export default function ProfileHeader({ active }) {
               margin-right: ${3 * GU}px;
             `}
           >
-            <img alt='profile' src={ProfileIcon} />
+            <img alt="profile" src={ProfileIcon} />
             <img
-              alt='active-juror'
+              alt="active-juror"
               src={ANJBadgeIcon}
-              css='position: absolute; top: 0; right: -5px'
+              css="position: absolute; top: 0; right: -5px"
             />
           </div>
           <div>
@@ -72,7 +70,7 @@ export default function ProfileHeader({ active }) {
                   `}
                 >
                   <img
-                    alt='active'
+                    alt="active"
                     src={IconCheck}
                     css={`
                       margin-right: 4px;

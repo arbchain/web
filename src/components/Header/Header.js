@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import React from 'react'
 import { ButtonIcon, GU, IconMenu } from '@aragon/ui'
 import ActivityButton from '../Activity/ActivityButton'
@@ -34,7 +32,7 @@ const Header = React.memo(function Header({
         `}
       >
         {compactMode ? (
-          <ButtonIcon label='Open menu' onClick={toggleMenuPanel}>
+          <ButtonIcon label="Open menu" onClick={toggleMenuPanel}>
             <IconMenu />
           </ButtonIcon>
         ) : (
@@ -70,9 +68,8 @@ const Header = React.memo(function Header({
             height: 100%;
           `}
         >
-        <ActivityButton />
+          <ActivityButton />
         </div>
-
       </div>
     </header>
   )

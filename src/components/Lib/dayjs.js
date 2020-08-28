@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import isBetween from 'dayjs/plugin/isBetween'
 import dayjs from 'dayjs'
 

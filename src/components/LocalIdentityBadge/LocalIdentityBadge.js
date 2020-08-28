@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React from 'react'
 // import { useNetwork } from '@aragon/api-react'
 import { IdentityBadge } from '@aragon/ui'

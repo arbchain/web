@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React from 'react'
 import {
   Box,
@@ -9,19 +10,17 @@ import {
   useTheme,
 } from '@aragon/ui'
 import IconCourt from '../../assets/courtIcon.svg'
+import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg'
 import DisputeStatus from './DisputeStatus'
 
 const DisputeInfo = ({ dispute }) => {
   const theme = useTheme()
   const {
-    id,
     description,
-    // status,
+    title,
     creator,
-    rewardAmount,
-    stakedAmount,
-    term,
-    // termDate,
+    claimant,
+    respondent,
   } = dispute
 
   return (
@@ -48,14 +47,12 @@ const DisputeInfo = ({ dispute }) => {
             `}
           >
             <div
-              css={`
-                background: #c8d7ea;
-                border-radius: 50%;
-                padding: 12px;
-                display: inline-block;
-              `}
             >
-              <img src={IconCourt} />
+              <img
+                  css={`
+                width: ${5 * GU}px;
+              `}
+                 src={ArbitrationCardDispute} />
             </div>
             <div
               css={`
@@ -69,9 +66,8 @@ const DisputeInfo = ({ dispute }) => {
                   ${textStyle('title3')};
                 `}
               >
-                Dispute #{id}
+                {title}
               </Text>
-              <IdentityBadge entity={creator} badgeOnly />
             </div>
           </div>
           <div>
@@ -113,7 +109,7 @@ const DisputeInfo = ({ dispute }) => {
                 margin-bottom: ${2 * GU}px;
               `}
             >
-              Organization
+              Claimant
             </h2>
             <div
               css={`
@@ -123,7 +119,7 @@ const DisputeInfo = ({ dispute }) => {
             >
               <IdentityBadge
                 // connectedAccount={addressesEqual(creator, connectedAccount)}
-                entity={creator}
+                entity={claimant}
               />
             </div>
           </div>
@@ -131,7 +127,7 @@ const DisputeInfo = ({ dispute }) => {
         <div
           css={`
             display: grid;
-            grid-template-columns: repeat(3, 1fr) minmax(250px, auto);
+            grid-template-columns: 1fr minmax(250px, auto);
             margin-bottom: ${5 * GU}px;
           `}
         >
@@ -145,7 +141,7 @@ const DisputeInfo = ({ dispute }) => {
                 margin-bottom: ${1.5 * GU}px;
               `}
             >
-              Rewards
+              ARBITRATION AGREEMENT
             </span>
             <Text
               css={`
@@ -153,9 +149,11 @@ const DisputeInfo = ({ dispute }) => {
                 ${textStyle('body2')};
               `}
             >
-              {`${rewardAmount} DAI`}
+              { `Apple Inc - Consenso Corp agreement`}
             </Text>
           </div>
+
+
           <div>
             <span
               css={`
@@ -166,65 +164,24 @@ const DisputeInfo = ({ dispute }) => {
                 margin-bottom: ${1.5 * GU}px;
               `}
             >
-              Collateral Staked
-            </span>
-            <Text
-              css={`
-                display: inline-block;
-                ${textStyle('body2')};
-              `}
-            >
-              {`${stakedAmount} ANJ`}
-            </Text>
-          </div>
-          <div>
-            <span
-              css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
-            >
-              Term Number
-            </span>
-            <Text
-              css={`
-                display: inline-block;
-                ${textStyle('body2')};
-              `}
-            >
-              {term}
-            </Text>
-          </div>
-          <div>
-            <span
-              css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
-            >
-              Created by
+              Respondent
             </span>
             <IdentityBadge
               // connectedAccount={addressesEqual(creator, connectedAccount)}
-              entity={creator}
+              entity={respondent}
             />
           </div>
+
         </div>
         <Button
           mode="strong"
           onClick={() => {}}
           wide
           css={`
-            background: ${theme.surfaceContentSecondary};
+            background: ${theme.selected};
           `}
         >
-          Vote
+          PERFORM ACTION
         </Button>
       </section>
     </Box>

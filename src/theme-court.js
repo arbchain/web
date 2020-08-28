@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 export default {
   _name: 'court',
   _appearance: 'light',

@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable */
 import React, {
   useCallback,
   useContext,
@@ -12,7 +10,6 @@ import PropTypes from 'prop-types'
 import StoredList from '../../StoredList'
 import { getNetworkType } from '../../lib/web3-utils'
 import { MINUTE } from '../../utils/date-utils'
-import { useWallet } from '../../providers/Wallet'
 import {
   ACTIVITY_STATUS_CONFIRMED,
   ACTIVITY_STATUS_FAILED,

@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Spring, animated } from 'react-spring/renderprops'
 import {
@@ -12,13 +10,13 @@ import {
   useTheme,
 } from '@aragon/ui'
 import ActivityList from './ActivityList'
-// import { useActivity } from './ActivityProvider'
+import { useActivity } from './ActivityProvider'
 
 const ActivityButton = React.memo(function ActivityButton() {
   const theme = useTheme()
   const [opened, setOpened] = useState(false)
-  // const { activities, markActivitiesRead, unreadCount } = useActivity()
-  const unreadCount = 1
+  // eslint-disable-next-line no-unused-vars
+  const { activities, markActivitiesRead, unreadCount } = useActivity()
   const containerRef = useRef()
   const popoverFocusElement = useRef()
 
@@ -26,7 +24,7 @@ const ActivityButton = React.memo(function ActivityButton() {
     () =>
       setOpened(opened => {
         if (opened) {
-          // markActivitiesRead()
+          markActivitiesRead()
         }
         return !opened
       }),
@@ -111,7 +109,12 @@ const ActivityButton = React.memo(function ActivityButton() {
                     right: -${0.5 * GU}px;
                   `}
                 >
-                  <Tag limitDigits mode="activity" label={unreadCount} />
+                  <Tag
+                    limitDigits
+                    mode="activity"
+                    label={unreadCount}
+                    style={{ backgroundColor: theme.selected }}
+                  />
                 </animated.div>
               )}
             </Spring>

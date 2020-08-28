@@ -127,7 +127,6 @@ function AnimatedGlobalPreferences({ path, onScreenChange, onClose }) {
     >
       {show =>
         show &&
-        /* eslint-disable react/prop-types */
         // z-index 1 on mobile keeps the menu above this preferences modal
         (({ opacity, enterProgress, blocking }) => (
           <AnimatedDiv
@@ -163,7 +162,6 @@ function AnimatedGlobalPreferences({ path, onScreenChange, onClose }) {
             />
           </AnimatedDiv>
         ))
-      /* eslint-enable react/prop-types */
       }
     </Transition>
   )

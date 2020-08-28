@@ -1,7 +1,7 @@
 import React from 'react'
 import { GU, textStyle, useTheme } from '@aragon/ui'
 
-import { timeline } from '../../mock-data'
+import { timeline } from '../../arbitrations-mock-data'
 import Stepper from '../Stepper'
 import Step from '../Step'
 
@@ -27,7 +27,7 @@ function DisputeTimeline() {
               stepPoint={
                 <div
                   css={`
-                    background: ${active ? theme.surfaceIcon : '#ECEFF4'};
+                    background: ${active ? theme.selected : '#ECEFF4'};
                     border-radius: 80%;
                     padding: 10px;
                     position: relative;

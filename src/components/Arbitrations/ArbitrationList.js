@@ -13,27 +13,58 @@ import {
   useTheme,
 } from '@aragon/ui'
 
+import AgreementForm from './modals/AgreementForm'
+
+import { fetchAgreement } from '../../lib/contracts/Agreement.js'
+import { useAccount } from '../../wallet/Account.js'
 import DisputeCard from './DisputeCard'
 
 import ArbitrationCard from './ArbitrationCard.js'
 
-function ArbitrationList({ disputes, selectDispute }) {
+const accounts = require('../../wallet/keys')
+const networks = require('../../wallet/network')
+
+const NODES = Object.keys(networks).map(node => {
+  return `${networks[node].host}:${networks[node].port}`
+})
+
+function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme()
   const [selected, setSelected] = useState(0)
+  const [agreementModal, setAgreementModal] = useState(false)
+
+  const openAgreement = () => setAgreementModal(true)
+  const walletAccount = useAccount()
+
+  const agreementDetails = fetchAgreement(
+    NODES[selected],
+    accounts[walletAccount.account]
+  )
+  console.log(agreementDetails)
+
   return (
     <div>
       <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
+          width: '100%',
         }}
       >
+        <AgreementForm
+          agreementModal={agreementModal}
+          setAgreementModal={setAgreementModal}
+          account={accounts[walletAccount.account]}
+          node={NODES[selected]}
+        />
         <div />
         <div style={{ display: 'flex', marginTop: '1rem' }}>
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button
               label="+NEW AGREEMENT"
-              onClick={() => console.log('Clicked')}
+              onClick={() => {
+                openAgreement()
+              }}
             />
           </div>
           <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
@@ -75,8 +106,8 @@ function ArbitrationList({ disputes, selectDispute }) {
           `}
         >
           <DropDown
-            header="Disputes"
-            placeholder="Disputes"
+            header="Status"
+            placeholder="Status"
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -97,17 +128,8 @@ function ArbitrationList({ disputes, selectDispute }) {
                 </span>
               </div>,
               'Open',
-              'Appeal',
               'Closed',
             ]}
-            width="128px"
-          />
-          <DropDown
-            header="Status"
-            placeholder="Status"
-            // selected={disputeStatusFilter}
-            // onChange={handleDisputeStatusFilterChange}
-            items={[]}
             width="128px"
           />
           <DateRangePicker
@@ -132,7 +154,15 @@ function ArbitrationList({ disputes, selectDispute }) {
           })}
         </CardLayout>
       ) : (
-        <ArbitrationCard />
+        arbitrations.map(arbitration => {
+          return (
+            <ArbitrationCard
+              key={arbitration.id}
+              arbitration={arbitration}
+              selectDispute={selectDispute}
+            />
+          )
+        })
       )}
     </div>
   )

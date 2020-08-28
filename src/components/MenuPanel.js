@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { ButtonBase, GU, springs, textStyle, useTheme } from '@aragon/ui'
@@ -60,24 +58,24 @@ function MenuPanel({ showHeaderLogo, onOpenPage }) {
           Menu
         </h2>
         <MenuItem
-          to='/dashboard'
+          to="/dashboard"
           icon={dashboardMenuIcon}
           darkIcon={dashboardIconDark}
-          label='Dashboard'
+          label="Dashboard"
           onActivate={onOpenPage}
         />
         <MenuItem
-          to='/arbitrations'
+          to="/arbitrations"
           icon={arbitrationsIcon}
           darkIcon={arbitrationsIconDark}
-          label='Arbitrations'
+          label="Arbitrations"
           onActivate={onOpenPage}
         />
         <MenuItem
-          to='/profile'
+          to="/profile"
           icon={profileIcon}
-          darkIcon= {profileIconDark}
-          label='Profile'
+          darkIcon={profileIconDark}
+          label="Profile"
           onActivate={onOpenPage}
         />
       </div>
@@ -128,7 +126,7 @@ function MenuItem({ to, icon, darkIcon, label, onActivate }) {
         `}
       />
 
-      <img src={active ? darkIcon : icon} alt=''/>
+      <img src={active ? darkIcon : icon} alt="" />
       <span
         css={`
           margin-left: ${1 * GU}px;
@@ -136,7 +134,7 @@ function MenuItem({ to, icon, darkIcon, label, onActivate }) {
           text-overflow: ellipsis;
           ${textStyle('body2')};
           font-weight: ${active ? '600' : '700'};
-          color: ${active ?theme.selected: ''}
+          color: ${active ? theme.selected : ''};
         `}
       >
         {label}
@@ -210,7 +208,7 @@ function AnimatedMenuPanel({
             style={{
               position: autoClosing ? 'absolute' : 'relative',
               transform: menuPanelProgress.interpolate(
-                (v) =>
+                v =>
                   `translate3d(
                   ${lerp(
                     v,
