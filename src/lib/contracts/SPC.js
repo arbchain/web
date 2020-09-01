@@ -8,10 +8,10 @@ import { Web3Contract } from '../../utils/web3-contracts';
 
 const ContractAbi = require('../../build/SPC_abi.json');
 const Web3 = require('web3');
-const ContractBin = require('../../build/SPC_bin.json').binary
+const ContractBin = require('../../build/SPC_bin.json').binary;
 const ContractReceipt = {
-  contractAddress: 'address',
-  privacyGroupId: 'id',
+  contractAddress: '0x0be9778d4e338e4076471cddec8e65a7f8a6d6ed',
+  privacyGroupId: '65CdeS17zbPOw3BNnU3AmiDj6wO3fIJaNUt7RqfuwwE=',
 };
 const web3Contract = new Web3Contract();
 
@@ -22,16 +22,16 @@ const web3Contract = new Web3Contract();
 
 export function deployProcedureContract(nodeSelected) {
   const [connected, setConnected] = useState(false);
-  const [result, setResult] = useState(false);
+  const [resultProcedureContract, setResultProcedure] = useState(false);
 
-  const create = useCallback(
+  const createProcedureContract = useCallback(
     async (account, args) => {
       setConnected(await web3Contract.connect(nodeSelected));
-      setResult(await web3Contract.deploy(ContractAbi, ContractBin, args, [], account));
+      setResultProcedure(await web3Contract.deploy(ContractAbi, ContractBin, args, [], account));
     },
     [nodeSelected]
   );
-  return { result, setResult, create };
+  return { resultProcedureContract, setResultProcedure, createProcedureContract };
 }
 
 export function useContract(nodeSelected) {

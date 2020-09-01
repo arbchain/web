@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   Bar,
   Button,
@@ -11,36 +11,33 @@ import {
   Tag,
   textStyle,
   useTheme,
-} from '@aragon/ui'
+} from '@aragon/ui';
 
-import AgreementForm from './modals/AgreementForm'
+import AgreementForm from './modals/AgreementForm';
 
-import { fetchAgreement } from '../../lib/contracts/Agreement.js'
-import { useAccount } from '../../wallet/Account.js'
-import DisputeCard from './DisputeCard'
+import { fetchAgreement } from '../../lib/contracts/Agreement.js';
+import { useAccount } from '../../wallet/Account.js';
+import DisputeCard from './DisputeCard';
 
-import ArbitrationCard from './ArbitrationCard.js'
+import ArbitrationCard from './ArbitrationCard.js';
 
-const accounts = require('../../wallet/keys')
-const networks = require('../../wallet/network')
+const accounts = require('../../wallet/keys');
+const networks = require('../../wallet/network');
 
 const NODES = Object.keys(networks).map(node => {
-  return `${networks[node].host}:${networks[node].port}`
-})
+  return `${networks[node].host}:${networks[node].port}`;
+});
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
-  const theme = useTheme()
-  const [selected, setSelected] = useState(0)
-  const [agreementModal, setAgreementModal] = useState(false)
+  const theme = useTheme();
+  const [selected, setSelected] = useState(0);
+  const [agreementModal, setAgreementModal] = useState(false);
 
-  const openAgreement = () => setAgreementModal(true)
-  const walletAccount = useAccount()
+  const openAgreement = () => setAgreementModal(true);
+  const walletAccount = useAccount();
 
-  const agreementDetails = fetchAgreement(
-    NODES[selected],
-    accounts[walletAccount.account]
-  )
-  console.log(agreementDetails)
+  const agreementDetails = fetchAgreement(NODES[selected], accounts[walletAccount.account]);
+  console.log(agreementDetails);
 
   return (
     <div>
@@ -63,7 +60,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             <Button
               label="+NEW AGREEMENT"
               onClick={() => {
-                openAgreement()
+                openAgreement();
               }}
             />
           </div>
@@ -74,10 +71,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               onClick={() => console.log('clicked')}
             />
           </div>
-          <p
-            style={{ cursor: 'pointer' }}
-            onClick={() => console.log('clicked')}
-          >
+          <p style={{ cursor: 'pointer' }} onClick={() => console.log('clicked')}>
             <IconRefresh
               css={`
                 color: ${theme.selected};
@@ -88,11 +82,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         </div>
       </div>
 
-      <Tabs
-        items={['All requests', 'My claims']}
-        selected={selected}
-        onChange={setSelected}
-      />
+      <Tabs items={['All requests', 'My claims']} selected={selected} onChange={setSelected} />
 
       <Bar>
         <div
@@ -144,13 +134,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       {selected ? (
         <CardLayout columnWidthMin={30 * GU} rowHeight={307}>
           {disputes.map(dispute => {
-            return (
-              <DisputeCard
-                key={dispute.id}
-                dispute={dispute}
-                selectDispute={selectDispute}
-              />
-            )
+            return <DisputeCard key={dispute.id} dispute={dispute} selectDispute={selectDispute} />;
           })}
         </CardLayout>
       ) : (
@@ -161,11 +145,11 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               arbitration={arbitration}
               selectDispute={selectDispute}
             />
-          )
+          );
         })
       )}
     </div>
-  )
+  );
 }
 
-export default ArbitrationList
+export default ArbitrationList;

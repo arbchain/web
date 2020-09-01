@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Result, Spin } from 'antd';
 import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
@@ -5,6 +6,7 @@ import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/Agreement';
+import { deployProcedureContract } from '../../../lib/contracts/SPC';
 
 const Web3 = require('web3');
 const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
@@ -31,7 +33,14 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
     setResult(false);
   };
   const { result, setResult, create } = createAgreement(node);
-  console.log(result);
+  const {
+    resultProcedureContract,
+    setResultProcedure,
+    createProcedureContract,
+  } = deployProcedureContract(node);
+
+  console.log(' Agreement Contract', result);
+  console.log('Procedure Contract', resultProcedureContract);
 
   const createAgain = () => {
     setAgreementSubmit(false);
@@ -207,6 +216,11 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
                 'Apple Inc',
                 disputeType + 1,
                 docHash,
+              ]);
+              createProcedureContract(account, [
+                '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
+                '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
+                '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
               ]);
             }}
           />
