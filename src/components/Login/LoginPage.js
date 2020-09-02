@@ -1,44 +1,51 @@
-import React, { useState } from 'react'
-import { Main, Button, DropDown, Modal, Layout, textStyle } from '@aragon/ui'
-import Connection from './Connection.js'
-import BrandLogo from '../../assets/arbchainLogo.png'
-import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js'
-import { useAccount } from '../../wallet/Account.js'
+/* eslint-disable */
 
-const accounts = require('../../wallet/keys')
-const networks = require('../../wallet/network')
+import React, { useState } from 'react';
+import { Main, Button, DropDown, Modal, Layout, textStyle } from '@aragon/ui';
+import Connection from './Connection.js';
+import BrandLogo from '../../assets/arbchainLogo.png';
+import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js';
+import { useAccount } from '../../wallet/Account.js';
+import SignUp from './SignUp/SignUp';
 
-const NODES = Object.keys(networks).map(node => {
-  return `${networks[node].host}:${networks[node].port}`
-})
-const ACCOUNTS = accounts.map(node => {
-  return `${node.name} - (${node.orionPublicKey})`
-})
+const accounts = require('../../wallet/keys');
+const networks = require('../../wallet/network');
+
+const NODES = Object.keys(networks).map((node) => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
+const ACCOUNTS = accounts.map((node) => {
+  return `${node.name} - (${node.orionPublicKey})`;
+});
 
 function LoginPage() {
-  const [walletModal, setWalletModal] = useState(false)
-  const [networkModal, setNetworkModal] = useState(false)
-  const [selected, setSelected] = useState(0)
-  const [account, setAccount] = useState(0)
+  const [walletModal, setWalletModal] = useState(false);
+  const [networkModal, setNetworkModal] = useState(false);
+  const [selected, setSelected] = useState(0);
+  const [account, setAccount] = useState(0);
+  // const [signUpModal, setSignUpModal] = useState(false);
+
+  // const open = () => setSignUpModal(true);
+  // const close = () => setSignUpModal(false);
 
   const openNetwork = () => {
-    setNetworkModal(true)
-    increaseCount()
-  }
-  const openWallet = () => setWalletModal(true)
-  const closeNetwork = () => setNetworkModal(false)
-  const closeWallet = () => setWalletModal(false)
+    setNetworkModal(true);
+    increaseCount();
+  };
+  const openWallet = () => setWalletModal(true);
+  const closeNetwork = () => setNetworkModal(false);
+  const closeWallet = () => setWalletModal(false);
 
   // This is an action to be invoked onclick
-  const increaseCount = () => increase(20, accounts[account])
+  const increaseCount = () => increase(20, accounts[account]);
 
-  const { connected, increase } = increaseCounter(NODES[selected])
-  const count = fetchCount(NODES[selected], accounts[account])
-  console.log(count)
+  const { connected, increase } = increaseCounter(NODES[selected]);
+  const count = fetchCount(NODES[selected], accounts[account]);
+  console.log(count);
 
   // Update the account context by using a callback function
-  const walletAccount = useAccount()
-  walletAccount.changeAccount(account)
+  const walletAccount = useAccount();
+  walletAccount.changeAccount(account);
 
   return (
     <Main layout={false}>
@@ -90,6 +97,12 @@ function LoginPage() {
             />
           </div>
         </Modal>
+
+        {/* signup modal */}
+
+        {/* <Modal visible={signUpModal} onClose={close}>
+          <SignUp />
+        </Modal> */}
         <div
           style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}
         >
@@ -159,16 +172,34 @@ function LoginPage() {
               marginRight: '10%',
             }}
           >
-            <Button
-              wide
-              style={{ backgroundColor: '#4D4CBB', color: 'white' }}
-              onClick={openWallet}
-            >
+            <Button wide onClick={openWallet}>
               Select an account
             </Button>
           </div>
+
+          <div
+            style={{
+              marginTop: '5%',
+              textAlign: 'center',
+              marginLeft: '10%',
+              marginRight: '10%',
+            }}
+          >
+            <Button
+              wide
+              style={{ backgroundColor: '#4D4CBB', color: 'white' }}
+              // onClick={open}
+            >
+              Login
+            </Button>
+          </div>
           <div style={{ textAlign: 'center', marginTop: '3%' }}>
-            <p>Troubleshoot Guide</p>
+            <p>
+              New to Arbchain?
+              <span style={{ color: '#4d4cbb', fontWeight: 'bold' }}>
+                Sign-Up here
+              </span>
+            </p>
           </div>
           <div
             style={{
@@ -205,7 +236,7 @@ function LoginPage() {
       </div>
       <Layout />
     </Main>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;
