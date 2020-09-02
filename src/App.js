@@ -24,8 +24,7 @@ function App() {
         <ActivityProvider>
           <Route exact path='/login' component={LoginPage} />
           <Route exact path='/signup' component={SignUp} />
-
-          <Main layout={false} theme={theme}>
+          <Main layout={false} theme={theme}> 
             <MainView>
               <Switch>
                 <Route exact path='/' component={Dashboard} />
@@ -35,7 +34,8 @@ function App() {
                 <Route component={ErrorPage} />
               </Switch>
             </MainView>
-          </Main>
+            </Main>
+          
         </ActivityProvider>
       </BrowserRouter>
     </AccountProvider>

@@ -1,11 +1,12 @@
 /* eslint-disable */
 
 import React from 'react';
+import { Main } from '@aragon/ui';
 import './SignUp.Style.css';
 
 function SignUp() {
   return (
-    <>
+    <Main layout={false}>
       <section className='main'>
         <div className='troubleshooting'>
           <h2>
@@ -59,7 +60,7 @@ function SignUp() {
           </div>
         </div>
       </section>
-    </>
+    </Main>
   );
 }
 

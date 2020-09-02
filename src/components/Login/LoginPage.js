@@ -6,7 +6,8 @@ import Connection from './Connection.js';
 import BrandLogo from '../../assets/arbchainLogo.png';
 import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js';
 import { useAccount } from '../../wallet/Account.js';
-import SignUp from './SignUp/SignUp';
+// import SignUp from './SignUp/SignUp';
+import './SignUp/SignUp.Style.css';
 
 const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
@@ -234,7 +235,6 @@ function LoginPage() {
           </div>
         </div>
       </div>
-      <Layout />
     </Main>
   );
 }

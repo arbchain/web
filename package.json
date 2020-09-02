@@ -12,6 +12,7 @@
     "clipboard-polyfill": "^2.8.6",
     "dayjs": "^1.8.14",
     "emotion-theming": "^10.0.27",
+    "file-loader": "^6.1.0",
     "fs-extra": "^9.0.1",
     "js-sha3": "^0.8.0",
     "node-sass": "^4.12.0",
