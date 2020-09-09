@@ -98,20 +98,21 @@ function LoginPage() {
                 </OptGroup>
               </Select>
             </Form.Item>
-            <Button
-              style={{
-                background: '#4d4cbb',
-                color: '#fff',
-              }}
-              wide
+
+            <Link
+              to='/dashboard'
+              style={{ textDecoration: 'none', color: '#fff' }}
             >
-              <Link
-                to='/dashboard'
-                style={{ textDecoration: 'none', color: '#fff' }}
+              <Button
+                style={{
+                  background: '#4d4cbb',
+                  color: '#fff',
+                }}
+                wide
               >
                 Sign In
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </Form>
         </Modal>
 
