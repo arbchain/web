@@ -10,7 +10,7 @@ import MainView from './components/MainView';
 import ErrorPage from './ErrorPage';
 
 import LoginPage from './components/Login/LoginPage';
-import SignUp from './components/Login/SignUp/SignUp';
+import SignUp from './components/Login/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
 import Arbitrations from './components/Arbitrations/Arbitrations';
@@ -24,7 +24,6 @@ function App() {
         <ActivityProvider>
           <Route exact path='/login' component={LoginPage} />
           <Route exact path='/signup' component={SignUp} />
-
           <Main layout={false} theme={theme}>
             <MainView>
               <Switch>

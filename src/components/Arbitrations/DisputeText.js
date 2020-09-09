@@ -1,11 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+/* eslint-disable */
+import React from 'react';
+import PropTypes from 'prop-types';
 
 // Render a text associated to a dispute.
 const DisputeText = ({ text, ...props }) => {
   // If there is no text, the component doesn’t render anything.
   if (!text.trim()) {
-    return null
+    return null;
   }
 
   return (
@@ -22,15 +23,15 @@ const DisputeText = ({ text, ...props }) => {
     >
       <span>{text}</span>
     </div>
-  )
-}
+  );
+};
 
 DisputeText.propTypes = {
   text: PropTypes.string,
-}
+};
 
 DisputeText.defaultProps = {
   text: '',
-}
+};
 
-export default DisputeText
+export default DisputeText;

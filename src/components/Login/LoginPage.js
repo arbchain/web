@@ -1,47 +1,64 @@
 /* eslint-disable */
 
 import React, { useState } from 'react';
-import { Main, Button, DropDown, Modal, Layout, textStyle } from '@aragon/ui';
+import {
+  Main,
+  Button,
+  DropDown,
+  // Modal,
+  Layout,
+  textStyle,
+  TextInput,
+} from '@aragon/ui';
 import Connection from './Connection.js';
 import BrandLogo from '../../assets/arbchainLogo.png';
 import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js';
 import { useAccount } from '../../wallet/Account.js';
-import SignUp from './SignUp/SignUp';
+import wallet from 'wallet-besu';
+import LoginPageBanner from '../../assets/login-page-banner.png';
+import { Link } from 'react-router-dom';
+import { Input, Result, Spin, Form, Select, Modal } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import 'antd/dist/antd.css';
 
-const accounts = require('../../wallet/keys');
-const networks = require('../../wallet/network');
+const { Option, OptGroup } = Select;
 
-const NODES = Object.keys(networks).map((node) => {
-  return `${networks[node].host}:${networks[node].port}`;
-});
-const ACCOUNTS = accounts.map((node) => {
-  return `${node.name} - (${node.orionPublicKey})`;
-});
+// const accounts = require('../../wallet/keys');
+// const networks = require('../../wallet/network');
+// let walletAccount;
+// let walletAccountMap;
+// const NODES = Object.keys(networks).map((node) => {
+//   return `${networks[node].host}:${networks[node].port}`;
+// });
+// const ACCOUNTS = accounts.map((node) => {
+//   return `${node.name} - (${node.orionPublicKey})`;
+// });
 
 function LoginPage() {
-  const [walletModal, setWalletModal] = useState(false);
-  const [networkModal, setNetworkModal] = useState(false);
+  // state for wallet
+  const [showModal, setshowModal] = useState(false);
+
+  // state for Networselection and Account selection
   const [selected, setSelected] = useState(0);
+  // state for account dropdown
   const [account, setAccount] = useState(0);
-  // const [signUpModal, setSignUpModal] = useState(false);
 
-  // const open = () => setSignUpModal(true);
-  // const close = () => setSignUpModal(false);
+  // handler for password field
+  const [password, setPassword] = useState('');
 
-  const openNetwork = () => {
-    setNetworkModal(true);
-    increaseCount();
+  const openWallet = async () => {
+    const Account = await wallet.login(password);
+    setAccount(Account);
+    console.log(Account);
+    setshowModal(true);
   };
-  const openWallet = () => setWalletModal(true);
-  const closeNetwork = () => setNetworkModal(false);
-  const closeWallet = () => setWalletModal(false);
 
   // This is an action to be invoked onclick
-  const increaseCount = () => increase(20, accounts[account]);
+  // const increaseCount = () => increase(20, accounts[account]);
 
-  const { connected, increase } = increaseCounter(NODES[selected]);
-  const count = fetchCount(NODES[selected], accounts[account]);
-  console.log(count);
+  // const { connected, increase } = increaseCounter(NODES[selected]);
+  // const count = fetchCount(NODES[selected], accounts[account]);
+  // console.log(count);
 
   // Update the account context by using a callback function
   const walletAccount = useAccount();
@@ -57,52 +74,47 @@ function LoginPage() {
           justify-content: space-between;
         `}
       >
-        <Modal visible={walletModal} onClose={closeWallet}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              fontSize: '1.5rem',
-              letterSpacing: '1px',
-              fontWeight: '900',
-              color: '#4D4CBB',
-            }}
-          >
-            Select an account:
-            <DropDown
-              items={ACCOUNTS}
-              selected={account}
-              onChange={setAccount}
-            />
-          </div>
-        </Modal>
-        <Modal visible={networkModal} onClose={closeNetwork}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              fontSize: '1.5rem',
-              letterSpacing: '1px',
-              fontWeight: '900',
-              color: '#4D4CBB',
-            }}
-          >
-            Select a network:
-            <DropDown
-              items={NODES}
-              selected={selected}
-              onChange={setSelected}
-            />
-          </div>
+        {/* login */}
+        <Modal
+          title=" Let's get you Signed in!!"
+          visible={showModal}
+          onCancel={() => setshowModal(false)}
+          onOk={showModal}
+          width={400}
+          footer={null}
+        >
+          <Form layout='vertical' id='form' className='login-form'>
+            <Form.Item label='Select Account' className='login-form'>
+              <Select
+                label='Select Account'
+                defaultValue={account}
+                onChange={(index) => {
+                  console.log(account[index]);
+                  setAccount(index);
+                }}
+              >
+                <OptGroup label='Accounts'>
+                  <Option value={account}>{account}</Option>
+                </OptGroup>
+              </Select>
+            </Form.Item>
+            <Button
+              style={{
+                background: '#4d4cbb',
+                color: '#fff',
+              }}
+              wide
+            >
+              <Link
+                to='/dashboard'
+                style={{ textDecoration: 'none', color: '#fff' }}
+              >
+                Sign In
+              </Link>
+            </Button>
+          </Form>
         </Modal>
 
-        {/* signup modal */}
-
-        {/* <Modal visible={signUpModal} onClose={close}>
-          <SignUp />
-        </Modal> */}
         <div
           style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}
         >
@@ -125,7 +137,7 @@ function LoginPage() {
                 justifyContent: 'center',
                 fontSize: '1.5rem',
                 letterSpacing: '1px',
-                fontWeight: '900',
+
                 color: '#4D4CBB',
               }}
             >
@@ -135,69 +147,55 @@ function LoginPage() {
           <div
             css={`
               text-align: center;
-              margin-top: '5%';
+              margin-top: '10%';
             `}
           >
-            <p>Select a node to get started</p>
+            <h1>Welcome to Arbchain</h1>
           </div>
           <div
             style={{
               marginTop: '10%',
-              textAlign: 'center',
               marginLeft: '10%',
               marginRight: '10%',
             }}
           >
-            <Connection status={connected} />
+            <p>Password</p>
+            <Input.Password
+              value={password}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
+            />
 
-            <Button wide onClick={openNetwork}>
-              <b>Change network</b>
-            </Button>
-          </div>
-          <div
-            style={{
-              textDecorationLine: 'underline',
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '5%',
-            }}
-          >
-            <p>AND</p>
-          </div>
-          <div
-            style={{
-              marginTop: '5%',
-              textAlign: 'center',
-              marginLeft: '10%',
-              marginRight: '10%',
-            }}
-          >
-            <Button wide onClick={openWallet}>
-              Select an account
-            </Button>
-          </div>
-
-          <div
-            style={{
-              marginTop: '5%',
-              textAlign: 'center',
-              marginLeft: '10%',
-              marginRight: '10%',
-            }}
-          >
-            <Button
-              wide
-              style={{ backgroundColor: '#4D4CBB', color: 'white' }}
-              // onClick={open}
+            <div
+              style={{
+                marginTop: '10%',
+                textAlign: 'center',
+              }}
             >
-              Login
-            </Button>
+              <Button
+                style={{
+                  background: '#4d4cbb',
+                  color: '#fff',
+                }}
+                wide
+                onClick={openWallet}
+              >
+                <b>Next</b>
+              </Button>
+            </div>
           </div>
+
           <div style={{ textAlign: 'center', marginTop: '3%' }}>
             <p>
               New to Arbchain?
               <span style={{ color: '#4d4cbb', fontWeight: 'bold' }}>
-                Sign-Up here
+                <Link
+                  to='/signup'
+                  style={{ textDecoration: 'none', marginRight: '1rem' }}
+                >
+                  Sign-Up here
+                </Link>
               </span>
             </p>
           </div>
@@ -228,13 +226,12 @@ function LoginPage() {
             }}
           >
             <img
-              style={{ flexShrink: '0', maxHeight: '40%' }}
-              src={require('../../assets/login-page-banner.png')}
+              style={{ flexShrink: '0', maxHeight: '100%' }}
+              src={LoginPageBanner}
             />
           </div>
         </div>
       </div>
-      <Layout />
     </Main>
   );
 }

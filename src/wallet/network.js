@@ -11,4 +11,4 @@ module.exports = {
     host: 'http://testnet.besu.consensolabs.com',
     port: 20004,
   },
-}
+};

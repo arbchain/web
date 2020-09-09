@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Web3Contract } from '../../utils/web3-contracts'
 
-const ContractAbi = require('../../build/Counter.json')
+const ContractAbi = require('../../build/Counter_abi.json')
 const ContractReceipt = require('../../build/Counter_receipt.json')
 
 const web3Contract = new Web3Contract()

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export default {
   _name: 'court',
   _appearance: 'light',
@@ -10,4 +12,4 @@ export default {
   selected: '#4D4CBB',
   selectedContent: '#FFFFFF',
   selectedDisabled: '#C4CDD5',
-}
+};

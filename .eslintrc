@@ -20,10 +20,11 @@
       "error",
       {
         "singleQuote": true,
-        "semi": false,
+        "semi": true,
         "trailingComma": "es5",
         "bracketSpacing": true,
         "jsxBracketSameLine": false,
+        "printWidth": 100,
         "tabSize": 2
       }
     ],
