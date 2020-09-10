@@ -22,6 +22,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 
 const { Option, OptGroup } = Select;
+const { Password } = Input;
 
 // const accounts = require('../../wallet/keys');
 // const networks = require('../../wallet/network');
@@ -50,7 +51,9 @@ function LoginPage() {
     const Account = await wallet.login(password);
     setAccount(Account);
     console.log(Account);
-    setshowModal(true);
+    if (password.length > 6) {
+      setshowModal(true);
+    }
   };
 
   // This is an action to be invoked onclick
@@ -161,7 +164,7 @@ function LoginPage() {
             }}
           >
             <p>Password</p>
-            <Input.Password
+            <Password
               value={password}
               onChange={(event) => {
                 setPassword(event.target.value);
