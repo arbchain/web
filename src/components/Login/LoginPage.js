@@ -49,6 +49,14 @@ function LoginPage() {
 
   const openWallet = async () => {
     const Account = await wallet.login(password);
+    console.log('ACCOUNT: ', Account);
+
+    //Todo :- validation
+    if (Account == null) {
+      console.log('Account not found');
+      return;
+    }
+
     setAccount(Account);
     console.log(Account);
     if (password.length > 6) {
@@ -164,11 +172,18 @@ function LoginPage() {
             }}
           >
             <p>Password</p>
-            <Password
+            <Input.Password
               value={password}
               onChange={(event) => {
                 setPassword(event.target.value);
               }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+              ]}
+              hasFeedback
             />
 
             <div
