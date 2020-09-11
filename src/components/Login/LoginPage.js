@@ -47,19 +47,23 @@ function LoginPage() {
   // handler for password field
   const [password, setPassword] = useState('');
 
+  const walletAccount = useAccount();
+
   const openWallet = async () => {
-    const Account = await wallet.login(password);
-    console.log('ACCOUNT: ', Account);
+    const account = await wallet.login(password);
+    console.log('ACCOUNT: ', account);
+
+    // Update the account context by using a callback function
+    walletAccount.changeAccount(account[0]);
 
     //Todo :- validation
-    if (Account == null) {
+    if (account == null) {
       console.log('Account not found');
       return;
     }
 
-    setAccount(Account);
-    console.log(Account);
-    if (password.length > 6) {
+    setAccount(account);
+    if (account) {
       setshowModal(true);
     }
   };
@@ -71,9 +75,6 @@ function LoginPage() {
   // const count = fetchCount(NODES[selected], accounts[account]);
   // console.log(count);
 
-  // Update the account context by using a callback function
-  const walletAccount = useAccount();
-  walletAccount.changeAccount(account);
 
   return (
     <Main layout={false}>
