@@ -29,19 +29,21 @@ export function useContract(nodeSelected) {
  * */
 export function createUser(nodeSelected) {
   const { connected } = useContract(nodeSelected);
+  const [status, setStatus] = useState(null);
 
   const newUserCreation = useCallback(
     async (name, zipCode, contactNumber, orionPublicKey, role, account) => {
-      return web3Contract.call(
+      const result = await web3Contract.call(
         'createUser',
         [name, zipCode, contactNumber, orionPublicKey, role],
         account
       );
+      setStatus(result);
     },
     [connected]
   );
 
-  return { connected, newUserCreation };
+  return { status, newUserCreation };
 }
 
 /**

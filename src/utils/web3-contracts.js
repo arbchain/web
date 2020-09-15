@@ -66,6 +66,8 @@ export class Web3Contract {
         functionAbi.outputs,
         result.output
       );
+    } else {
+      return result;
     }
   }
 

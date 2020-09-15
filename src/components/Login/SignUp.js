@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Steps, Select, Form, Button, Input } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { Steps, Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
 import { Main } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
 
-// Destructing
-//const { Header, Content, Footer, Sider } = Layout;
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
 
@@ -55,6 +54,20 @@ const validateMessages = {
   },
 };
 
+// Toast message
+
+const openSuccessNotification = (type) => {
+  notification[type]({
+    message: 'User Account has been created, please Login to continue',
+  });
+};
+
+const openWarningNotification = (type) => {
+  notification[type]({
+    message: 'Please enter all the fields in the Form!',
+  });
+};
+
 const Signup = () => {
   // state for stepper
   const [current, setCurrent] = useState(0);
@@ -83,6 +96,8 @@ const Signup = () => {
   // state for account dropdown
   const [account, setAccount] = useState(0);
 
+  let history = useHistory();
+
   // Stepper Handler
   function next() {
     setCurrent(current + 1);
@@ -107,21 +122,36 @@ const Signup = () => {
 
   // Network selection
 
-  const { connected, newUserCreation } = createUser(NODES[network]);
+  const { status, newUserCreation } = createUser(NODES[network]);
 
   // This is an action to be invoked onclick
-  const registerUser = () =>
-    newUserCreation(name, zip, phone, 'TestOrianKey', role, accounts[account]);
+  async function registerUser() {
+    await newUserCreation(
+      name,
+      zip,
+      phone,
+      'TestOrianKey',
+      role,
+      accounts[account]
+    );
 
+    wallet.create(password, 'TestOrianKey').then((res) => {
+      console.log('Wallet Created', res);
+      if (res) {
+        openSuccessNotification('success');
+        setTimeout(() => {
+          history.push('/login');
+        }, 3000);
+      } else {
+        openWarningNotification('warning');
+      }
+    });
+  }
   // Test
 
-  console.log(name);
-  console.log(zip);
-  console.log(phone);
-  console.log(email);
-  console.log(role);
-  console.log(password);
-
+  // if (status != null) {
+  //   openNotification('success');
+  // }
   let networkSelection = (
     <Form
       {...layout}
@@ -153,7 +183,6 @@ const Signup = () => {
         {...layout}
         id='form'
         name='nest-messages'
-        // onFinish={registerUser}
         validateMessages={validateMessages}
       >
         <Form.Item
@@ -209,7 +238,14 @@ const Signup = () => {
           <Input value={email} onChange={(e) => setEmail(e.target.value)} />
         </Form.Item>
 
-        <Form.Item label='Role'>
+        <Form.Item
+          label='Role'
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Select label='Role' defaultValue='Role' onChange={selectRole}>
             <OptGroup label='Networks'>
               <Option value={0}>Party</Option>
@@ -218,18 +254,19 @@ const Signup = () => {
             </OptGroup>
           </Select>
         </Form.Item>
-        <Form.Item label='Password'>
+        <Form.Item
+          label='Password'
+          rules={[
+            {
+              required: true,
+            },
+          ]}
+        >
           <Input.Password
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Item>
-
-        {/* <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-          <Button type='primary' htmlType='submit'>
-            Sign up
-          </Button>
-        </Form.Item> */}
       </Form>
     </>
   );
@@ -269,12 +306,6 @@ const Signup = () => {
             </OptGroup>
           </Select>
         </Form.Item>
-
-        {/* <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-      <Button type='primary' htmlType='submit'>
-        Sign up
-      </Button>
-    </Form.Item> */}
       </Form>
     </>
   );
