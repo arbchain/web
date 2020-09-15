@@ -10,8 +10,8 @@ const ContractAbi = require('../../build/SPC_abi.json');
 const Web3 = require('web3');
 const ContractBin = require('../../build/SPC_bin.json').binary;
 const ContractReceipt = {
-  contractAddress: '0x0be9778d4e338e4076471cddec8e65a7f8a6d6ed',
-  privacyGroupId: '65CdeS17zbPOw3BNnU3AmiDj6wO3fIJaNUt7RqfuwwE=',
+  contractAddress: '0x006f236c8b8bff6a6253ba7a8b61d89d33d0120f',
+  privacyGroupId: 'Kgiru9TPQao+OUOxqXu2Ol3wVcK2wMlfMi+/4oWAO7Q=',
 };
 const web3Contract = new Web3Contract();
 
@@ -320,23 +320,23 @@ export function setLanguage(nodeSelected) {
 // getter function
 // Rest all getter functions to added further as needed.
 
-export function getArbitratorLength(nodeSelected, account) {
+export function getArbitrationDetails(nodeSelected, account) {
   const { connected } = useContract(nodeSelected);
-  const [length, setLength] = useState(0);
+  const [arbitrationDetails, setArbitrationDetails] = useState([]);
 
   useEffect(() => {
-    async function spcCall() {
+    async function getDetails() {
       try {
         if (connected) {
-          const len = await web3Contract.call('getArbitratorLength', [], account);
-          setLength(len);
+          const res = await web3Contract.call('getArbitrationDetails', [], account);
+          setArbitrationDetails(res);
         }
       } catch (err) {
         return false;
       }
     }
-    spcCall();
+    getDetails();
   }, [connected, account]);
 
-  return length;
+  return arbitrationDetails;
 }

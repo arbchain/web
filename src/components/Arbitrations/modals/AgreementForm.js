@@ -218,6 +218,9 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
                 docHash,
               ]);
               createProcedureContract(account, [
+                'Test Arbitration',
+                'A simple test arbitration',
+                '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
                 '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
                 '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
                 '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',

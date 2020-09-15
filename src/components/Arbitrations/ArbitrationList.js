@@ -16,6 +16,7 @@ import {
 import AgreementForm from './modals/AgreementForm';
 
 import { fetchAgreement } from '../../lib/contracts/Agreement.js';
+import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
 import DisputeCard from './DisputeCard';
 
@@ -37,7 +38,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const walletAccount = useAccount();
 
   const agreementDetails = fetchAgreement(NODES[selected], accounts[walletAccount.account]);
-  console.log(agreementDetails);
+  const arbitrationDetails = getArbitrationDetails(
+    NODES[selected],
+    accounts[walletAccount.account]
+  );
+  console.log('Aggreement Details', agreementDetails);
+  console.log('Arbitration Details:', arbitrationDetails);
 
   return (
     <div>

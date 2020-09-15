@@ -7,8 +7,8 @@ const ContractAbi = require('../../build/ArbitrationAgreement_abi.json')
 const Web3 = require('web3')
 const ContractBin = require('../../build/ArbitrationAgreement_bin.json').binary
 const ContractReceipt = {
-  contractAddress: '0x7095807ac6a7d58035e2750eaa3bfd90146c461d',
-  privacyGroupId: "afOSOq5kUQQOdVMcWvxqwUUzvs3eHhayT8LMnqARNz8="
+  contractAddress: "0xd76efda45bf931b15b5050749e95e3fc57392a31",
+  privacyGroupId: "guiCcLZ+dt2YFUTRxEZLpb2itJItxc26f7r1nDlpJBk="
 }
 const web3Contract = new Web3Contract()
 
