@@ -1,7 +1,7 @@
 module.exports = [
   {
     name: 'node1',
-    url: 'http://testnet.besu.consensolabs.com:20000',
+    url: 'http://testnet.arbchain.xyz:20000',
     orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
     privateKey:
       '8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63',
@@ -20,4 +20,4 @@ module.exports = [
     orionPublicKey: 'k2zXEin4Ip/qBGlRkJejnGWdP9cjkK+DAvKNW31L2C8=',
     url: 'http://testnet.besu.consensolabs.com:20004',
   },
-]
+];

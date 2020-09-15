@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Steps, Select, Form, Button, Input } from 'antd';
 import wallet from 'wallet-besu';
 import { Main } from '@aragon/ui';
+import { createUser } from '../../lib/contracts/MasterContract';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
 
@@ -9,6 +10,18 @@ import './SingnUp.Style.css';
 //const { Header, Content, Footer, Sider } = Layout;
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
+
+const accounts = require('../../wallet/keys.js');
+const networks = require('../../wallet/network.js');
+console.log('ACCOUNTS', accounts);
+
+const NODES = Object.keys(networks).map((node) => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
+
+const ACCOUNTS = accounts.map((node) => {
+  return `${node.name} - (${node.orionPublicKey})`;
+});
 
 // Form Layout
 const layout = {
@@ -67,6 +80,9 @@ const Signup = () => {
   // password
   const [password, setPassword] = useState('');
 
+  // state for account dropdown
+  const [account, setAccount] = useState(0);
+
   // Stepper Handler
   function next() {
     setCurrent(current + 1);
@@ -74,10 +90,6 @@ const Signup = () => {
 
   function prev() {
     setCurrent(current - 1);
-  }
-
-  function handleChange(value) {
-    console.log(`selected ${value}`);
   }
 
   // Form Handlers
@@ -92,6 +104,14 @@ const Signup = () => {
     console.log(`Selected role : ${value}`);
     setNetwork(value);
   }
+
+  // Network selection
+
+  const { connected, newUserCreation } = createUser(NODES[network]);
+
+  // This is an action to be invoked onclick
+  const registerUser = () =>
+    newUserCreation(name, zip, phone, 'TestOrianKey', role, accounts[account]);
 
   // Test
 
@@ -192,8 +212,9 @@ const Signup = () => {
         <Form.Item label='Role'>
           <Select label='Role' defaultValue='Role' onChange={selectRole}>
             <OptGroup label='Networks'>
-              <Option value={role}>Arbitrator</Option>
-              <Option value='Role2'>Claiment</Option>
+              <Option value={0}>Party</Option>
+              <Option value={1}>Arbitrator</Option>
+              <Option value={2}>Arbitratral Court</Option>
             </OptGroup>
           </Select>
         </Form.Item>
@@ -221,28 +242,30 @@ const Signup = () => {
         {...layout}
         id='form'
         name='nest-messages'
-        // onFinish={registerUser}
+        onFinish={registerUser}
         validateMessages={validateMessages}
       >
         <Form.Item name={['user', 'name']} label='Name'>
-          <Input value={name} />
+          <Input value={name} readOnly />
         </Form.Item>
 
         <Form.Item name='zip' label='Zip Code'>
-          <Input style={{ width: '100%' }} value={zip} />
+          <Input style={{ width: '100%' }} value={zip} readOnly />
         </Form.Item>
 
         <Form.Item name='phone' label='Phone Number'>
-          <Input value={phone} />
+          <Input value={phone} readOnly />
         </Form.Item>
         <Form.Item name={['user', 'email']} label='Email'>
-          <Input value={email} />
+          <Input value={email} readOnly />
         </Form.Item>
 
         <Form.Item label='Role'>
           <Select label='Role' defaultValue='Role'>
             <OptGroup label='Networks'>
-              <Option value={role}>Arbitrator</Option>
+              <Option value={role} readOnly>
+                Arbitrator
+              </Option>
             </OptGroup>
           </Select>
         </Form.Item>
@@ -288,10 +311,7 @@ const Signup = () => {
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button
-              type='primary'
-              // onClick={() => message.success('Processing complete!')}
-            >
+            <Button type='primary' onClick={registerUser}>
               Sign up
             </Button>
           )}
