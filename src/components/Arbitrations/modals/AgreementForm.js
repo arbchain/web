@@ -6,8 +6,8 @@ import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { createAgreement } from '../../../lib/contracts/Agreement';
-import { deployProcedureContract } from '../../../lib/contracts/SPC';
+import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
+import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 import { addAgreementContract } from '../../../lib/contracts/MasterContract';
 const Web3 = require('web3');
 const antIcon = (
@@ -40,16 +40,15 @@ export default function AgreementForm({
     setAgreementSubmit(false);
     setResult(false);
   };
-  const { result, setResult, create } = createAgreement(node);
+  const { result, agreementAdditionStatus, setResult, create } = createAgreement(node);
   const {
     resultProcedureContract,
-    setResultProcedure,
+    procedureAdditionStatus,
     createProcedureContract,
   } = deployProcedureContract(node);
 
-  const { status, agreementAddition } = addAgreementContract(node);
-
-  console.log('Status', status);
+  console.log('Agreement Addition Status', agreementAdditionStatus);
+  console.log('Procedure Addition Staus', procedureAdditionStatus);
   console.log(' Agreement Contract', result);
   console.log('Procedure Contract', resultProcedureContract);
 

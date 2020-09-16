@@ -5,22 +5,23 @@ import { useHistory } from 'react-router-dom';
 import { Steps, Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
 import { Main } from '@aragon/ui';
-import { createUser } from '../../lib/contracts/MasterContract';
+import { Web3Contract } from '../../utils/web3-contracts';
+import { createUser, userMap } from '../../lib/contracts/MasterContract';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
 
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
 
-const accounts = require('../../wallet/keys.js');
+const Accounts = require('../../wallet/keys.js');
 const networks = require('../../wallet/network.js');
-console.log('ACCOUNTS', accounts);
+console.log('ACCOUNTS', Accounts);
 
 const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ACCOUNTS = accounts.map(node => {
+const ACCOUNTS = Accounts.map(node => {
   return `${node.name} - (${node.orionPublicKey})`;
 });
 
@@ -125,12 +126,13 @@ const Signup = () => {
   // Network selection
 
   const { status, newUserCreation } = createUser(NODES[network]);
+  const { userData, getUserData } = userMap(NODES[network]);
 
   // This is an action to be invoked onclick
   async function registerUser() {
-    await newUserCreation(name, zip, phone, 'TestOrianKey', role, accounts[account]);
+    await newUserCreation(name, zip, phone, 'TestOrionKey', role, Accounts[account]);
 
-    wallet.create(password, 'TestOrianKey').then(res => {
+    wallet.create(password, 'TestOrionKey').then(res => {
       console.log('Wallet Created', res);
       if (res) {
         openSuccessNotification('success');

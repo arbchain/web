@@ -14,6 +14,12 @@ export class Web3Contract {
     }
   }
 
+  async fromPrivateKeyToPublic(account){
+
+    const publicKey = await this.web3.eth.accounts.privateKeyToAccount(`0x{account}`);
+    return publicKey
+  }
+
   async createPrivacyGroup(participants, account) {
     console.log(account);
     const privacyGroup = await this.web3.privx.createPrivacyGroup({

@@ -51,19 +51,21 @@ export function createUser(nodeSelected) {
  * */
 export function addProcedureContract(nodeSelected) {
   const { connected } = useContract(nodeSelected);
+  const [procedureAdditionStatus, setStatus] = useState(null);
 
-  const contractAddition = useCallback(
+  const procedureContractAddition = useCallback(
     async (contractAddress, groupId, account) => {
-      return web3Contract.call(
+      const result = await web3Contract.call(
         'addProcedureContract',
         [contractAddress, groupId],
         account
       );
+      setStatus(result)
     },
     [connected]
   );
 
-  return { connected, contractAddition };
+  return { procedureAdditionStatus, procedureContractAddition };
 }
 
 /**
@@ -71,19 +73,21 @@ export function addProcedureContract(nodeSelected) {
  * */
 export function addAgreementContract(nodeSelected) {
   const { connected } = useContract(nodeSelected);
+  const [agreementAdditionStatus, setStatus] = useState(null);
 
-  const contractAddition = useCallback(
+  const agreementContractAddition = useCallback(
     async (contractAddress, groupId, account) => {
-      return web3Contract.call(
+      const result = await web3Contract.call(
         'addAgreementContract',
         [contractAddress, groupId],
         account
       );
+      setStatus(result)
     },
     [connected]
   );
 
-  return { connected, contractAddition };
+  return { agreementAdditionStatus, agreementContractAddition };
 }
 
 /**
@@ -196,4 +200,23 @@ export function getProcedureAddress(nodeSelected, account) {
   }, [connected, account]);
 
   return address;
+}
+
+export function userMap(nodeSelected) {
+  const {connected} = useContract(nodeSelected);
+  const [userData, setUserData] = useState(null)
+
+  const getUserData = useCallback(
+    async (userAddress, account) => {
+      const result = await web3Contract.call(
+        'userMap',
+        [userAddress],
+        account
+      );
+      setUserData(result);
+    },
+    [connected]
+  );
+
+  return { userData, getUserData };
 }
