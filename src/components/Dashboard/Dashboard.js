@@ -1,19 +1,21 @@
-import React from 'react'
-import Card from '@aragon/ui/dist/Card'
-import active from '../../assets/active.svg'
-import inactive from '../../assets/inactive.svg'
-import totalcost from '../../assets/totalcost.svg'
-import ChartComponent from './ChartComponent'
-import agreement1 from '../../assets/agreement 1.svg'
-import agreement2 from '../../assets/agreement 2.svg'
-import notasksfound from '../../assets/notasksfound.svg'
+/* eslint-disable */
+
+import React from 'react';
+import Card from '@aragon/ui/dist/Card';
+import active from '../../assets/active.svg';
+import inactive from '../../assets/inactive.svg';
+import totalcost from '../../assets/totalcost.svg';
+import ChartComponent from './ChartComponent';
+import agreement1 from '../../assets/agreement 1.svg';
+import agreement2 from '../../assets/agreement 2.svg';
+import notasksfound from '../../assets/notasksfound.svg';
 // import TaskTable from './TaskTable'
 // import { tasks } from '../../mock-data'
-import { Header, Split, Box, DropDown } from '@aragon/ui'
+import { Header, Split, Box, DropDown } from '@aragon/ui';
 
-var green = '#219653'
-var orange = '#FF7A3C'
-var primary = '#52006F'
+var green = '#219653';
+var orange = '#FF7A3C';
+var primary = '#52006F';
 
 function Dashboard() {
   // TODO - only for testing we need to use the  connected account
@@ -22,7 +24,7 @@ function Dashboard() {
 
   return (
     <React.Fragment>
-      <Header primary="Dashboard" />
+      <Header primary='Dashboard' />
       <div
         style={{
           display: 'grid',
@@ -35,13 +37,13 @@ function Dashboard() {
         }}
       >
         <div style={{ width: '100%' }}>
-          <Box heading="Dispute stats">
+          <Box heading='Dispute stats'>
             <div>
               <div style={{ display: 'flex' }}>
                 <Card
                   style={{ margin: '0.5rem', padding: '0rem' }}
-                  width="8rem"
-                  height="8rem"
+                  width='8rem'
+                  height='8rem'
                 >
                   <div>
                     <img src={active} />
@@ -51,8 +53,8 @@ function Dashboard() {
                 </Card>
                 <Card
                   style={{ margin: '0.5rem', padding: '0rem' }}
-                  width="8rem"
-                  height="8rem"
+                  width='8rem'
+                  height='8rem'
                 >
                   <div>
                     <img src={inactive} />
@@ -68,8 +70,8 @@ function Dashboard() {
                     padding: '0rem',
                     backgroundColor: primary,
                   }}
-                  width="8rem"
-                  height="8rem"
+                  width='8rem'
+                  height='8rem'
                 >
                   <div>
                     <img src={totalcost} />
@@ -82,7 +84,7 @@ function Dashboard() {
           </Box>
         </div>
         <div style={{ width: '100%' }}>
-          <Box heading="Activity">
+          <Box heading='Activity'>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <DropDown items={['Monthly', 'Monthly', 'Monthly']} />
             </div>
@@ -106,7 +108,7 @@ function Dashboard() {
         }}
       >
         <div style={{ width: '100%', margin: '0rem', padding: '0rem' }}>
-          <Box padding="0" heading="Documents Submitted">
+          <Box padding='0' heading='Documents Submitted'>
             <div style={{ marginTop: '1rem', display: 'flex' }}>
               <Split
                 primary={
@@ -120,8 +122,8 @@ function Dashboard() {
                   >
                     <Card
                       style={{ margin: '0.5rem', padding: '0rem' }}
-                      width="8rem"
-                      height="8rem"
+                      width='8rem'
+                      height='8rem'
                     >
                       <div>
                         <img src={agreement1} />
@@ -131,8 +133,8 @@ function Dashboard() {
                     </Card>
                     <Card
                       style={{ margin: '0.5rem', padding: '0rem' }}
-                      width="8rem"
-                      height="8rem"
+                      width='8rem'
+                      height='8rem'
                     >
                       <div>
                         <img src={agreement2} />
@@ -147,7 +149,7 @@ function Dashboard() {
           </Box>
         </div>
         <div style={{ width: '100%', textAlign: 'center' }}>
-          <Box heading="Actions needed">
+          <Box heading='Actions needed'>
             <div style={{ marginTop: '1rem' }}>
               <div>
                 <img src={notasksfound} />
@@ -160,7 +162,7 @@ function Dashboard() {
         </div>
       </div>
     </React.Fragment>
-  )
+  );
 }
 
-export default Dashboard
+export default Dashboard;

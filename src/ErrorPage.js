@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react'
 import { Main } from '@aragon/ui'
 import { Link } from 'react-router-dom'

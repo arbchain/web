@@ -1,32 +1,36 @@
-import React from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import { Main } from '@aragon/ui'
+/* eslint-disable */
 
-import theme from './theme-court'
+import React from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Main } from '@aragon/ui';
 
-import MainView from './components/MainView'
-import ErrorPage from './ErrorPage'
+import theme from './theme-court';
 
-import LoginPage from './components/Login/LoginPage'
-import Dashboard from './components/Dashboard/Dashboard'
-import Profile from './components/Profile/Profile'
-import Arbitrations from './components/Arbitrations/Arbitrations'
-import { ActivityProvider } from './components/Activity/ActivityProvider'
-import { AccountProvider } from './wallet/Account.js'
+import MainView from './components/MainView';
+import ErrorPage from './ErrorPage';
+
+import LoginPage from './components/Login/LoginPage';
+import SignUp from './components/Login/SignUp';
+import Dashboard from './components/Dashboard/Dashboard';
+import Profile from './components/Profile/Profile';
+import Arbitrations from './components/Arbitrations/Arbitrations';
+import { ActivityProvider } from './components/Activity/ActivityProvider';
+import { AccountProvider } from './wallet/Account.js';
 
 function App() {
   return (
     <AccountProvider>
       <BrowserRouter>
         <ActivityProvider>
-          <Route exact path="/login" component={LoginPage} />
+          <Route exact path='/login' component={LoginPage} />
+          <Route exact path='/signup' component={SignUp} />
           <Main layout={false} theme={theme}>
             <MainView>
               <Switch>
-                <Route exact path="/" component={Dashboard} />
-                <Route exact path="/dashboard" component={Dashboard} />
-                <Route exact path="/arbitrations" component={Arbitrations} />
-                <Route path="/profile" component={Profile} />
+                <Route exact path='/' component={Dashboard} />
+                <Route exact path='/dashboard' component={Dashboard} />
+                <Route exact path='/arbitrations' component={Arbitrations} />
+                <Route path='/profile' component={Profile} />
                 <Route component={ErrorPage} />
               </Switch>
             </MainView>
@@ -34,7 +38,7 @@ function App() {
         </ActivityProvider>
       </BrowserRouter>
     </AccountProvider>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,12 +1,12 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { GU, textStyle, useTheme } from '@aragon/ui'
-import { getRelativeTime } from '../../utils/date-utils'
-import useNow from '../../hooks/useNow'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { GU, textStyle, useTheme } from '@aragon/ui';
+import { getRelativeTime } from '../../utils/date-utils';
+import useNow from '../../hooks/useNow';
 
 function TimeTag({ date, label, ...props }) {
-  const theme = useTheme()
-  const now = useNow()
+  const theme = useTheme();
+  const now = useNow();
   return (
     <div
       css={`
@@ -21,12 +21,12 @@ function TimeTag({ date, label, ...props }) {
     >
       {label || getRelativeTime(now, date)}
     </div>
-  )
+  );
 }
 
 TimeTag.propTypes = {
   date: PropTypes.number.isRequired, // unix timestamp
   label: PropTypes.node,
-}
+};
 
-export default TimeTag
+export default TimeTag;

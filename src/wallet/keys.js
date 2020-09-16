@@ -11,7 +11,7 @@ module.exports = [
     privateKey:
       'c87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3',
     orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
-    url: 'http://testnet.besu.consensolabs.com:20001',
+    url: 'http://testnet.besu.consensolabs.com:20002',
   },
   {
     name: 'node3',
@@ -20,4 +20,4 @@ module.exports = [
     orionPublicKey: 'k2zXEin4Ip/qBGlRkJejnGWdP9cjkK+DAvKNW31L2C8=',
     url: 'http://testnet.besu.consensolabs.com:20004',
   },
-]
+];
