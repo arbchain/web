@@ -1,13 +1,20 @@
 import React from 'react'
 
 import { Box, Button, GU, textStyle, useViewport } from '@aragon/ui'
+import { useAccount } from '../../wallet/Account.js';
+import wallet from 'wallet-besu';
 
 import ProfileIcon from '../../assets/profile.png'
 import ANJBadgeIcon from '../../assets/anjBadge.svg'
 import IconCheck from '../../assets/IconCheck.svg'
 
+const Web3 = require("web3")
+const web3 = new Web3("http://localhost:8545");
+
 export default function ProfileHeader({ active }) {
   const { below } = useViewport()
+  const walletAccount = useAccount();
+  console.log(wallet.getAddress())
   // const theme = useTheme()
 
   return (
@@ -60,7 +67,7 @@ export default function ProfileHeader({ active }) {
                   margin-right: ${2 * GU}px;
                 `}
               >
-                Eliza Stewart
+                {web3.eth.accounts.privateKeyToAccount(walletAccount.account).address}
               </span>
               {active && (
                 <div

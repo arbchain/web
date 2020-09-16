@@ -1,4 +1,5 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
+
 import { Result, Spin } from 'antd';
 import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
@@ -9,7 +10,9 @@ import { createAgreement } from '../../../lib/contracts/Agreement';
 import { deployProcedureContract } from '../../../lib/contracts/SPC';
 import { addAgreementContract } from '../../../lib/contracts/MasterContract';
 const Web3 = require('web3');
-const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
+const antIcon = (
+  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
+);
 
 const counterParties = [
   '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
@@ -17,7 +20,12 @@ const counterParties = [
 ];
 const languages = ['English', 'French', 'Spanish'];
 
-export default function AgreementForm({ agreementModal, setAgreementModal, account, node }) {
+export default function AgreementForm({
+  agreementModal,
+  setAgreementModal,
+  account,
+  node,
+}) {
   const theme = useTheme();
 
   const [disputeType, setDisputeType] = useState(0);
@@ -77,7 +85,7 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
   };
 
   return (
-    <Modal width="50rem" visible={agreementModal} onClose={closeAgreement}>
+    <Modal width='50rem' visible={agreementModal} onClose={closeAgreement}>
       <div
         style={{
           fontSize: '1.5rem',
@@ -93,8 +101,8 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
       {agreementSubmit ? (
         result ? (
           <Result
-            status="success"
-            title="Successfully created Arbitration Agreement!"
+            status='success'
+            title='Successfully created Arbitration Agreement!'
             subTitle={'Transaction ID: ' + result.transactionHash}
             extra={[
               <Button
@@ -160,7 +168,7 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
             <TextInput
               style={{ flexBasis: '100%' }}
               value={seat}
-              onChange={event => {
+              onChange={(event) => {
                 setSeat(event.target.value);
               }}
             />
@@ -198,7 +206,7 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
             <div style={{ flexBasis: '100%' }}>
               <DropDown
                 style={{ borderColor: '#D9D9D9' }}
-                items={counterParties.map(party => {
+                items={counterParties.map((party) => {
                   return party.slice(0, 20) + '...';
                 })}
                 selected={counterParty}
@@ -221,14 +229,14 @@ export default function AgreementForm({ agreementModal, setAgreementModal, accou
             <TextInput
               style={{ flexBasis: '100%' }}
               value={docHash}
-              onChange={event => {
+              onChange={(event) => {
                 setDocHash(event.target.value);
               }}
             />
           </div>
 
           <Button
-            label="SUBMIT"
+            label='SUBMIT'
             style={{
               backgroundColor: theme.selected,
               color: 'white',

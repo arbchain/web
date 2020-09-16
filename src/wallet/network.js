@@ -5,10 +5,10 @@ module.exports = {
   },
   node2: {
     host: 'http://testnet.besu.consensolabs.com',
-    port: 20001,
+    port: 20002,
   },
   node3: {
     host: 'http://testnet.besu.consensolabs.com',
     port: 20004,
   },
-}
+};

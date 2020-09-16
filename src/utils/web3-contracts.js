@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const Web3 = require('web3');
 const EEAClient = require('web3-besu');
 
@@ -32,13 +34,15 @@ export class Web3Contract {
   }
 
   async call(name, args, account) {
-    const functionAbi = this.Contract._jsonInterface.find(e => {
+    const functionAbi = this.Contract._jsonInterface.find((e) => {
       return e.name === name;
     });
 
     let functionArgs = [];
     if (functionAbi.inputs.length) {
-      functionArgs = this.web3.eth.abi.encodeParameters(functionAbi.inputs, args).slice(2);
+      functionArgs = this.web3.eth.abi
+        .encodeParameters(functionAbi.inputs, args)
+        .slice(2);
     }
 
     const functionCall = {
@@ -49,14 +53,19 @@ export class Web3Contract {
       privacyGroupId: this.privacyGroupId,
     };
 
-    const transactionHash = await this.web3.eea.sendRawTransaction(functionCall);
+    const transactionHash = await this.web3.eea.sendRawTransaction(
+      functionCall
+    );
     const result = await this.web3.priv.getTransactionReceipt(
       transactionHash,
       account.orionPublicKey
     );
 
     if (parseInt(result.output)) {
-      return this.web3.eth.abi.decodeParameters(functionAbi.outputs, result.output);
+      return this.web3.eth.abi.decodeParameters(
+        functionAbi.outputs,
+        result.output
+      );
     } else {
       return result;
     }
@@ -67,14 +76,16 @@ export class Web3Contract {
     const privacyGroupId = privacyGroup.privacyGroupId;
     this.Contract = new this.web3.eth.Contract(contractAbi);
 
-    const constructorAbi = this.Contract._jsonInterface.find(e => {
+    const constructorAbi = this.Contract._jsonInterface.find((e) => {
       return e.type === 'constructor';
     });
 
     let constructorArgs = '';
 
     if (constructorAbi && args.length) {
-      constructorArgs = this.web3.eth.abi.encodeParameters(constructorAbi.inputs, args).slice(2);
+      constructorArgs = this.web3.eth.abi
+        .encodeParameters(constructorAbi.inputs, args)
+        .slice(2);
     }
 
     const contractOptions = {
@@ -84,7 +95,9 @@ export class Web3Contract {
       privateKey: account.privateKey,
     };
 
-    const transactionHash = await this.web3.eea.sendRawTransaction(contractOptions);
+    const transactionHash = await this.web3.eea.sendRawTransaction(
+      contractOptions
+    );
     const result = await this.web3.priv.getTransactionReceipt(
       transactionHash,
       account.orionPublicKey
@@ -94,11 +107,11 @@ export class Web3Contract {
   }
 
   async documentSigning(name, args, account) {
-    const functionAbi = this.Contract._jsonInterface.find(e => {
+    const functionAbi = this.Contract._jsonInterface.find((e) => {
       return e.name === name;
     });
 
-    const nonceFunctionAbi = this.Contract._jsonInterface.find(e => {
+    const nonceFunctionAbi = this.Contract._jsonInterface.find((e) => {
       return e.name === 'replayNonce';
     });
 
@@ -114,7 +127,9 @@ export class Web3Contract {
       privacyGroupId: this.privacyGroupId,
     };
 
-    const nonceTransactionHash = await this.web3.eea.sendRawTransaction(nonceFunctionCall);
+    const nonceTransactionHash = await this.web3.eea.sendRawTransaction(
+      nonceFunctionCall
+    );
     const nonceResult = await this.web3.priv.getTransactionReceipt(
       nonceTransactionHash,
       account.orionPublicKey
@@ -129,7 +144,9 @@ export class Web3Contract {
       ['bytes32', 'uint'],
       [this.web3.utils.keccak256(args[0]), replayNonce],
     ];
-    const paramsHash = this.web3.utils.keccak256(this.web3.eth.abi.encodeParameters(...params));
+    const paramsHash = this.web3.utils.keccak256(
+      this.web3.eth.abi.encodeParameters(...params)
+    );
     const signature = await account.sign(paramsHash);
 
     const functionArgs = this.web3.eth.abi
@@ -148,13 +165,18 @@ export class Web3Contract {
       privacyGroupId: this.privacyGroupId,
     };
 
-    const transactionHash = await this.web3.eea.sendRawTransaction(functionCall);
+    const transactionHash = await this.web3.eea.sendRawTransaction(
+      functionCall
+    );
     const result = await this.web3.priv.getTransactionReceipt(
       transactionHash,
       account.orionPublicKey
     );
     if (parseInt(result.output)) {
-      return this.web3.eth.abi.decodeParameters(functionAbi.outputs, result.output);
+      return this.web3.eth.abi.decodeParameters(
+        functionAbi.outputs,
+        result.output
+      );
     }
   }
 }

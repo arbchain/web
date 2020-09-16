@@ -1,15 +1,17 @@
-import environment from './environment'
-import { getNetworkType, isLocalOrUnknownNetwork } from './lib/web3-utils'
-import { getDefaultEthNode, getIpfsGateway } from './local-settings'
+/* eslint-disable */
 
-const SUBGRAPH_NAME = environment('SUBGRAPH_NAME')
+import environment from './environment';
+import { getNetworkType, isLocalOrUnknownNetwork } from './lib/web3-utils';
+import { getDefaultEthNode, getIpfsGateway } from './local-settings';
 
-export const RINKEBY_COURT = '0xb5ffbe75fa785725eea5f931b64fc04e516c9c5d'
+const SUBGRAPH_NAME = environment('SUBGRAPH_NAME');
+
+export const RINKEBY_COURT = '0xb5ffbe75fa785725eea5f931b64fc04e516c9c5d';
 export const RINKEBY_USABILITY_COURT =
-  '0x44f788370206696b20B94BC77c4f73Ca264aa05E'
+  '0x44f788370206696b20B94BC77c4f73Ca264aa05E';
 
 export const RINKEBY_STAGING_COURT =
-  '0x52180Af656A1923024D1ACcF1D827AB85cE48878'
+  '0x52180Af656A1923024D1ACcF1D827AB85cE48878';
 
 export const networkConfigs = {
   main: {
@@ -38,31 +40,31 @@ export const networkConfigs = {
       defaultEth: 'http://localhost:8545',
     },
   },
-}
+};
 
 export function getInternalNetworkName() {
-  return isLocalOrUnknownNetwork() ? 'local' : getNetworkType()
+  return isLocalOrUnknownNetwork() ? 'local' : getNetworkType();
 }
 
 export function getNetworkConfig() {
-  return networkConfigs[getInternalNetworkName()]
+  return networkConfigs[getInternalNetworkName()];
 }
 
-export const networkAgentAddress = getNetworkConfig().network_agent
+export const networkAgentAddress = getNetworkConfig().network_agent;
 
-export const networkReserveAddress = getNetworkConfig().network_reserve
+export const networkReserveAddress = getNetworkConfig().network_reserve;
 
 function getRinkebyCourtAddress(subGraphName) {
   if (subGraphName === 'usability') {
-    return RINKEBY_USABILITY_COURT
+    return RINKEBY_USABILITY_COURT;
   }
   if (subGraphName === 'staging') {
-    return RINKEBY_STAGING_COURT
+    return RINKEBY_STAGING_COURT;
   }
-  return RINKEBY_COURT
+  return RINKEBY_COURT;
 }
 
 export const defaultEthNode =
-  getDefaultEthNode() || getNetworkConfig().nodes.defaultEth
+  getDefaultEthNode() || getNetworkConfig().nodes.defaultEth;
 
-export const defaultIpfsGateway = getIpfsGateway()
+export const defaultIpfsGateway = getIpfsGateway();
