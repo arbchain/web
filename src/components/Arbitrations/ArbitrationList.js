@@ -42,6 +42,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     NODES[selected],
     accounts[walletAccount.account]
   );
+
   console.log('Aggreement Details', agreementDetails);
   console.log('Arbitration Details:', arbitrationDetails);
 

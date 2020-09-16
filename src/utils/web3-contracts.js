@@ -57,6 +57,8 @@ export class Web3Contract {
 
     if (parseInt(result.output)) {
       return this.web3.eth.abi.decodeParameters(functionAbi.outputs, result.output);
+    } else {
+      return result;
     }
   }
 

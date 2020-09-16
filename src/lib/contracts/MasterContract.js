@@ -2,26 +2,27 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Web3Contract } from '../../utils/web3-contracts'
 
-const ContractAbi = require('../../build/MasterContract_bin.json')
+const ContractAbi = require('../../build/MasterContract_abi.json')
 const ContractReceipt = require('../../build/MasterContract_receipt.json')
 
 const web3Contract = new Web3Contract()
 
 export function useContract(nodeSelected) {
-    const [connected, setConnected] = useState(false)
-
+    const [connected, setConnected] = useState(false);
+  
     useMemo(async () => {
-        setConnected(await web3Contract.connect(nodeSelected))
-        await web3Contract.create(
-            ContractAbi,
-            ContractReceipt.contractAddress,
-            [],
-            ContractReceipt.privacyGroupId
-        )
-    }, [nodeSelected])
-
-    return { connected }
-}
+      setConnected(await web3Contract.connect(nodeSelected));
+  
+      await web3Contract.create(
+        ContractAbi,
+        ContractReceipt.contractAddress,
+        [],
+        ContractReceipt.privacyGroupId
+      );
+    }, [nodeSelected]);
+  
+    return { connected };
+  }
 
 /**
  * Function: createUser
@@ -79,23 +80,24 @@ export function addProcedureContract(nodeSelected) {
  * */
 export function addAgreementContract(nodeSelected) {
     const { connected } = useContract(nodeSelected);
-
-    const contractAddition = useCallback(
+    const {status, setStatus} = useState(null)
+    const agreementAddition = useCallback(
         async (
             contractAddress,
             groupId,
             account
         ) => {
-            return web3Contract.call(
+            const res = await web3Contract.call(
                 'addAgreementContract',
                 [contractAddress, groupId],
                 account
             );
+            setStatus(res)
         },
         [connected]
     );
 
-    return { connected, contractAddition };
+    return { status, agreementAddition };
 }
 
 /**
@@ -156,7 +158,7 @@ export function getProcedureLength(nodeSelected, account) {
 
 /**
  * Get Agreement Address for particular user stored at particular location
- * */
+ */
 export function getAgreementAddress(nodeSelected, account) {
     const { connected } = useContract(nodeSelected);
     const [address, setAddress] = useState(0);
@@ -209,6 +211,33 @@ export function getProcedureAddress(nodeSelected, account) {
 
     return address;
 }
+
+/*
+* get the required User data
+*/
+
+export function userMap(nodeSelected) {
+    const {connected} = useContract(nodeSelected);
+    const [userData, setUserData] = useState(null)
+
+    useEffect(() => {
+        async function getUserData(){
+        try{
+            if(connected){
+                const res = await web3Contract.call('userMap', [userAddress], account)
+                setUserData(res);
+            }
+        }catch(err){
+            return false;
+        }
+    }
+    getUserData();
+    },[connected, account])
+
+    return userData;
+}
+
+
 
 
 

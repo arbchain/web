@@ -1,44 +1,44 @@
-import React, { useState } from 'react'
-import { Main, Button, DropDown, Modal, Layout, textStyle } from '@aragon/ui'
-import Connection from './Connection.js'
-import BrandLogo from '../../assets/arbchainLogo.png'
-import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js'
-import { useAccount } from '../../wallet/Account.js'
+import React, { useState } from 'react';
+import { Main, Button, DropDown, Modal, Layout, textStyle } from '@aragon/ui';
+import Connection from './Connection.js';
+import BrandLogo from '../../assets/arbchainLogo.png';
+import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js';
+import { useAccount } from '../../wallet/Account.js';
 
-const accounts = require('../../wallet/keys')
-const networks = require('../../wallet/network')
+const accounts = require('../../wallet/keys');
+const networks = require('../../wallet/network');
 
 const NODES = Object.keys(networks).map(node => {
-  return `${networks[node].host}:${networks[node].port}`
-})
+  return `${networks[node].host}:${networks[node].port}`;
+});
 const ACCOUNTS = accounts.map(node => {
-  return `${node.name} - (${node.orionPublicKey})`
-})
+  return `${node.name} - (${node.orionPublicKey})`;
+});
 
 function LoginPage() {
-  const [walletModal, setWalletModal] = useState(false)
-  const [networkModal, setNetworkModal] = useState(false)
-  const [selected, setSelected] = useState(0)
-  const [account, setAccount] = useState(0)
+  const [walletModal, setWalletModal] = useState(false);
+  const [networkModal, setNetworkModal] = useState(false);
+  const [selected, setSelected] = useState(0);
+  const [account, setAccount] = useState(0);
 
   const openNetwork = () => {
-    setNetworkModal(true)
-    increaseCount()
-  }
-  const openWallet = () => setWalletModal(true)
-  const closeNetwork = () => setNetworkModal(false)
-  const closeWallet = () => setWalletModal(false)
+    setNetworkModal(true);
+    increaseCount();
+  };
+  const openWallet = () => setWalletModal(true);
+  const closeNetwork = () => setNetworkModal(false);
+  const closeWallet = () => setWalletModal(false);
 
   // This is an action to be invoked onclick
-  const increaseCount = () => increase(20, accounts[account])
+  const increaseCount = () => increase(20, accounts[account]);
 
-  const { connected, increase } = increaseCounter(NODES[selected])
-  const count = fetchCount(NODES[selected], accounts[account])
-  console.log(count)
+  const { connected, increase } = increaseCounter(NODES[selected]);
+  const count = fetchCount(NODES[selected], accounts[account]);
+  console.log(count);
 
   // Update the account context by using a callback function
-  const walletAccount = useAccount()
-  walletAccount.changeAccount(account)
+  const walletAccount = useAccount();
+  walletAccount.changeAccount(account);
 
   return (
     <Main layout={false}>
@@ -63,11 +63,7 @@ function LoginPage() {
             }}
           >
             Select an account:
-            <DropDown
-              items={ACCOUNTS}
-              selected={account}
-              onChange={setAccount}
-            />
+            <DropDown items={ACCOUNTS} selected={account} onChange={setAccount} />
           </div>
         </Modal>
         <Modal visible={networkModal} onClose={closeNetwork}>
@@ -83,16 +79,10 @@ function LoginPage() {
             }}
           >
             Select a network:
-            <DropDown
-              items={NODES}
-              selected={selected}
-              onChange={setSelected}
-            />
+            <DropDown items={NODES} selected={selected} onChange={setSelected} />
           </div>
         </Modal>
-        <div
-          style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}
-        >
+        <div style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}>
           <div
             css={`
               ${textStyle('title1')};
@@ -205,7 +195,7 @@ function LoginPage() {
       </div>
       <Layout />
     </Main>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;
