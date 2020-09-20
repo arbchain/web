@@ -13,15 +13,15 @@ import './SingnUp.Style.css';
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
 
-const Accounts = require('../../wallet/keys.js');
+const accounts = require('../../wallet/keys.js');
 const networks = require('../../wallet/network.js');
-console.log('ACCOUNTS', Accounts);
+console.log('ACCOUNTS', accounts);
 
 const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ACCOUNTS = Accounts.map(node => {
+const ACCOUNTS = accounts.map(node => {
   return `${node.name} - (${node.orionPublicKey})`;
 });
 
@@ -130,7 +130,7 @@ const Signup = () => {
 
   // This is an action to be invoked onclick
   async function registerUser() {
-    await newUserCreation(name, zip, phone, 'TestOrionKey', role, Accounts[account]);
+    await newUserCreation(name, zip, phone, 'TestOrionKey', role, accounts[account]);
 
     wallet.create(password, 'TestOrionKey').then(res => {
       console.log('Wallet Created', res);

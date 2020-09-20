@@ -10,8 +10,8 @@ const ContractAbi = require('../../build/SPC_abi.json');
 const Web3 = require('web3');
 const ContractBin = require('../../build/SPC_bin.json').binary;
 const ContractReceipt = {
-  contractAddress: '0x006f236c8b8bff6a6253ba7a8b61d89d33d0120f',
-  privacyGroupId: 'Kgiru9TPQao+OUOxqXu2Ol3wVcK2wMlfMi+/4oWAO7Q=',
+  contractAddress: '0x5b085b1F8D1E34eA6e5faFAb493BF1928E8616A3',
+  privacyGroupId: 'cDnHhTvlbrEIyBYoBqLEVE8klhamMel2oR3Sm3zDWSU=',
 };
 const web3Contract = new Web3Contract();
 
@@ -34,18 +34,13 @@ export function deployProcedureContract(nodeSelected) {
   return { resultProcedureContract, setResultProcedure, createProcedureContract };
 }
 
-export function useContract(nodeSelected) {
+export function useContract(nodeSelected, contractAddress, privacyGroupId) {
   const [connected, setConnected] = useState(false);
 
   useMemo(async () => {
     setConnected(await web3Contract.connect(nodeSelected));
 
-    await web3Contract.create(
-      ContractAbi,
-      ContractReceipt.contractAddress,
-      [],
-      ContractReceipt.privacyGroupId
-    );
+    await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
   }, [nodeSelected]);
 
   return { connected };
@@ -54,8 +49,8 @@ export function useContract(nodeSelected) {
 /**
  * Function 1: createArbitrationResponse
  */
-export function createArbitrationResponse(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function createArbitrationResponse(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const arbitrationResponseCreation = useCallback(
     async (
@@ -320,23 +315,36 @@ export function setLanguage(nodeSelected) {
 // getter function
 // Rest all getter functions to added further as needed.
 
-export function getArbitrationDetails(nodeSelected, account) {
-  const { connected } = useContract(nodeSelected);
+// export function getArbitrationDetails(nodeSelected, contractAddress, privacyGroupId, account) {
+//   const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+//   const [arbitrationDetails, setArbitrationDetails] = useState([]);
+
+//   useEffect(() => {
+//     async function getDetails() {
+//       try {
+//         if (connected) {
+//           const res = await web3Contract.call('getArbitrationDetails', [], account);
+//           setArbitrationDetails(res);
+//         }
+//       } catch (err) {
+//         return false;
+//       }
+//     }
+//     getDetails();
+//   }, [connected, account]);
+
+//   return arbitrationDetails;
+// }
+
+export function getArbitrationDetails(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
 
-  useEffect(() => {
-    async function getDetails() {
-      try {
-        if (connected) {
-          const res = await web3Contract.call('getArbitrationDetails', [], account);
-          setArbitrationDetails(res);
-        }
-      } catch (err) {
-        return false;
-      }
-    }
-    getDetails();
-  }, [connected, account]);
-
-  return arbitrationDetails;
+  const arbitrationDetailsCall = useCallback(
+    async account => {
+      setArbitrationDetails(await web3Contract.call('getArbitrationDetails', [], account));
+    },
+    [nodeSelected]
+  );
+  return { arbitrationDetails, arbitrationDetailsCall };
 }

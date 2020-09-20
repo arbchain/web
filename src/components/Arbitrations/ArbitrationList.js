@@ -18,33 +18,52 @@ import AgreementForm from './modals/AgreementForm';
 import { fetchAgreement } from '../../lib/contracts/Agreement.js';
 import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
+import { getProcedureAddress } from '../../lib/contracts/MasterContract';
 import DisputeCard from './DisputeCard';
 
 import ArbitrationCard from './ArbitrationCard.js';
 
+const Web3 = require('web3');
 const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
 
+const web3 = new Web3();
 const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
+  let data = null;
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const [agreementModal, setAgreementModal] = useState(false);
-
   const openAgreement = () => setAgreementModal(true);
   const walletAccount = useAccount();
-
-  const agreementDetails = fetchAgreement(NODES[selected], accounts[walletAccount.account]);
-  const arbitrationDetails = getArbitrationDetails(
+  const address = web3.eth.accounts.privateKeyToAccount(`0x${accounts[0].privateKey}`);
+  const { procedureCount, procedureAddress } = getProcedureAddress(
     NODES[selected],
+    address.address,
     accounts[walletAccount.account]
   );
 
-  console.log('Aggreement Details', agreementDetails);
-  console.log('Arbitration Details:', arbitrationDetails);
+  // console.log(arbitrationDetails);
+  // const arbitrationDetails = getArbitrationDetails(
+  //   NODES[selected],
+  //   '0xe9552bA055855190Ed2F701C5e0Cd14f92972AdE',
+  //   'djFWIKE9dU5DP5OiY4OrIRy8JbtpgADT2NAOFccgzXE=',
+  //   accounts[walletAccount.account]
+  // );
+  // console.log(arbitrationDetails);
+
+  if (procedureCount !== null && procedureAddress.length === parseInt(procedureCount[0])) {
+    data = JSON.parse(localStorage.getItem('procedure_address'));
+  }
+
+  console.log('Procedure Count', procedureCount);
+  console.log('Procedure Data', data);
+
+  // console.log('Procedure Addresses', procedureAddress.length);
+  // console.log('Aggreement Details', agreementDetails);
 
   return (
     <div>

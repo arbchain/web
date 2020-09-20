@@ -13,11 +13,6 @@ const Web3 = require('web3');
 const Agreement_ContractBin = require('../../build/ArbitrationAgreement_bin.json').binary;
 const SPC_ContractBin = require('../../build/SPC_bin.json').binary;
 
-const Agreement_ContractReceipt = {
-  contractAddress: '0xd76efda45bf931b15b5050749e95e3fc57392a31',
-  privacyGroupId: 'guiCcLZ+dt2YFUTRxEZLpb2itJItxc26f7r1nDlpJBk=',
-};
-
 const web3Contract = new Web3Contract();
 
 export function createAgreement(nodeSelected) {
@@ -25,7 +20,6 @@ export function createAgreement(nodeSelected) {
   const [connected, setConnected] = useState(false);
   const [result, setResult] = useState(false);
   const { agreementAdditionStatus, agreementContractAddition } = addAgreementContract(nodeSelected);
-
   const create = useCallback(
     async (account, args) => {
       setConnected(await web3Contract.connect(nodeSelected));
