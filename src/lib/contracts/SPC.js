@@ -312,39 +312,22 @@ export function setLanguage(nodeSelected) {
   return { connected, languageSelection };
 }
 
-// getter function
-// Rest all getter functions to added further as needed.
-
-// export function getArbitrationDetails(nodeSelected, contractAddress, privacyGroupId, account) {
-//   const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
-//   const [arbitrationDetails, setArbitrationDetails] = useState([]);
-
-//   useEffect(() => {
-//     async function getDetails() {
-//       try {
-//         if (connected) {
-//           const res = await web3Contract.call('getArbitrationDetails', [], account);
-//           setArbitrationDetails(res);
-//         }
-//       } catch (err) {
-//         return false;
-//       }
-//     }
-//     getDetails();
-//   }, [connected, account]);
-
-//   return arbitrationDetails;
-// }
-
-export function getArbitrationDetails(nodeSelected, contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
-  const [arbitrationDetails, setArbitrationDetails] = useState([]);
-
-  const arbitrationDetailsCall = useCallback(
-    async account => {
-      setArbitrationDetails(await web3Contract.call('getArbitrationDetails', [], account));
-    },
-    [nodeSelected]
-  );
-  return { arbitrationDetails, arbitrationDetailsCall };
+export async function getArbitrationDetails(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getArbitrationDetails', [], account);
+      console.log(res);
+    }
+  } catch (err) {
+    return false;
+  }
+  return res;
 }

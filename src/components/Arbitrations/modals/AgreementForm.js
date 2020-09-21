@@ -71,7 +71,7 @@ export default function AgreementForm({
       docHash,
     ]);
     createProcedureContract(account, [
-      'Test Arbitration',
+      'Test Arbitration 2',
       'A simple test arbitration',
       '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
       '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',

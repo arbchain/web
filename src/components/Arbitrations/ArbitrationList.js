@@ -14,8 +14,6 @@ import {
 } from '@aragon/ui';
 
 import AgreementForm from './modals/AgreementForm';
-
-import { fetchAgreement } from '../../lib/contracts/Agreement.js';
 import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
 import { getProcedureAddress } from '../../lib/contracts/MasterContract';
@@ -46,21 +44,25 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     accounts[walletAccount.account]
   );
 
-  // console.log(arbitrationDetails);
-  // const arbitrationDetails = getArbitrationDetails(
-  //   NODES[selected],
-  //   '0xe9552bA055855190Ed2F701C5e0Cd14f92972AdE',
-  //   'djFWIKE9dU5DP5OiY4OrIRy8JbtpgADT2NAOFccgzXE=',
-  //   accounts[walletAccount.account]
-  // );
-  // console.log(arbitrationDetails);
-
   if (procedureCount !== null && procedureAddress.length === parseInt(procedureCount[0])) {
     data = JSON.parse(localStorage.getItem('procedure_address'));
+    if (data !== undefined) {
+      let index = 0;
+      while (index < parseInt(procedureCount[0])) {
+        console.log(data[index]);
+        const res = getArbitrationDetails(
+          NODES[selected],
+          data[index].procedureContractAddress,
+          data[index].groupId,
+          accounts[walletAccount.account]
+        );
+        index++;
+      }
+    }
   }
 
   console.log('Procedure Count', procedureCount);
-  console.log('Procedure Data', data);
+  // console.log('Procedure Data', procedureAddress);
 
   // console.log('Procedure Addresses', procedureAddress.length);
   // console.log('Aggreement Details', agreementDetails);

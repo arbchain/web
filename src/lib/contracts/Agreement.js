@@ -52,23 +52,22 @@ export function useContract(nodeSelected, contractAddress, privacyGroupId) {
   return { connected }
 }
 
-export function fetchAgreement(nodeSelected, contractAddress, privacyGroupId, account) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId)
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    async function agreementCall() {
-      try {
-        if (connected) {
-          const c = await web3Contract.call('agreementDetails', [], account)
-          setCount(c)
-        }
-      } catch (err) {
-        return false
-      }
+export async function fetchAgreement(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('agreementDetails', [], account);
+      console.log(res);
     }
-    agreementCall()
-  }, [connected, account])
-
-  return count
+  } catch (err) {
+    return false;
+  }
+  return res;
 }
