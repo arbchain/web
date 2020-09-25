@@ -1,20 +1,12 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import './ProfileHeader.css';
-import {
-  Box,
-  Button,
-  GU,
-  textStyle,
-  useViewport,
-  Main,
-  Card,
-} from '@aragon/ui';
-import { useAccount } from '../../wallet/Account.js';
+import { Box, GU, textStyle } from '@aragon/ui';
 import { userMap } from '../../lib/contracts/MasterContract';
 import ProfileIcon from '../../assets/profile.png';
 import ANJBadgeIcon from '../../assets/anjBadge.svg';
 import IconCheck from '../../assets/IconCheck.svg';
+import { Form, Input } from 'antd';
 
 const Web3 = require('web3');
 const web3 = new Web3();
@@ -29,10 +21,6 @@ const NODES = Object.keys(networks).map((node) => {
 export default function ProfileHeader({ active }) {
   const [selected, setSelected] = useState(0);
   const [account, setAccount] = useState(0);
-  const [userName, setUserName] = useState('');
-  const [contact, setContact] = useState();
-  const [Zip, setZip] = useState();
-  const [Role, setRole] = useState();
 
   const address = web3.eth.accounts.privateKeyToAccount(
     `0x${accounts[0].privateKey}`
@@ -46,14 +34,33 @@ export default function ProfileHeader({ active }) {
   console.log(address);
   console.log('USER DATA:', userData);
 
+  let card;
   if (userData != null) {
     const { name, contactNumber, zipCode, role } = userData;
-    console.log('NAME', name);
-    console.log('Contact', contactNumber);
-    console.log('Zip', zipCode);
-    console.log('Role', role);
-    //setUserName(name);
+
+    // freeze- freezing an object prevents new properties from being added to it
+
+    card = (
+      <>
+        <Form layout='vertical'>
+          <Form.Item label='Name'>
+            <Input value={name} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+
+          <Form.Item label='Contact Number'>
+            <Input value={contactNumber} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+          <Form.Item label='Zip Code'>
+            <Input value={zipCode} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+          <Form.Item label='Role'>
+            <Input value={role} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+        </Form>
+      </>
+    );
   }
+
   return (
     <div>
       <Box
@@ -128,35 +135,8 @@ export default function ProfileHeader({ active }) {
           </div>
         </div>
 
-        <h2>Name : </h2>
-        <h2>Contact</h2>
-        <h2>Zip</h2>
+        {card}
       </Box>
-
-      {/* <div className='profile' style={{ display: 'flex' }}>
-        <div style={{ width: '100%', overflow: 'hidden' }}>
-          <Box
-            heading='Profile Details'
-            style={{ width: '670px', height: '529px' }}
-          ></Box>
-        </div>
-
-        <div
-          style={{
-            width: '100%',
-            overflow: 'hidden',
-          }}
-        >
-          <Box
-            style={{
-              width: '407px',
-              height: '529px',
-              marginLeft: '48px',
-              background: 'red',
-            }}
-          ></Box>
-        </div>
-      </div> */}
     </div>
   );
 }
