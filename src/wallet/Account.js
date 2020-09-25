@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 
 const AccountAugmentedContext = React.createContext({
-  account: 0,
+  account: {},
   changeAccount: () => {},
 })
 
@@ -10,7 +10,7 @@ function useAccountAugmented() {
 }
 
 function AccountAugmented({ children }) {
-  const [account, setaccount] = useState(0)
+  const [account, setaccount] = useState({})
 
   // Call back context function to update the selected account
   function changeAccount(value) {

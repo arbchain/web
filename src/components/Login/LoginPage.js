@@ -53,8 +53,11 @@ function LoginPage() {
     const account = await wallet.login(password);
     console.log('ACCOUNT: ', account);
 
+    //Storing the password locally. Need a secure way to do this for prod
+    localStorage.setItem('wpassword', password);
+
     // Update the account context by using a callback function
-    walletAccount.changeAccount(account[0]);
+    walletAccount.changeAccount({privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
 
     //Todo :- validation
     if (account == null) {

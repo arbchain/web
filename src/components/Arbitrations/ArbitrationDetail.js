@@ -1,9 +1,9 @@
-import React from 'react'
-import { BackButton, Bar, Box, Split } from '@aragon/ui'
+import React from 'react';
+import { BackButton, Bar, Box, Split } from '@aragon/ui';
 
-import DisputeInfo from './DisputeInfo'
-import DisputeEvidences from './DisputeEvidences'
-import DisputeTimeline from './DisputeTimeline'
+import DisputeInfo from './DisputeInfo';
+import DisputeEvidences from './DisputeEvidences';
+import DisputeTimeline from './DisputeTimeline';
 
 function ArbitrationDetail({ arbitration, onBack }) {
   return (
@@ -16,9 +16,7 @@ function ArbitrationDetail({ arbitration, onBack }) {
         primary={
           <React.Fragment>
             <DisputeInfo dispute={arbitration} />
-            {arbitration.arguments && (
-              <DisputeEvidences evidences={arbitration.arguments} />
-            )}
+            {arbitration.arguments && <DisputeEvidences evidences={arbitration.arguments} />}
           </React.Fragment>
         }
         secondary={
@@ -31,7 +29,7 @@ function ArbitrationDetail({ arbitration, onBack }) {
         }
       />
     </React.Fragment>
-  )
+  );
 }
 
-export default ArbitrationDetail
+export default ArbitrationDetail;

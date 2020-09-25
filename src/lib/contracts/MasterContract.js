@@ -7,6 +7,7 @@ const ContractReceipt = require('../../build/MasterContract_receipt.json');
 
 const web3Contract = new Web3Contract();
 
+
 export function useContract(nodeSelected) {
   const [connected, setConnected] = useState(false);
 
@@ -51,19 +52,20 @@ export function createUser(nodeSelected) {
  * */
 export function addProcedureContract(nodeSelected) {
   const { connected } = useContract(nodeSelected);
+  const [procedureAdditionStatus, setStatus] = useState(null);
 
-  const contractAddition = useCallback(
+  const procedureContractAddition = useCallback(
     async (contractAddress, groupId, account) => {
-      return web3Contract.call(
+      const result = await web3Contract.call(
         'addProcedureContract',
         [contractAddress, groupId],
         account
       );
+      setStatus(result)
     },
     [connected]
   );
-
-  return { connected, contractAddition };
+  return { procedureAdditionStatus, procedureContractAddition };
 }
 
 /**
@@ -71,129 +73,95 @@ export function addProcedureContract(nodeSelected) {
  * */
 export function addAgreementContract(nodeSelected) {
   const { connected } = useContract(nodeSelected);
+  const [agreementAdditionStatus, setStatus] = useState(null);
 
-  const contractAddition = useCallback(
+  const agreementContractAddition = useCallback(
     async (contractAddress, groupId, account) => {
-      return web3Contract.call(
+      const result = await web3Contract.call(
         'addAgreementContract',
         [contractAddress, groupId],
         account
       );
+      setStatus(result)
     },
     [connected]
   );
 
-  return { connected, contractAddition };
+  return { agreementAdditionStatus, agreementContractAddition };
 }
 
-/**
- * Get total agreement for particular user
- * */
-export function getAgreementLength(nodeSelected, account) {
-  const { connected } = useContract(nodeSelected);
-  const [length, setLength] = useState(0);
+
+export function userMap(nodeSelected, userAddress, account) {
+  const {connected} = useContract(nodeSelected);
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    async function agreementLengthCall(userAddress) {
-      try {
-        if (connected) {
-          const len = await web3Contract.call(
-            'getAgreementlength',
-            [userAddress],
-            account
-          );
-          setLength(len);
+    async function getUserData(){
+      try{
+        if(connected){
+          const data = await web3Contract.call('userMap', [userAddress], account);
+          setUserData(data)
         }
-      } catch (err) {
-        return false;
+      }catch(err) {
+        return false
       }
     }
-    agreementLengthCall();
-  }, [connected, account]);
+    getUserData()
+  },[connected, account])
 
-  return length;
+  return { userData };
 }
 
-/**
- * Get total procedure for particular user
- * */
-export function getProcedureLength(nodeSelected, account) {
-  const { connected } = useContract(nodeSelected);
-  const [length, setLength] = useState(0);
+export function getProcedureAddress (nodeSelected, account) {
+  const {connected} = useContract(nodeSelected);
+  const [procedureAddress, setProcedureAddress] = useState([])
 
   useEffect(() => {
-    async function procedureLengthCall(userAddress) {
-      try {
-        if (connected) {
-          const len = await web3Contract.call(
-            'getProcedurelength',
-            [userAddress],
-            account
-          );
-          setLength(len);
+    async function procedureAddressCall(){
+      try{
+        const userAddress = web3Contract.web3.eth.accounts.privateKeyToAccount(`0x${account.privateKey}`).address;
+        if(connected){
+          const res = await web3Contract.call('getAllProcedureAddress',[userAddress], account);
+          setProcedureAddress(res[0]);
         }
-      } catch (err) {
-        return false;
+      }catch(err) {
+        return false
       }
     }
-    procedureLengthCall();
-  }, [connected, account]);
-
-  return length;
+    procedureAddressCall()
+  },[connected, account])
+  return { procedureAddress };
 }
 
-/**
- * Get Agreement Address for particular user stored at particular location
- * */
-export function getAgreementAddress(nodeSelected, account) {
-  const { connected } = useContract(nodeSelected);
-  const [address, setAddress] = useState(0);
+export function getAgreementAddress (nodeSelected, userAddress, account) {
+  const {connected} = useContract(nodeSelected);
+  const [agreementCount, setCount] = useState(null);
+  const [agreementAddress, setAgreementAddress] = useState([])
 
   useEffect(() => {
-    async function agreementAddressCall(userAddress, index) {
-      try {
-        if (connected) {
-          const len = await web3Contract.call(
-            'getAgreementAddress',
-            [userAddress, index],
-            account
-          );
-          setAddress(len);
+    async function agreementAddressCall(){
+      try{
+        if(connected){
+          const agrCount = await web3Contract.call('getAgreementlength', [userAddress], account);
+          setCount(agrCount);
+
+          let i = 0;
+          //let count = 0;
+          while(i<parseInt(proCount[0])){
+            const res = await web3Contract.call('getAgreementAddress',[userAddress, i],account);
+            const data = await web3Contract.call('agreement',[res[0]], account)
+            setAgreementAddress(agreementAddress => [...agreementAddress, data])
+            i++;
+          }
         }
-      } catch (err) {
-        return false;
+      }catch(err) {
+        return false
       }
     }
-    agreementAddressCall();
-  }, [connected, account]);
-
-  return address;
-}
-
-/**
- * Get Procedure Address for particular user stored at particular location
- * */
-export function getProcedureAddress(nodeSelected, account) {
-  const { connected } = useContract(nodeSelected);
-  const [address, setAddress] = useState(0);
-
-  useEffect(() => {
-    async function procedureAddressCall(userAddress, index) {
-      try {
-        if (connected) {
-          const len = await web3Contract.call(
-            'getAgreementAddress',
-            [userAddress, index],
-            account
-          );
-          setAddress(len);
-        }
-      } catch (err) {
-        return false;
-      }
-    }
-    procedureAddressCall();
-  }, [connected, account]);
-
-  return address;
+    agreementAddressCall()
+  },[connected, account])
+  if(agreementAddress !== []){
+    localStorage.setItem('agreement_address', JSON.stringify(agreementAddress));
+  }
+  return { agreementCount, agreementAddress };
 }
