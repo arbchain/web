@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Bar,
   Button,
@@ -20,6 +20,7 @@ import { getProcedureAddress } from '../../lib/contracts/MasterContract';
 import DisputeCard from './DisputeCard';
 
 import ArbitrationCard from './ArbitrationCard.js';
+import wallet from 'wallet-besu';
 
 const Web3 = require('web3');
 const accounts = require('../../wallet/keys');
@@ -35,37 +36,75 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const [agreementModal, setAgreementModal] = useState(false);
-  const openAgreement = () => setAgreementModal(true);
-  const walletAccount = useAccount();
-  const address = web3.eth.accounts.privateKeyToAccount(`0x${accounts[0].privateKey}`);
-  const { procedureCount, procedureAddress } = getProcedureAddress(
-    NODES[selected],
-    address.address,
-    accounts[walletAccount.account]
-  );
+  const [arbitrationDetails, setArbitrationDetails] = useState([]);
 
-  if (procedureCount !== null && procedureAddress.length === parseInt(procedureCount[0])) {
-    data = JSON.parse(localStorage.getItem('procedure_address'));
-    if (data !== undefined) {
-      let index = 0;
-      while (index < parseInt(procedureCount[0])) {
-        console.log(data[index]);
-        const res = getArbitrationDetails(
-          NODES[selected],
-          data[index].procedureContractAddress,
-          data[index].groupId,
-          accounts[walletAccount.account]
-        );
-        index++;
-      }
+  const openAgreement = () => setAgreementModal(true);
+
+  const walletAccount = useAccount();
+  
+  useEffect(() => {
+  
+    async function load() { 
+    try{
+       //Fetching the password locally. Need a secure way to do this for prod
+       const account = await wallet.login(localStorage.getItem('wpassword'));
+
+       // Update the account context by using a callback function
+       walletAccount.changeAccount({privateKey:account[0], orionPublicKey: localStorage.getItem('orionKey')});
+      
+    }catch(err) {
+      return false
     }
   }
+  load()
+  
+},[] )
 
-  console.log('Procedure Count', procedureCount);
-  // console.log('Procedure Data', procedureAddress);
 
-  // console.log('Procedure Addresses', procedureAddress.length);
-  // console.log('Aggreement Details', agreementDetails);
+  const { procedureAddress } = getProcedureAddress(
+    NODES[selected],
+    walletAccount.account
+  )
+  console.log(procedureAddress)
+
+  useEffect(() => {
+    async function agreementAddressCall(){
+      try{
+        if (procedureAddress.length) {
+              let index = 0;
+              let allDetails = [];
+              while (index < parseInt(procedureAddress.length)) {
+                const details = await getArbitrationDetails(
+                  NODES[selected],
+                  procedureAddress[index].procedureContractAddress,
+                  procedureAddress[index].groupId,
+                  walletAccount.account
+                );
+                allDetails.push(details)
+                index++;
+              }
+              console.log(allDetails)
+              setArbitrationDetails(allDetails)
+          }
+
+        
+      }catch(err) {
+        return false
+      }
+    }
+    agreementAddressCall()
+  }, [procedureAddress])
+
+  try {
+  console.log('Procedure Count', procedureAddress.length);
+  console.log('Procedure Data', procedureAddress);
+
+  console.log('All Arbitration Details', arbitrationDetails);
+  }
+
+  catch(err) {
+    //pass
+  }
 
   return (
     <div>
@@ -79,7 +118,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         <AgreementForm
           agreementModal={agreementModal}
           setAgreementModal={setAgreementModal}
-          account={accounts[walletAccount.account]}
+          account={walletAccount.account}
           node={NODES[selected]}
         />
         <div />

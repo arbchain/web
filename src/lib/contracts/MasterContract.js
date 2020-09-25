@@ -112,26 +112,17 @@ export function userMap(nodeSelected, userAddress, account) {
   return { userData };
 }
 
-export function getProcedureAddress (nodeSelected, userAddress, account) {
+export function getProcedureAddress (nodeSelected, account) {
   const {connected} = useContract(nodeSelected);
-  const [procedureCount, setCount] = useState(null);
   const [procedureAddress, setProcedureAddress] = useState([])
 
   useEffect(() => {
     async function procedureAddressCall(){
       try{
+        const userAddress = web3Contract.web3.eth.accounts.privateKeyToAccount(`0x${account.privateKey}`).address;
         if(connected){
-          const proCount = await web3Contract.call('getProcedurelength', [userAddress], account);
-          setCount(proCount);
-
-          let i = 0;
-          //let count = 0;
-          while(i<parseInt(proCount[0])){
-            const res = await web3Contract.call('getProcedureAddress',[userAddress, i],account);
-            const data = await web3Contract.call('procedure',[res[0]], account)
-            setProcedureAddress(procedureAddress => [...procedureAddress, data])
-            i++;
-          }
+          const res = await web3Contract.call('getAllProcedureAddress',[userAddress], account);
+          setProcedureAddress(res[0]);
         }
       }catch(err) {
         return false
@@ -139,10 +130,7 @@ export function getProcedureAddress (nodeSelected, userAddress, account) {
     }
     procedureAddressCall()
   },[connected, account])
-  if(procedureAddress !== []){
-    localStorage.setItem('procedure_address', JSON.stringify(procedureAddress));
-  }
-  return { procedureCount, procedureAddress };
+  return { procedureAddress };
 }
 
 export function getAgreementAddress (nodeSelected, userAddress, account) {
