@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 import { Steps, Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
 import { Main } from '@aragon/ui';
-import { Web3Contract } from '../../utils/web3-contracts';
 import { createUser, userMap } from '../../lib/contracts/MasterContract';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
@@ -130,11 +129,13 @@ const Signup = () => {
 
   // This is an action to be invoked onclick
   async function registerUser() {
-    await newUserCreation(name, zip, phone, 'TestOrionKey', role, accounts[account]);
 
-    wallet.create(password, 'TestOrionKey').then(res => {
+    wallet.create(password, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=').then(async res => {
       console.log('Wallet Created', res);
       if (res) {
+        const account = await wallet.login(password);
+        console.log(`0x${account[0]}`)
+        await newUserCreation(name, zip, phone, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, { privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
         openSuccessNotification('success');
         setTimeout(() => {
           history.push('/login');
