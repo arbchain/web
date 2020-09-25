@@ -197,3 +197,26 @@ export function getProcedureAddress(nodeSelected, account) {
 
   return address;
 }
+
+export function userMap(nodeSelected, userAddress, account) {
+  const { connected } = useContract(nodeSelected);
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        if (connected) {
+          const data = await web3Contract.call(
+            'userMap',
+            [userAddress],
+            account
+          );
+          setUserData(data);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getUserData();
+  }, [connected, account]);
+  return { userData };
+}

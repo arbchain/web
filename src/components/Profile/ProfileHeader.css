@@ -1,0 +1,10 @@
+.box {
+  padding: 40px;
+  border-radius: 0;
+}
+
+/* padding={40}
+        css={`
+          border-radius: 0;
+          margin-bottom: ${2 * GU}px;
+        `} */

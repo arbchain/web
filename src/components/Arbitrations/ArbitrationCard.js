@@ -1,19 +1,19 @@
 /*eslint-disable */
-import React from 'react'
-import { textStyle } from '@aragon/ui'
-import ArbitrationCardName from '../../assets/ArbitrationCardName.svg'
-import ArbitrationArgument from '../../assets/ArbitrationArgument.svg'
-import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg'
-import ArbitrationCompanyName from '../../assets/ArbitrationCompanyName.svg'
-import Arbitrators from '../../assets/Arbitrators.svg'
-import DisputeStatus from './DisputeStatus'
-import styled from "styled-components";
+import React from 'react';
+import { textStyle } from '@aragon/ui';
+import ArbitrationCardName from '../../assets/ArbitrationCardName.svg';
+import ArbitrationArgument from '../../assets/ArbitrationArgument.svg';
+import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
+import ArbitrationCompanyName from '../../assets/ArbitrationCompanyName.svg';
+import Arbitrators from '../../assets/Arbitrators.svg';
+import DisputeStatus from './DisputeStatus';
+import styled from 'styled-components';
 
-const ArbitrationCardNameStyle = <img src={ArbitrationCardName} />
-const ArbitrationCardDisputeStyle = <img src={ArbitrationCardDispute} />
-const ArbitratorsStyle = <img src={Arbitrators} />
-const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />
-const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />
+const ArbitrationCardNameStyle = <img src={ArbitrationCardName} />;
+const ArbitrationCardDisputeStyle = <img src={ArbitrationCardDispute} />;
+const ArbitratorsStyle = <img src={Arbitrators} />;
+const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />;
+const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />;
 
 function ArbitrationCard({ arbitration, selectDispute }) {
   return (
@@ -51,7 +51,9 @@ function ArbitrationCard({ arbitration, selectDispute }) {
             >
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitratorsStyle}</p>
-                <CardSubText>{arbitration.arbitratorCount} arbitrators</CardSubText>
+                <CardSubText>
+                  {arbitration.arbitratorCount} arbitrators
+                </CardSubText>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitrationCompanyNameStyle}</p>
@@ -69,13 +71,13 @@ function ArbitrationCard({ arbitration, selectDispute }) {
         </div>
       </section>
     </>
-  )
+  );
 }
 
 const CardSubText = styled.span`
-        ${textStyle('label2')}
-      font-weight: 300;
-      color: ${({ labelColor }) => labelColor};
-`
+  ${textStyle('label2')}
+  font-weight: 300;
+  color: ${({ labelColor }) => labelColor};
+`;
 
-export default ArbitrationCard
+export default ArbitrationCard;

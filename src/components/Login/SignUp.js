@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Steps, Select, Form, Button, Input, notification } from 'antd';
@@ -12,7 +13,6 @@ const { Option, OptGroup } = Select;
 
 const accounts = require('../../wallet/keys.js');
 const networks = require('../../wallet/network.js');
-console.log('ACCOUNTS', accounts);
 
 const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
@@ -301,7 +301,7 @@ const Signup = () => {
           <Select label='Role' defaultValue='Role'>
             <OptGroup label='Networks'>
               <Option value={role} readOnly>
-                Arbitrator
+                {role}
               </Option>
             </OptGroup>
           </Select>

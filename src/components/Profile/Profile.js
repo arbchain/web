@@ -1,7 +1,7 @@
-import React from 'react'
-import ProfileHeader from './ProfileHeader'
+import React from 'react';
+import ProfileHeader from './ProfileHeader';
 
-import { Header } from '@aragon/ui'
+import { Header } from '@aragon/ui';
 
 function Profile() {
   // TODO - only for testing we need to use the  connected account
@@ -10,10 +10,10 @@ function Profile() {
 
   return (
     <React.Fragment>
-      <Header primary="Profile" />
+      <Header primary='Profile' />
       <ProfileHeader active />
     </React.Fragment>
-  )
+  );
 }
 
-export default Profile
+export default Profile;
