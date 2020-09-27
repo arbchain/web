@@ -147,35 +147,6 @@ const Signup = () => {
       }
     });
   }
-  // Test
-
-  // if (status != null) {
-  //   openNotification('success');
-  // }
-  let networkSelection = (
-    <Form
-      {...layout}
-      id='form'
-      name='nest-messages'
-      // onFinish={registerUser}
-      validateMessages={validateMessages}
-    >
-      <Form.Item label='Select Network'>
-        <Select label='Field A' defaultValue='Node1' onChange={selectNetwork}>
-          <OptGroup label='Networks'>
-            <Option value={network}>Node1</Option>
-            <Option value='n2'>Node2</Option>
-          </OptGroup>
-        </Select>
-        <Button
-          type='primary'
-          style={{ width: '100%', marginTop: '16px', background: '#4d4cbb' }}
-        >
-          Generate New Account
-        </Button>
-      </Form.Item>
-    </Form>
-  );
 
   let userInformation = (
     <>
@@ -313,15 +284,11 @@ const Signup = () => {
   // stepper
   const steps = [
     {
-      title: 'Select Network',
-      content: networkSelection,
-    },
-    {
       title: 'User Information',
       content: userInformation,
     },
     {
-      title: 'Create Account',
+      title: 'Sign up',
       content: preview,
     },
   ];
