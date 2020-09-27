@@ -38,8 +38,6 @@ export default function ProfileHeader({ active }) {
   if (userData != null) {
     const { name, contactNumber, zipCode, role } = userData;
 
-    // freeze- freezing an object prevents new properties from being added to it
-
     card = (
       <>
         <Form layout='vertical'>
