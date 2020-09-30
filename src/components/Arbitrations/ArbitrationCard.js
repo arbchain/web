@@ -16,6 +16,12 @@ const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />
 const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />
 
 function ArbitrationCard({ arbitration, selectDispute }) {
+  //note: If undefined error try doing conditional rendering here.
+
+  // const status = [DISPUTE_STATUS_OPEN,
+  //   DISPUTE_STATUS_APPEAL,
+  //   DISPUTE_STATUS_CLOSED,]
+  console.log("Card logging", arbitration)
   return (
     <>
       <section>
@@ -27,7 +33,7 @@ function ArbitrationCard({ arbitration, selectDispute }) {
             boxShadow: '0px 1px 3px rgba(51, 77, 117, 0.2)',
             cursor: 'pointer',
           }}
-          onClick={() => selectDispute(arbitration.id)}
+          // onClick={() => selectDispute(arbitration.id)}
         >
           <div style={{ display: 'grid', gridTemplateColumns: '5fr 2fr 1fr' }}>
             <div
@@ -37,11 +43,11 @@ function ArbitrationCard({ arbitration, selectDispute }) {
             >
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}>
                 <p>{ArbitrationCardDisputeStyle}</p>
-                <p>{arbitration.title}</p>
+                <p>{arbitration[0]}</p>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}>
                 <p>{ArbitrationCardNameStyle}</p>
-                <CardSubText>{arbitration.claimant}</CardSubText>
+                <CardSubText>{arbitration[5]}</CardSubText>
               </div>
             </div>
             <div
@@ -51,20 +57,20 @@ function ArbitrationCard({ arbitration, selectDispute }) {
             >
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitratorsStyle}</p>
-                <CardSubText>{arbitration.arbitratorCount} arbitrators</CardSubText>
+                <CardSubText>{arbitration[4]} arbitrators</CardSubText>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitrationCompanyNameStyle}</p>
-                <CardSubText>{arbitration.respondent}</CardSubText>
+                <CardSubText>{arbitration[6]}</CardSubText>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitrationArgumentStyle}</p>
-                <CardSubText>{arbitration.arguments.length}</CardSubText>
+                <CardSubText>3</CardSubText>
               </div>
             </div>
-            <div>
-              <DisputeStatus dispute={arbitration} />
-            </div>
+            {/* <div>
+              <DisputeStatus dispute={DISPUTE_STATUS_OPEN} />
+            </div> */}
           </div>
         </div>
       </section>

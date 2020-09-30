@@ -126,18 +126,13 @@ const Signup = () => {
 
   // This is an action to be invoked onclick
   async function registerUser() {
-    await newUserCreation(
-      name,
-      zip,
-      phone,
-      'TestOrianKey',
-      role,
-      accounts[account]
-    );
 
-    wallet.create(password, 'TestOrianKey').then((res) => {
+    wallet.create(password, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=').then(async res => {
       console.log('Wallet Created', res);
       if (res) {
+        const account = await wallet.login(password);
+        console.log(`0x${account[0]}`)
+        await newUserCreation(name, zip, phone, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, { privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
         openSuccessNotification('success');
         setTimeout(() => {
           history.push('/login');
