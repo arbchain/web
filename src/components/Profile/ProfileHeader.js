@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-//import './ProfileHeader.css';
 import { Box, GU, textStyle } from '@aragon/ui';
 import { userMap } from '../../lib/contracts/MasterContract';
 import ProfileIcon from '../../assets/profile.png';
