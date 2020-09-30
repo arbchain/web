@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Bar,
   Button,
@@ -14,97 +14,37 @@ import {
 } from '@aragon/ui';
 
 import AgreementForm from './modals/AgreementForm';
-import { getArbitrationDetails } from '../../lib/contracts/SPC';
+import ProcedureForm from './modals/ProcedureForm';
+
+import { fetchAgreement } from '../../lib/contracts/Agreement.js';
 import { useAccount } from '../../wallet/Account.js';
-import { getProcedureAddress } from '../../lib/contracts/MasterContract';
 import DisputeCard from './DisputeCard';
 
 import ArbitrationCard from './ArbitrationCard.js';
-import wallet from 'wallet-besu';
 
-const Web3 = require('web3');
 const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
 
-const web3 = new Web3();
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
-  let data = null;
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const [agreementModal, setAgreementModal] = useState(false);
-  const [arbitrationDetails, setArbitrationDetails] = useState([]);
+  const [procedureModal, setProcedureModal] = useState(false);
 
   const openAgreement = () => setAgreementModal(true);
 
+  const openProcedure = () => setProcedureModal(true);
   const walletAccount = useAccount();
-  
-  useEffect(() => {
-  
-    async function load() { 
-    try{
-       //Fetching the password locally. Need a secure way to do this for prod
-       const account = await wallet.login(localStorage.getItem('wpassword'));
 
-       // Update the account context by using a callback function
-       walletAccount.changeAccount({privateKey:account[0], orionPublicKey: localStorage.getItem('orionKey')});
-      
-    }catch(err) {
-      return false
-    }
-  }
-  load()
-  
-},[] )
-
-
-  const { procedureAddress } = getProcedureAddress(
+  const agreementDetails = fetchAgreement(
     NODES[selected],
-    walletAccount.account
-  )
-  console.log(procedureAddress)
-
-  useEffect(() => {
-    async function agreementAddressCall(){
-      try{
-        if (procedureAddress.length) {
-              let index = 0;
-              let allDetails = [];
-              while (index < parseInt(procedureAddress.length)) {
-                const details = await getArbitrationDetails(
-                  NODES[selected],
-                  procedureAddress[index].procedureContractAddress,
-                  procedureAddress[index].groupId,
-                  walletAccount.account
-                );
-                allDetails.push(details)
-                index++;
-              }
-              console.log(allDetails)
-              setArbitrationDetails(allDetails)
-          }
-
-        
-      }catch(err) {
-        return false
-      }
-    }
-    agreementAddressCall()
-  }, [procedureAddress])
-
-  try {
-  console.log('Procedure Count', procedureAddress.length);
-  console.log('Procedure Data', procedureAddress);
-
-  console.log('All Arbitration Details', arbitrationDetails);
-  }
-
-  catch(err) {
-    //pass
-  }
+    accounts[walletAccount.account]
+  );
+  console.log(agreementDetails);
 
   return (
     <div>
@@ -118,14 +58,37 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         <AgreementForm
           agreementModal={agreementModal}
           setAgreementModal={setAgreementModal}
-          account={walletAccount.account}
+          account={accounts[walletAccount.account]}
           node={NODES[selected]}
         />
         <div />
+        {/* procedure modal */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <ProcedureForm
+            procedureModal={procedureModal}
+            setProcedureModal={setProcedureModal}
+          />
+        </div>
+
         <div style={{ display: 'flex', marginTop: '1rem' }}>
+          <div style={{ marginLeft: '0.5rem' }}>
+            <Button
+              label='+NEW PROCEDURE'
+              onClick={() => {
+                openProcedure();
+              }}
+            />
+          </div>
+
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button
-              label="+NEW AGREEMENT"
+              label='+NEW AGREEMENT'
               onClick={() => {
                 openAgreement();
               }}
@@ -133,23 +96,30 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           </div>
           <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
             <Button
-              label="+ ADD REQUEST"
+              label='+ ADD REQUEST'
               style={{ backgroundColor: theme.selected, color: 'white' }}
               onClick={() => console.log('clicked')}
             />
           </div>
-          <p style={{ cursor: 'pointer' }} onClick={() => console.log('clicked')}>
+          <p
+            style={{ cursor: 'pointer' }}
+            onClick={() => console.log('clicked')}
+          >
             <IconRefresh
               css={`
                 color: ${theme.selected};
               `}
-              size="medium"
+              size='medium'
             />
           </p>
         </div>
       </div>
 
-      <Tabs items={['All requests', 'My claims']} selected={selected} onChange={setSelected} />
+      <Tabs
+        items={['All requests', 'My claims', 'Agreement Details']}
+        selected={selected}
+        onChange={setSelected}
+      />
 
       <Bar>
         <div
@@ -163,8 +133,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           `}
         >
           <DropDown
-            header="Status"
-            placeholder="Status"
+            header='Status'
+            placeholder='Status'
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -181,13 +151,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
                     ${textStyle('label3')};
                   `}
                 >
-                  <Tag limitDigits={4} label={disputes.length} size="small" />
+                  <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width="128px"
+            width='128px'
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -200,12 +170,18 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {selected ? (
         <CardLayout columnWidthMin={30 * GU} rowHeight={307}>
-          {disputes.map(dispute => {
-            return <DisputeCard key={dispute.id} dispute={dispute} selectDispute={selectDispute} />;
+          {disputes.map((dispute) => {
+            return (
+              <DisputeCard
+                key={dispute.id}
+                dispute={dispute}
+                selectDispute={selectDispute}
+              />
+            );
           })}
         </CardLayout>
       ) : (
-        arbitrations.map(arbitration => {
+        arbitrations.map((arbitration) => {
           return (
             <ArbitrationCard
               key={arbitration.id}

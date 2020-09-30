@@ -40,7 +40,12 @@ export default function AgreementForm({
     setAgreementSubmit(false);
     setResult(false);
   };
-  const { result, agreementAdditionStatus, setResult, create } = createAgreement(node);
+  const {
+    result,
+    agreementAdditionStatus,
+    setResult,
+    create,
+  } = createAgreement(node);
   const {
     resultProcedureContract,
     procedureAdditionStatus,
@@ -94,7 +99,7 @@ export default function AgreementForm({
           textAlign: 'center',
         }}
       >
-        Create an Arbitration Agreement
+        <h2> Create an Arbitration Agreement</h2>
       </div>
 
       {agreementSubmit ? (

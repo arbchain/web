@@ -1,125 +1,140 @@
-import React from 'react'
+/* eslint-disable */
+import React, { useState, useEffect } from 'react';
+//import './ProfileHeader.css';
+import { Box, GU, textStyle } from '@aragon/ui';
+import { userMap } from '../../lib/contracts/MasterContract';
+import ProfileIcon from '../../assets/profile.png';
+import ANJBadgeIcon from '../../assets/anjBadge.svg';
+import IconCheck from '../../assets/IconCheck.svg';
+import { Form, Input } from 'antd';
 
-import { Box, Button, GU, textStyle, useViewport } from '@aragon/ui'
-import { useAccount } from '../../wallet/Account.js';
-import wallet from 'wallet-besu';
+const Web3 = require('web3');
+const web3 = new Web3();
 
-import ProfileIcon from '../../assets/profile.png'
-import ANJBadgeIcon from '../../assets/anjBadge.svg'
-import IconCheck from '../../assets/IconCheck.svg'
+const accounts = require('../../wallet/keys');
+const networks = require('../../wallet/network');
 
-const Web3 = require("web3")
-const web3 = new Web3("http://localhost:8545");
+const NODES = Object.keys(networks).map((node) => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
 
 export default function ProfileHeader({ active }) {
-  const { below } = useViewport()
-  const walletAccount = useAccount();
-  console.log(wallet.getAddress())
-  // const theme = useTheme()
+  const [selected, setSelected] = useState(0);
+  const [account, setAccount] = useState(0);
+
+  const address = web3.eth.accounts.privateKeyToAccount(
+    `0x${accounts[0].privateKey}`
+  );
+
+  const { userData } = userMap(
+    NODES[selected],
+    address.address,
+    accounts[account]
+  );
+  console.log(address);
+  console.log('USER DATA:', userData);
+
+  let card;
+  if (userData != null) {
+    const { name, contactNumber, zipCode, role } = userData;
+
+    card = (
+      <>
+        <Form layout='vertical'>
+          <Form.Item label='Name'>
+            <Input value={name} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+
+          <Form.Item label='Contact Number'>
+            <Input value={contactNumber} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+          <Form.Item label='Zip Code'>
+            <Input value={zipCode} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+          <Form.Item label='Role'>
+            <Input value={role} readOnly style={{ width: '30%' }} />
+          </Form.Item>
+        </Form>
+      </>
+    );
+  }
 
   return (
-    <Box
-      padding={40}
-      css={`
-        border-radius: 0;
-        margin-bottom: ${2 * GU}px;
-      `}
-    >
-      <div
+    <div>
+      <Box
+        padding={40}
         css={`
-          margin-bottom: ${3 * GU}px;
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
+          border-radius: 0;
+          margin-bottom: ${2 * GU}px;
         `}
       >
         <div
           css={`
+            margin-bottom: ${3 * GU}px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            justify-content: space-between;
           `}
         >
           <div
             css={`
-              position: relative;
-              margin-right: ${3 * GU}px;
+              display: flex;
+              align-items: center;
             `}
           >
-            <img alt="profile" src={ProfileIcon} />
-            <img
-              alt="active-juror"
-              src={ANJBadgeIcon}
-              css="position: absolute; top: 0; right: -5px"
-            />
-          </div>
-          <div>
             <div
               css={`
-                margin-bottom: ${1 * GU}px;
-                display: flex;
-                align-items: center;
+                position: relative;
+                margin-right: ${3 * GU}px;
               `}
             >
-              <span
+              <img alt='profile' src={ProfileIcon} />
+              <img
+                alt='active-juror'
+                src={ANJBadgeIcon}
+                css='position: absolute; top: 0; right: -5px'
+              />
+            </div>
+            <div>
+              <div
                 css={`
-                  ${textStyle('title4')}
-                  letter-spacing: 1px;
-                  margin-right: ${2 * GU}px;
+                  margin-bottom: ${1 * GU}px;
+                  display: flex;
+                  align-items: center;
                 `}
               >
-                {web3.eth.accounts.privateKeyToAccount(walletAccount.account).address}
-              </span>
-              {active && (
-                <div
+                <span
                   css={`
-                    display: flex;
-                    align-items: center;
+                    ${textStyle('title4')}
+                    letter-spacing: 1px;
+                    margin-right: ${2 * GU}px;
                   `}
                 >
-                  <img
-                    alt="active"
-                    src={IconCheck}
+                  {address.address}
+                </span>
+                {active && (
+                  <div
                     css={`
-                      margin-right: 4px;
-                    `}
-                  />
-                  {/* <span
-                    css={`
-                      ${textStyle('label2')}
-                      color: ${theme.contentSecondary};
+                      display: flex;
+                      align-items: center;
                     `}
                   >
-                    ACTIVE JUROR
-                  </span> */}
-                </div>
-              )}
+                    <img
+                      alt='active'
+                      src={IconCheck}
+                      css={`
+                        margin-right: 4px;
+                      `}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-            {/* <div>
-              <p
-                css={`
-                  ${textStyle('body3')}
-                `}
-              >
-                You are active and eligible to be drafted starting from the next
-                term, on 14/12/19 at 16:00.
-              </p>
-            </div> */}
           </div>
         </div>
-        {!below('medium') && (
-          <div>
-            <Button>
-              <span
-                css={`
-                  color: #636971;
-                `}
-              >
-                View profile
-              </span>
-            </Button>
-          </div>
-        )}
-      </div>
-    </Box>
-  )
+
+        {card}
+      </Box>
+    </div>
+  );
 }
