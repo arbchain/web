@@ -28,7 +28,7 @@ const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
@@ -63,7 +63,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     load();
   }, []);
 
-  const { procedureAddress } = getProcedureAddress(NODES[selected], walletAccount.account);
+  const { procedureAddress } = getProcedureAddress(
+    NODES[selected],
+    walletAccount.account
+  );
 
   useEffect(() => {
     async function procedureAddressCall() {
@@ -136,7 +139,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         <div style={{ display: 'flex', marginTop: '1rem' }}>
           <div style={{ marginLeft: '0.5rem' }}>
             <Button
-              label="+NEW PROCEDURE"
+              label='+NEW PROCEDURE'
               onClick={() => {
                 openProcedure();
               }}
@@ -145,7 +148,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button
-              label="+NEW AGREEMENT"
+              label='+NEW AGREEMENT'
               onClick={() => {
                 openAgreement();
               }}
@@ -153,17 +156,20 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           </div>
           <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
             <Button
-              label="+ ADD REQUEST"
+              label='+ ADD REQUEST'
               style={{ backgroundColor: theme.selected, color: 'white' }}
               onClick={() => console.log('clicked')}
             />
           </div>
-          <p style={{ cursor: 'pointer' }} onClick={() => console.log('clicked')}>
+          <p
+            style={{ cursor: 'pointer' }}
+            onClick={() => console.log('clicked')}
+          >
             <IconRefresh
               css={`
                 color: ${theme.selected};
               `}
-              size="medium"
+              size='medium'
             />
           </p>
         </div>
@@ -187,8 +193,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           `}
         >
           <DropDown
-            header="Status"
-            placeholder="Status"
+            header='Status'
+            placeholder='Status'
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -205,13 +211,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
                     ${textStyle('label3')};
                   `}
                 >
-                  <Tag limitDigits={4} label={disputes.length} size="small" />
+                  <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width="128px"
+            width='128px'
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -223,7 +229,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </Bar>
 
       {selected
-        ? arbitrationDetails.map(arbitration => {
+        ? arbitrationDetails.map((arbitration) => {
             return (
               <ArbitrationCard
                 key={arbitration[0]}
@@ -232,7 +238,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               />
             );
           })
-        : arbitrationDetails.map(arbitration => {
+        : arbitrationDetails.map((arbitration) => {
             return (
               <ArbitrationCard
                 key={arbitration[0]}

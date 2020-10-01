@@ -1,19 +1,19 @@
 /*eslint-disable */
-import React from 'react'
-import { textStyle } from '@aragon/ui'
-import ArbitrationCardName from '../../assets/ArbitrationCardName.svg'
-import ArbitrationArgument from '../../assets/ArbitrationArgument.svg'
-import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg'
-import ArbitrationCompanyName from '../../assets/ArbitrationCompanyName.svg'
-import Arbitrators from '../../assets/Arbitrators.svg'
-import DisputeStatus from './DisputeStatus'
-import styled from "styled-components";
+import React from 'react';
+import { textStyle } from '@aragon/ui';
+import ArbitrationCardName from '../../assets/ArbitrationCardName.svg';
+import ArbitrationArgument from '../../assets/ArbitrationArgument.svg';
+import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
+import ArbitrationCompanyName from '../../assets/ArbitrationCompanyName.svg';
+import Arbitrators from '../../assets/Arbitrators.svg';
+import DisputeStatus from './DisputeStatus';
+import styled from 'styled-components';
 
-const ArbitrationCardNameStyle = <img src={ArbitrationCardName} />
-const ArbitrationCardDisputeStyle = <img src={ArbitrationCardDispute} />
-const ArbitratorsStyle = <img src={Arbitrators} />
-const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />
-const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />
+const ArbitrationCardNameStyle = <img src={ArbitrationCardName} />;
+const ArbitrationCardDisputeStyle = <img src={ArbitrationCardDispute} />;
+const ArbitratorsStyle = <img src={Arbitrators} />;
+const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />;
+const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />;
 
 function ArbitrationCard({ arbitration, selectDispute }) {
   //note: If undefined error try doing conditional rendering here.
@@ -21,7 +21,7 @@ function ArbitrationCard({ arbitration, selectDispute }) {
   // const status = [DISPUTE_STATUS_OPEN,
   //   DISPUTE_STATUS_APPEAL,
   //   DISPUTE_STATUS_CLOSED,]
-  console.log("Card logging", arbitration)
+  console.log('Card logging', arbitration);
   return (
     <>
       <section>
@@ -75,13 +75,13 @@ function ArbitrationCard({ arbitration, selectDispute }) {
         </div>
       </section>
     </>
-  )
+  );
 }
 
 const CardSubText = styled.span`
-        ${textStyle('label2')}
-      font-weight: 300;
-      color: ${({ labelColor }) => labelColor};
-`
+  ${textStyle('label2')}
+  font-weight: 300;
+  color: ${({ labelColor }) => labelColor};
+`;
 
-export default ArbitrationCard
+export default ArbitrationCard;
