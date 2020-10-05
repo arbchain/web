@@ -13,6 +13,7 @@ import {
   useTheme,
 } from '@aragon/ui';
 
+import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
 import { fetchAgreement } from '../../lib/contracts/Agreement';
@@ -94,31 +95,31 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     agreementAddressCall();
   }, [agreementAddress]);
 
-  // useEffect(() => {
-  //   async function procedureAddressCall() {
-  //     try {
-  //       if (procedureAddress.length) {
-  //         let index = 0;
-  //         const allDetails = [];
-  //         while (index < parseInt(procedureAddress.length)) {
-  //           const details = await getArbitrationDetails(
-  //             NODES[selected],
-  //             procedureAddress[index].procedureContractAddress,
-  //             procedureAddress[index].groupId,
-  //             walletAccount.account
-  //           );
-  //           allDetails.push(details);
-  //           index++;
-  //         }
-  //         console.log(allDetails);
-  //         setArbitrationDetails(allDetails);
-  //       }
-  //     } catch (err) {
-  //       return false;
-  //     }
-  //   }
-  //   procedureAddressCall();
-  // }, [procedureAddress]);
+  useEffect(() => {
+    async function procedureAddressCall() {
+      try {
+        if (procedureAddress.length) {
+          let index = 0;
+          const allDetails = [];
+          while (index < parseInt(procedureAddress.length)) {
+            const details = await getArbitrationDetails(
+              NODES[selected],
+              procedureAddress[index].procedureContractAddress,
+              procedureAddress[index].groupId,
+              walletAccount.account
+            );
+            allDetails.push(details);
+            index++;
+          }
+          console.log(allDetails);
+          setArbitrationDetails(allDetails);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    procedureAddressCall();
+  }, [procedureAddress]);
 
   // try {
   //   console.log('All Arbitration Details', arbitrationDetails);
@@ -126,12 +127,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   //   // pass
   // }
 
-  console.log('All agreement details', agreementDetails);
-
-  // if (arbitrationDetails.length !== 0) {
-  //   console.log('All Arbitration Details', arbitrationDetails);
-  //   console.log('All agreement details', agreementAddress);
-  // }
+  if (arbitrationDetails.length !== 0) {
+    console.log('All Arbitration Details', arbitrationDetails);
+    console.log('All agreement details', agreementAddress);
+  }
 
   return (
     <div>
@@ -254,25 +253,19 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         </div>
       </Bar>
 
-      {selected
-        ? arbitrationDetails.map(arbitration => {
-            return (
-              <ArbitrationCard
-                key={arbitration[0]}
-                arbitration={arbitration}
-                selectDispute={selectDispute}
-              />
-            );
-          })
-        : arbitrationDetails.map(arbitration => {
-            return (
-              <ArbitrationCard
-                key={arbitration[0]}
-                arbitration={arbitration}
-                selectDispute={selectDispute}
-              />
-            );
-          })}
+      {selected ? (
+        <AgreementList />
+      ) : (
+        arbitrationDetails.map(arbitration => {
+          return (
+            <ArbitrationCard
+              key={arbitration[0]}
+              arbitration={arbitration}
+              selectDispute={selectDispute}
+            />
+          );
+        })
+      )}
     </div>
   );
 }
