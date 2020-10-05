@@ -7,9 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 
-const antIcon = (
-  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
-);
+const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 
 const ageementAddr = [
   '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
@@ -21,12 +19,7 @@ const courtAddr = [
   '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
 ];
 
-export default function ProcedureForm({
-  procedureModal,
-  setProcedureModal,
-  account,
-  node,
-}) {
+export default function ProcedureForm({ procedureModal, setProcedureModal, account, node }) {
   const theme = useTheme();
 
   const [name, setName] = useState('');
@@ -68,7 +61,7 @@ export default function ProcedureForm({
   };
 
   return (
-    <Modal width='50rem' visible={procedureModal} onClose={closeProcedure}>
+    <Modal width="50rem" visible={procedureModal} onClose={closeProcedure}>
       <div
         style={{
           fontSize: '1.5rem',
@@ -83,8 +76,8 @@ export default function ProcedureForm({
       {procedureSubmit ? (
         resultProcedureContract ? (
           <Result
-            status='success'
-            title='Successfully created Procedure Agreement!'
+            status="success"
+            title="Successfully created Procedure Agreement!"
             extra={[
               <Button
                 style={{
@@ -129,7 +122,7 @@ export default function ProcedureForm({
             <TextInput
               style={{ flexBasis: '100%' }}
               value={name}
-              onChange={(event) => {
+              onChange={event => {
                 setName(event.target.value);
               }}
             />
@@ -147,7 +140,7 @@ export default function ProcedureForm({
             <TextArea
               style={{ flexBasis: '100%' }}
               value={description}
-              onChange={(event) => {
+              onChange={event => {
                 setDescription(event.target.value);
               }}
             />
@@ -186,7 +179,7 @@ export default function ProcedureForm({
             <TextInput
               style={{ flexBasis: '100%' }}
               value={claimantAddress}
-              onChange={(event) => {
+              onChange={event => {
                 setClaimantAddress(event.target.value);
               }}
             />
@@ -203,7 +196,7 @@ export default function ProcedureForm({
             <TextInput
               style={{ flexBasis: '100%' }}
               value={respondentAddress}
-              onChange={(event) => {
+              onChange={event => {
                 setRespondentAddress(event.target.value);
               }}
             />
@@ -219,7 +212,7 @@ export default function ProcedureForm({
             <div style={{ flexBasis: '100%' }}> Court Address:</div>
             <DropDown
               style={{ borderColor: '#D9D9D9' }}
-              items={courtAddr.map((party) => {
+              items={courtAddr.map(party => {
                 return party.slice(0, 20) + '...';
               })}
               selected={courtAddress}
@@ -231,7 +224,7 @@ export default function ProcedureForm({
           </div>
 
           <Button
-            label='SUBMIT'
+            label="SUBMIT"
             style={{
               backgroundColor: theme.selected,
               color: 'white',

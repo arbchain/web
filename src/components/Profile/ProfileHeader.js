@@ -1,11 +1,17 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import { Box, GU, textStyle } from '@aragon/ui';
+import { addressesEqual, Box, GU, textStyle } from '@aragon/ui';
 import { userMap } from '../../lib/contracts/MasterContract';
 import ProfileIcon from '../../assets/profile.png';
 import ANJBadgeIcon from '../../assets/anjBadge.svg';
 import IconCheck from '../../assets/IconCheck.svg';
-import { Form, Input } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Form, Input, Spin } from 'antd';
+import { useAccount } from '../../wallet/Account.js';
+import wallet from 'wallet-besu';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
+
 
 const Web3 = require('web3');
 const web3 = new Web3();
@@ -19,23 +25,42 @@ const NODES = Object.keys(networks).map((node) => {
 
 export default function ProfileHeader({ active }) {
   const [selected, setSelected] = useState(0);
-  const [account, setAccount] = useState(0);
+  let address = null;
+  const walletAccount = useAccount();
 
-  const address = web3.eth.accounts.privateKeyToAccount(
-    `0x${accounts[0].privateKey}`
-  );
+  if(walletAccount.account.privateKey !== undefined){
+    address = web3.eth.accounts.privateKeyToAccount(`0x${walletAccount.account.privateKey}`);
+    console.log(address)
+  }
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // Fetching the password locally. Need a secure way to do this for prod
+        const account = await wallet.login(localStorage.getItem('wpassword'));
+
+        // Update the account context by using a callback function
+        walletAccount.changeAccount({
+          privateKey: account[0],
+          orionPublicKey: localStorage.getItem('orionKey'),
+        });
+      } catch (err) {
+        return false;
+      }
+    }
+    load();
+  }, []);
+
 
   const { userData } = userMap(
     NODES[selected],
-    address.address,
-    accounts[account]
+    walletAccount.account
   );
-  console.log(address);
   console.log('USER DATA:', userData);
 
   let card;
   if (userData != null) {
-    const { name, contactNumber, zipCode, role } = userData;
+    const { name, contactNumber, zipCode, role, userAddress } = userData;
 
     card = (
       <>
@@ -109,7 +134,7 @@ export default function ProfileHeader({ active }) {
                     margin-right: ${2 * GU}px;
                   `}
                 >
-                  {address.address}
+                  {address ? address.address : <Spin indicator={antIcon} />}
                 </span>
                 {active && (
                   <div

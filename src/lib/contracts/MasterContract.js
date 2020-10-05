@@ -91,13 +91,14 @@ export function addAgreementContract(nodeSelected) {
 }
 
 
-export function userMap(nodeSelected, userAddress, account) {
+export function userMap(nodeSelected, account) {
   const {connected} = useContract(nodeSelected);
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     async function getUserData(){
       try{
+        const userAddress = web3Contract.web3.eth.accounts.privateKeyToAccount(`0x${account.privateKey}`).address;
         if(connected){
           const data = await web3Contract.call('userMap', [userAddress], account);
           setUserData(data)
@@ -133,26 +134,17 @@ export function getProcedureAddress (nodeSelected, account) {
   return { procedureAddress };
 }
 
-export function getAgreementAddress (nodeSelected, userAddress, account) {
+export function getAgreementAddress (nodeSelected, account) {
   const {connected} = useContract(nodeSelected);
-  const [agreementCount, setCount] = useState(null);
   const [agreementAddress, setAgreementAddress] = useState([])
 
   useEffect(() => {
     async function agreementAddressCall(){
       try{
+        const userAddress = web3Contract.web3.eth.accounts.privateKeyToAccount(`0x${account.privateKey}`).address;
         if(connected){
-          const agrCount = await web3Contract.call('getAgreementlength', [userAddress], account);
-          setCount(agrCount);
-
-          let i = 0;
-          //let count = 0;
-          while(i<parseInt(proCount[0])){
-            const res = await web3Contract.call('getAgreementAddress',[userAddress, i],account);
-            const data = await web3Contract.call('agreement',[res[0]], account)
-            setAgreementAddress(agreementAddress => [...agreementAddress, data])
-            i++;
-          }
+          const res = await web3Contract.call('getAllAgreementAddress',[userAddress], account);
+          setAgreementAddress(res[0]);
         }
       }catch(err) {
         return false
@@ -160,8 +152,38 @@ export function getAgreementAddress (nodeSelected, userAddress, account) {
     }
     agreementAddressCall()
   },[connected, account])
-  if(agreementAddress !== []){
-    localStorage.setItem('agreement_address', JSON.stringify(agreementAddress));
-  }
-  return { agreementCount, agreementAddress };
+  return { agreementAddress };
 }
+
+// export function getAgreementAddress (nodeSelected, userAddress, account) {
+//   const {connected} = useContract(nodeSelected);
+//   const [agreementCount, setCount] = useState(null);
+//   const [agreementAddress, setAgreementAddress] = useState([])
+
+//   useEffect(() => {
+//     async function agreementAddressCall(){
+//       try{
+//         if(connected){
+//           const agrCount = await web3Contract.call('getAgreementlength', [userAddress], account);
+//           setCount(agrCount);
+
+//           let i = 0;
+//           //let count = 0;
+//           while(i<parseInt(proCount[0])){
+//             const res = await web3Contract.call('getAgreementAddress',[userAddress, i],account);
+//             const data = await web3Contract.call('agreement',[res[0]], account)
+//             setAgreementAddress(agreementAddress => [...agreementAddress, data])
+//             i++;
+//           }
+//         }
+//       }catch(err) {
+//         return false
+//       }
+//     }
+//     agreementAddressCall()
+//   },[connected, account])
+//   if(agreementAddress !== []){
+//     localStorage.setItem('agreement_address', JSON.stringify(agreementAddress));
+//   }
+//   return { agreementCount, agreementAddress };
+// }
