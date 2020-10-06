@@ -16,13 +16,9 @@ import {
 import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
-import { fetchAgreement } from '../../lib/contracts/Agreement';
 import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
-import {
-  getProcedureAddress,
-  getAgreementAddress,
-} from '../../lib/contracts/MasterContract';
+import { getProcedureAddress } from '../../lib/contracts/MasterContract';
 // import DisputeCard from './DisputeCard';
 
 import ArbitrationCard from './ArbitrationCard.js';
@@ -33,7 +29,7 @@ const Web3 = require('web3');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map((node) => {
+const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
@@ -43,7 +39,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
-  const [agreementDetails, setAgreementDetails] = useState([]);
 
   const openAgreement = () => setAgreementModal(true);
 
@@ -68,41 +63,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     load();
   }, []);
 
-  const { agreementAddress } = getAgreementAddress(
-    NODES[0],
-    walletAccount.account
-  );
-  const { procedureAddress } = getProcedureAddress(
-    NODES[0],
-    walletAccount.account
-  );
-
-  useEffect(() => {
-    async function agreementAddressCall() {
-      try {
-        if (agreementAddress.length) {
-          console.log('Agreement adrees length', agreementAddress.length);
-          let index = 0;
-          const allDetails = [];
-          while (index < parseInt(agreementAddress.length)) {
-            const details = await fetchAgreement(
-              NODES[0],
-              agreementAddress[index].agreementContractAddress,
-              agreementAddress[index].groupId,
-              walletAccount.account
-            );
-            allDetails.push(details);
-            index++;
-          }
-          console.log(allDetails);
-          setAgreementDetails(allDetails);
-        }
-      } catch (err) {
-        return false;
-      }
-    }
-    agreementAddressCall();
-  }, [agreementAddress]);
+  const { procedureAddress } = getProcedureAddress(NODES[0], walletAccount.account);
 
   useEffect(() => {
     async function procedureAddressCall() {
@@ -138,7 +99,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
   if (arbitrationDetails.length !== 0) {
     console.log('All Arbitration Details', arbitrationDetails);
-    console.log('All agreement details', agreementAddress);
   }
 
   return (
@@ -176,7 +136,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         <div style={{ display: 'flex', marginTop: '1rem' }}>
           <div style={{ marginLeft: '0.5rem' }}>
             <Button
-              label='+NEW PROCEDURE'
+              label="+NEW PROCEDURE"
               onClick={() => {
                 openProcedure();
               }}
@@ -185,36 +145,17 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button
-              label='+NEW AGREEMENT'
+              label="+NEW AGREEMENT"
               onClick={() => {
                 openAgreement();
               }}
             />
           </div>
-          <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
-            <Button
-              label='+ ADD REQUEST'
-              style={{ backgroundColor: theme.selected, color: 'white' }}
-              onClick={() => console.log('clicked')}
-            />
-          </div>
-          <p
-            style={{ cursor: 'pointer' }}
-            onClick={() => console.log('clicked')}
-          >
-            <IconRefresh
-              css={`
-                color: ${theme.selected};
-              `}
-              size='medium'
-            />
-          </p>
         </div>
       </div>
 
       <Tabs
-        items={['All requests', 'My claims', 'Agreement Details']}
-        q
+        items={['All requests', 'Agreement Details']}
         selected={selected}
         onChange={setSelected}
       />
@@ -231,8 +172,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           `}
         >
           <DropDown
-            header='Status'
-            placeholder='Status'
+            header="Status"
+            placeholder="Status"
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -249,13 +190,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
                     ${textStyle('label3')};
                   `}
                 >
-                  <Tag limitDigits={4} label={disputes.length} size='small' />
+                  <Tag limitDigits={4} label={disputes.length} size="small" />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width='128px'
+            width="128px"
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -267,9 +208,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </Bar>
 
       {selected ? (
-        <AgreementList />
+        <AgreementList walletAccount={walletAccount} />
       ) : (
-        arbitrationDetails.map((arbitration) => {
+        arbitrationDetails.map(arbitration => {
           return (
             <ArbitrationCard
               key={arbitration[0]}

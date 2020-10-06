@@ -18,32 +18,12 @@ const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-function AgreementList({ disputes, arbitrations, selectDispute }) {
+function AgreementList({ disputes, selectDispute, walletAccount }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const [agreementDetails, setAgreementDetails] = useState([]);
 
-  const walletAccount = useAccount();
-
-  useEffect(() => {
-    async function load() {
-      try {
-        // Fetching the password locally. Need a secure way to do this for prod
-        const account = await wallet.login(localStorage.getItem('wpassword'));
-
-        // Update the account context by using a callback function
-        walletAccount.changeAccount({
-          privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey'),
-        });
-      } catch (err) {
-        return false;
-      }
-    }
-    load();
-  }, []);
-
-  const { agreementAddress } = getAgreementAddress(NODES[selected], walletAccount.account);
+  const { agreementAddress } = getAgreementAddress(NODES[0], walletAccount.account);
 
   useEffect(() => {
     async function agreementAddressCall() {
@@ -54,7 +34,7 @@ function AgreementList({ disputes, arbitrations, selectDispute }) {
           const allDetails = [];
           while (index < parseInt(agreementAddress.length)) {
             const details = await fetchAgreement(
-              NODES[selected],
+              NODES[0],
               agreementAddress[index].agreementContractAddress,
               agreementAddress[index].groupId,
               walletAccount.account
