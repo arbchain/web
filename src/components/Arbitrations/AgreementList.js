@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Bar,
-  Button,
-  CardLayout,
-  DateRangePicker,
-  DropDown,
-  IconRefresh,
-  GU,
-  Tabs,
-  Tag,
-  textStyle,
-  useTheme,
-} from '@aragon/ui';
+import { useTheme } from '@aragon/ui';
 
 import { fetchAgreement } from '../../lib/contracts/Agreement';
 import { useAccount } from '../../wallet/Account.js';
@@ -20,7 +8,6 @@ import { getAgreementAddress } from '../../lib/contracts/MasterContract';
 
 import AgreementCard from './AgreementCard';
 
-import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 
 const Web3 = require('web3');
