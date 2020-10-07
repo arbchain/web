@@ -5,7 +5,6 @@ import {
   CardLayout,
   DateRangePicker,
   DropDown,
-  IconRefresh,
   GU,
   Tabs,
   Tag,
@@ -16,6 +15,7 @@ import {
 import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
+import StatementForm from './modals/StatementForm';
 import { fetchAgreement } from '../../lib/contracts/Agreement';
 import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
@@ -42,12 +42,16 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [selected, setSelected] = useState(0);
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
+  const [statementModal, setStatementModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
   const [agreementDetails, setAgreementDetails] = useState([]);
 
   const openAgreement = () => setAgreementModal(true);
 
   const openProcedure = () => setProcedureModal(true);
+
+  const openStatement = () => setStatementModal(true);
+
   const walletAccount = useAccount();
 
   useEffect(() => {
@@ -157,6 +161,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           node={NODES[0]}
         />
         <div />
+
         {/* procedure modal */}
         <div
           style={{
@@ -168,6 +173,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           <ProcedureForm
             procedureModal={procedureModal}
             setProcedureModal={setProcedureModal}
+            account={walletAccount.account}
+            node={NODES[0]}
+          />
+        </div>
+
+        {/* statement  modal */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <StatementForm
+            statementModal={statementModal}
+            setStatementModal={setStatementModal}
             account={walletAccount.account}
             node={NODES[0]}
           />
@@ -193,27 +214,19 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           </div>
           <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
             <Button
-              label='+ ADD REQUEST'
+              label='+ NEW STATEMENT'
               style={{ backgroundColor: theme.selected, color: 'white' }}
-              onClick={() => console.log('clicked')}
+              onClick={() => {
+                openStatement();
+                console.log('WORKSSSS');
+              }}
             />
           </div>
-          <p
-            style={{ cursor: 'pointer' }}
-            onClick={() => console.log('clicked')}
-          >
-            <IconRefresh
-              css={`
-                color: ${theme.selected};
-              `}
-              size='medium'
-            />
-          </p>
         </div>
       </div>
 
       <Tabs
-        items={['All requests', 'My claims', 'Agreement Details']}
+        items={['All requests', 'Agreement Details', 'Statement Details']}
         q
         selected={selected}
         onChange={setSelected}
