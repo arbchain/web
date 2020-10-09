@@ -15,13 +15,15 @@ const ArbitratorsStyle = <img src={Arbitrators} />;
 const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />;
 const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />;
 
-function ArbitrationCard({ arbitration, selectDispute }) {
+function AgreementCard({ agreement, selectDispute }) {
   //note: If undefined error try doing conditional rendering here.
 
   // const status = [DISPUTE_STATUS_OPEN,
   //   DISPUTE_STATUS_APPEAL,
   //   DISPUTE_STATUS_CLOSED,]
-  console.log('Card logging', arbitration);
+
+  const disputeType = ["Future", "Existing"]
+  console.log('Card logging', agreement);
   return (
     <>
       <section>
@@ -43,11 +45,11 @@ function ArbitrationCard({ arbitration, selectDispute }) {
             >
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}>
                 <p>{ArbitrationCardDisputeStyle}</p>
-                <p>{arbitration[0]}</p>
+                <p>Law: {agreement[3]}</p>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}>
                 <p>{ArbitrationCardNameStyle}</p>
-                <CardSubText>{arbitration[5]}</CardSubText>
+                <CardSubText>Agreement : {agreement[5]}</CardSubText>
               </div>
             </div>
             <div
@@ -57,15 +59,15 @@ function ArbitrationCard({ arbitration, selectDispute }) {
             >
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitratorsStyle}</p>
-                <CardSubText>{arbitration[4]} arbitrators</CardSubText>
+                <CardSubText>{agreement[0]} arbitrators</CardSubText>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitrationCompanyNameStyle}</p>
-                <CardSubText>{arbitration[6]}</CardSubText>
+                <CardSubText>Seat - {agreement[1]}</CardSubText>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
                 <p>{ArbitrationArgumentStyle}</p>
-                <CardSubText>3</CardSubText>
+        <CardSubText>Dispute Type: {disputeType[parseInt(agreement[4])]}</CardSubText>
               </div>
             </div>
             {/* <div>
@@ -84,4 +86,4 @@ const CardSubText = styled.span`
   color: ${({ labelColor }) => labelColor};
 `;
 
-export default ArbitrationCard;
+export default AgreementCard;

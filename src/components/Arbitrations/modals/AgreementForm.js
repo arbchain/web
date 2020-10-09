@@ -7,7 +7,6 @@ import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
-import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 import { addAgreementContract } from '../../../lib/contracts/MasterContract';
 const Web3 = require('web3');
 const antIcon = (
@@ -40,17 +39,16 @@ export default function AgreementForm({
     setAgreementSubmit(false);
     setResult(false);
   };
-  const { result, agreementAdditionStatus, setResult, create } = createAgreement(node);
   const {
-    resultProcedureContract,
-    procedureAdditionStatus,
-    createProcedureContract,
-  } = deployProcedureContract(node);
+    result,
+    agreementAdditionStatus,
+    setResult,
+    create,
+  } = createAgreement(node);
+  
 
   console.log('Agreement Addition Status', agreementAdditionStatus);
-  console.log('Procedure Addition Staus', procedureAdditionStatus);
   console.log(' Agreement Contract', result);
-  console.log('Procedure Contract', resultProcedureContract);
 
   const createAgain = () => {
     setAgreementSubmit(false);
@@ -70,14 +68,6 @@ export default function AgreementForm({
       disputeType + 1,
       docHash,
     ]);
-    createProcedureContract(account, [
-      'Test Arbitration 2',
-      'A simple test arbitration',
-      '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
-      '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
-      '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
-      '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
-    ]);
     if (result !== false && resultProcedureContract) {
       agreementAddition(result.contractAddress, result.privacyGroupId, account);
     }
@@ -94,7 +84,7 @@ export default function AgreementForm({
           textAlign: 'center',
         }}
       >
-        Create an Arbitration Agreement
+        <h2> Create an Arbitration Agreement</h2>
       </div>
 
       {agreementSubmit ? (

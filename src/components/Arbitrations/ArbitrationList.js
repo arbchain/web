@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Bar,
   Button,
@@ -13,17 +13,19 @@ import {
   useTheme,
 } from '@aragon/ui';
 
+import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
+import ProcedureForm from './modals/ProcedureForm';
 import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
 import { getProcedureAddress } from '../../lib/contracts/MasterContract';
-import DisputeCard from './DisputeCard';
+// import DisputeCard from './DisputeCard';
 
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 
 const Web3 = require('web3');
-const accounts = require('../../wallet/keys');
+// const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
@@ -32,78 +34,71 @@ const NODES = Object.keys(networks).map(node => {
 });
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
-  let data = null;
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const [agreementModal, setAgreementModal] = useState(false);
+  const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
 
   const openAgreement = () => setAgreementModal(true);
 
+  const openProcedure = () => setProcedureModal(true);
   const walletAccount = useAccount();
-  
-  useEffect(() => {
-  
-    async function load() { 
-    try{
-       //Fetching the password locally. Need a secure way to do this for prod
-       const account = await wallet.login(localStorage.getItem('wpassword'));
-
-       // Update the account context by using a callback function
-       walletAccount.changeAccount({privateKey:account[0], orionPublicKey: localStorage.getItem('orionKey')});
-      
-    }catch(err) {
-      return false
-    }
-  }
-  load()
-  
-},[] )
-
-
-  const { procedureAddress } = getProcedureAddress(
-    NODES[selected],
-    walletAccount.account
-  )
-  console.log(procedureAddress)
 
   useEffect(() => {
-    async function agreementAddressCall(){
-      try{
-        if (procedureAddress.length) {
-              let index = 0;
-              let allDetails = [];
-              while (index < parseInt(procedureAddress.length)) {
-                const details = await getArbitrationDetails(
-                  NODES[selected],
-                  procedureAddress[index].procedureContractAddress,
-                  procedureAddress[index].groupId,
-                  walletAccount.account
-                );
-                allDetails.push(details)
-                index++;
-              }
-              console.log(allDetails)
-              setArbitrationDetails(allDetails)
-          }
+    async function load() {
+      try {
+        // Fetching the password locally. Need a secure way to do this for prod
+        const account = await wallet.login(localStorage.getItem('wpassword'));
 
-        
-      }catch(err) {
-        return false
+        // Update the account context by using a callback function
+        walletAccount.changeAccount({
+          privateKey: account[0],
+          orionPublicKey: localStorage.getItem('orionKey'),
+        });
+      } catch (err) {
+        return false;
       }
     }
-    agreementAddressCall()
-  }, [procedureAddress])
+    load();
+  }, []);
 
-  try {
-  console.log('Procedure Count', procedureAddress.length);
-  console.log('Procedure Data', procedureAddress);
+  const { procedureAddress } = getProcedureAddress(NODES[0], walletAccount.account);
 
-  console.log('All Arbitration Details', arbitrationDetails);
-  }
+  useEffect(() => {
+    async function procedureAddressCall() {
+      try {
+        if (procedureAddress.length) {
+          let index = 0;
+          const allDetails = [];
+          while (index < parseInt(procedureAddress.length)) {
+            const details = await getArbitrationDetails(
+              NODES[0],
+              procedureAddress[index].procedureContractAddress,
+              procedureAddress[index].groupId,
+              walletAccount.account
+            );
+            allDetails.push(details);
+            index++;
+          }
+          console.log(allDetails);
+          setArbitrationDetails(allDetails);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    procedureAddressCall();
+  }, [procedureAddress]);
 
-  catch(err) {
-    //pass
+  // try {
+  //   console.log('All Arbitration Details', arbitrationDetails);
+  // } catch (err) {
+  //   // pass
+  // }
+
+  if (arbitrationDetails.length !== 0) {
+    console.log('All Arbitration Details', arbitrationDetails);
   }
 
   return (
@@ -119,10 +114,35 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           agreementModal={agreementModal}
           setAgreementModal={setAgreementModal}
           account={walletAccount.account}
-          node={NODES[selected]}
+          node={NODES[0]}
         />
         <div />
+        {/* procedure modal */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
+        >
+          <ProcedureForm
+            procedureModal={procedureModal}
+            setProcedureModal={setProcedureModal}
+            account={walletAccount.account}
+            node={NODES[0]}
+          />
+        </div>
+
         <div style={{ display: 'flex', marginTop: '1rem' }}>
+          <div style={{ marginLeft: '0.5rem' }}>
+            <Button
+              label="+NEW PROCEDURE"
+              onClick={() => {
+                openProcedure();
+              }}
+            />
+          </div>
+
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button
               label="+NEW AGREEMENT"
@@ -131,25 +151,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               }}
             />
           </div>
-          <div style={{ marginLeft: '0.25rem', marginRight: '0.5rem' }}>
-            <Button
-              label="+ ADD REQUEST"
-              style={{ backgroundColor: theme.selected, color: 'white' }}
-              onClick={() => console.log('clicked')}
-            />
-          </div>
-          <p style={{ cursor: 'pointer' }} onClick={() => console.log('clicked')}>
-            <IconRefresh
-              css={`
-                color: ${theme.selected};
-              `}
-              size="medium"
-            />
-          </p>
         </div>
       </div>
 
-      <Tabs items={['All requests', 'My claims']} selected={selected} onChange={setSelected} />
+      <Tabs
+        items={['All requests', 'Agreement Details']}
+        selected={selected}
+        onChange={setSelected}
+      />
 
       <Bar>
         <div
@@ -199,16 +208,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </Bar>
 
       {selected ? (
-        <CardLayout columnWidthMin={30 * GU} rowHeight={307}>
-          {disputes.map(dispute => {
-            return <DisputeCard key={dispute.id} dispute={dispute} selectDispute={selectDispute} />;
-          })}
-        </CardLayout>
+        <AgreementList walletAccount={walletAccount} />
       ) : (
-        arbitrations.map(arbitration => {
+        arbitrationDetails.map(arbitration => {
           return (
             <ArbitrationCard
-              key={arbitration.id}
+              key={arbitration[0]}
               arbitration={arbitration}
               selectDispute={selectDispute}
             />

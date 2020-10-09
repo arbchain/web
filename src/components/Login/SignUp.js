@@ -1,11 +1,10 @@
-/* eslint-disable no-template-curly-in-string */
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Steps, Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
 import { Main } from '@aragon/ui';
-import { createUser, userMap } from '../../lib/contracts/MasterContract';
+import { createUser } from '../../lib/contracts/MasterContract';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
 
@@ -14,13 +13,12 @@ const { Option, OptGroup } = Select;
 
 const accounts = require('../../wallet/keys.js');
 const networks = require('../../wallet/network.js');
-console.log('ACCOUNTS', accounts);
 
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ACCOUNTS = accounts.map(node => {
+const ACCOUNTS = accounts.map((node) => {
   return `${node.name} - (${node.orionPublicKey})`;
 });
 
@@ -58,13 +56,13 @@ const validateMessages = {
 
 // Toast message
 
-const openSuccessNotification = type => {
+const openSuccessNotification = (type) => {
   notification[type]({
     message: 'User Account has been created, please Login to continue',
   });
 };
 
-const openWarningNotification = type => {
+const openWarningNotification = (type) => {
   notification[type]({
     message: 'Please enter all the fields in the Form!',
   });
@@ -98,7 +96,7 @@ const Signup = () => {
   // state for account dropdown
   const [account, setAccount] = useState(0);
 
-  const history = useHistory();
+  let history = useHistory();
 
   // Stepper Handler
   function next() {
@@ -125,7 +123,6 @@ const Signup = () => {
   // Network selection
 
   const { status, newUserCreation } = createUser(NODES[network]);
-  const { userData, getUserData } = userMap(NODES[network]);
 
   // This is an action to be invoked onclick
   async function registerUser() {
@@ -145,51 +142,30 @@ const Signup = () => {
       }
     });
   }
-  // Test
 
-  // if (status != null) {
-  //   openNotification('success');
-  // }
-  const networkSelection = (
-    <Form
-      {...layout}
-      id="form"
-      name="nest-messages"
-      // onFinish={registerUser}
-      validateMessages={validateMessages}
-    >
-      <Form.Item label="Select Network">
-        <Select label="Field A" defaultValue="Node1" onChange={selectNetwork}>
-          <OptGroup label="Networks">
-            <Option value={network}>Node1</Option>
-            <Option value="n2">Node2</Option>
-          </OptGroup>
-        </Select>
-        <Button type="primary" style={{ width: '100%', marginTop: '16px', background: '#4d4cbb' }}>
-          Generate New Account
-        </Button>
-      </Form.Item>
-    </Form>
-  );
-
-  const userInformation = (
+  let userInformation = (
     <>
-      <Form {...layout} id="form" name="nest-messages" validateMessages={validateMessages}>
+      <Form
+        {...layout}
+        id='form'
+        name='nest-messages'
+        validateMessages={validateMessages}
+      >
         <Form.Item
           name={['user', 'name']}
-          label="Name"
+          label='Name'
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input value={name} onChange={e => setName(e.target.value)} />
+          <Input value={name} onChange={(e) => setName(e.target.value)} />
         </Form.Item>
 
         <Form.Item
-          name="zip"
-          label="Zip Code"
+          name='zip'
+          label='Zip Code'
           rules={[
             {
               required: true,
@@ -197,12 +173,16 @@ const Signup = () => {
             },
           ]}
         >
-          <Input style={{ width: '100%' }} value={zip} onChange={e => setZip(e.target.value)} />
+          <Input
+            style={{ width: '100%' }}
+            value={zip}
+            onChange={(e) => setZip(e.target.value)}
+          />
         </Form.Item>
 
         <Form.Item
-          name="phone"
-          label="Phone Number"
+          name='phone'
+          label='Phone Number'
           rules={[
             {
               required: true,
@@ -210,30 +190,30 @@ const Signup = () => {
             },
           ]}
         >
-          <Input value={phone} onChange={e => setPhone(e.target.value)} />
+          <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
         </Form.Item>
         <Form.Item
           name={['user', 'email']}
-          label="Email"
+          label='Email'
           rules={[
             {
               type: 'email',
             },
           ]}
         >
-          <Input value={email} onChange={e => setEmail(e.target.value)} />
+          <Input value={email} onChange={(e) => setEmail(e.target.value)} />
         </Form.Item>
 
         <Form.Item
-          label="Role"
+          label='Role'
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Select label="Role" defaultValue="Role" onChange={selectRole}>
-            <OptGroup label="Networks">
+          <Select label='Role' defaultValue='Role' onChange={selectRole}>
+            <OptGroup label='Networks'>
               <Option value={0}>Party</Option>
               <Option value={1}>Arbitrator</Option>
               <Option value={2}>Arbitratral Court</Option>
@@ -241,14 +221,17 @@ const Signup = () => {
           </Select>
         </Form.Item>
         <Form.Item
-          label="Password"
+          label='Password'
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Input.Password value={password} onChange={e => setPassword(e.target.value)} />
+          <Input.Password
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </Form.Item>
       </Form>
     </>
@@ -256,35 +239,35 @@ const Signup = () => {
 
   // Preview:- Readonly
 
-  const preview = (
+  let preview = (
     <>
       <Form
         {...layout}
-        id="form"
-        name="nest-messages"
+        id='form'
+        name='nest-messages'
         onFinish={registerUser}
         validateMessages={validateMessages}
       >
-        <Form.Item name={['user', 'name']} label="Name">
+        <Form.Item name={['user', 'name']} label='Name'>
           <Input value={name} readOnly />
         </Form.Item>
 
-        <Form.Item name="zip" label="Zip Code">
+        <Form.Item name='zip' label='Zip Code'>
           <Input style={{ width: '100%' }} value={zip} readOnly />
         </Form.Item>
 
-        <Form.Item name="phone" label="Phone Number">
+        <Form.Item name='phone' label='Phone Number'>
           <Input value={phone} readOnly />
         </Form.Item>
-        <Form.Item name={['user', 'email']} label="Email">
+        <Form.Item name={['user', 'email']} label='Email'>
           <Input value={email} readOnly />
         </Form.Item>
 
-        <Form.Item label="Role">
-          <Select label="Role" defaultValue="Role">
-            <OptGroup label="Networks">
+        <Form.Item label='Role'>
+          <Select label='Role' defaultValue='Role'>
+            <OptGroup label='Networks'>
               <Option value={role} readOnly>
-                Arbitrator
+                {role}
               </Option>
             </OptGroup>
           </Select>
@@ -296,36 +279,32 @@ const Signup = () => {
   // stepper
   const steps = [
     {
-      title: 'Select Network',
-      content: networkSelection,
-    },
-    {
       title: 'User Information',
       content: userInformation,
     },
     {
-      title: 'Create Account',
+      title: 'Sign up',
       content: preview,
     },
   ];
 
   return (
     <Main layout={false}>
-      <div className="container">
-        <Steps current={current} className="stepper">
-          {steps.map(item => (
+      <div className='container'>
+        <Steps current={current} className='stepper'>
+          {steps.map((item) => (
             <Step key={item.title} title={item.title} />
           ))}
         </Steps>
-        <div className="steps-content">{steps[current].content}</div>
-        <div className="steps-action">
+        <div className='steps-content'>{steps[current].content}</div>
+        <div className='steps-action'>
           {current < steps.length - 1 && (
-            <Button type="primary" onClick={next}>
+            <Button type='primary' onClick={next}>
               Next
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button type="primary" onClick={registerUser}>
+            <Button type='primary' onClick={registerUser}>
               Sign up
             </Button>
           )}
