@@ -210,12 +210,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       {selected ? (
         <AgreementList walletAccount={walletAccount} />
       ) : (
-        arbitrationDetails.map(arbitration => {
+        arbitrationDetails.map((arbitration, index) => {
           return (
             <ArbitrationCard
               key={arbitration[0]}
               arbitration={arbitration}
               selectDispute={selectDispute}
+              procedureAddress={procedureAddress[index]}
             />
           );
         })

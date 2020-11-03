@@ -16,17 +16,23 @@ const ArbitratorsStyle = <img src={Arbitrators} />;
 const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />;
 const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />;
 
-function ArbitrationCard({ arbitration, selectDispute }) {
+function ArbitrationCard({ arbitration, selectDispute, procedureAddress }) {
   //note: If undefined error try doing conditional rendering here.
 
   // const status = [DISPUTE_STATUS_OPEN,
   //   DISPUTE_STATUS_APPEAL,
   //   DISPUTE_STATUS_CLOSED,]
+  console.log("Address", procedureAddress)
   console.log('Card logging', arbitration);
   return (
     <>
       <section>
-        <Link to='/proceduredetails' style={{ color: '#000000d9' }}>
+        <Link to={{
+          pathname:`/arbitrations/${procedureAddress.procedureContractAddress}`,
+          procedureAddress:procedureAddress,
+          arbitration:arbitration
+        }} 
+          style={{ color: '#000000d9' }}>
           <div
             style={{
               padding: '2rem',

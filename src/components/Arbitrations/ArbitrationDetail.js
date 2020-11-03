@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//import { AgreementContext } from './Contexts';
+// import { AgreementContext } from './Contexts';
 import {
   BackButton,
   Bar,
@@ -19,11 +19,16 @@ import DisputeTimeline from './DisputeTimeline';
 import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-const ArbitrationDetail = () => {
+const ArbitrationDetail = props => {
   const [statementModal, setStatementModal] = useState(false);
   const openStatement = () => setStatementModal(true);
-  let history = useHistory();
+  const history = useHistory();
   const theme = useTheme();
+
+  const status = ['Open', 'Close'];
+
+  const { arbitration } = props.location;
+  console.log();
 
   return (
     <React.Fragment>
@@ -49,7 +54,7 @@ const ArbitrationDetail = () => {
       <Split
         primary={
           <React.Fragment>
-            <Box heading='Agreement Details'>
+            <Box heading="Agreement Details">
               <Box>
                 <section
                   css={`
@@ -92,13 +97,13 @@ const ArbitrationDetail = () => {
                             ${textStyle('title3')};
                           `}
                         >
-                          Test Title
+                          {arbitration[0]}
                         </Text>
                       </div>
                     </div>
                     <div>
                       {/* <DisputeStatus dispute={dispute} /> */}
-                      <h1>Status</h1>
+                      <h1>{status[arbitration[3]]}</h1>
                     </div>
                   </div>
 
@@ -125,11 +130,7 @@ const ArbitrationDetail = () => {
                           ${textStyle('body2')};
                         `}
                       >
-                        Lorem ipsum, dolor sit amet consectetur adipisicing
-                        elit. Iste quod error ea esse inventore officia
-                        obcaecati praesentium consequuntur id provident velit,
-                        excepturi temporibus mollitia quaerat laudantium in
-                        corporis rerum veniam!
+                        {arbitration[1]}
                       </Text>
                     </div>
                     <div>
@@ -148,6 +149,7 @@ const ArbitrationDetail = () => {
                           align-items: flex-start;
                         `}
                       >
+                        {arbitration[6]}
                         <IdentityBadge
                         // connectedAccount={addressesEqual(creator, connectedAccount)}
                         //   entity={claimant}
@@ -180,7 +182,7 @@ const ArbitrationDetail = () => {
                           ${textStyle('body2')};
                         `}
                       >
-                        {`Apple Inc - Consenso Corp agreement`}
+                        {arbitration[2]}
                       </Text>
                     </div>
 
@@ -196,14 +198,15 @@ const ArbitrationDetail = () => {
                       >
                         Respondent
                       </span>
-                      <IdentityBadge
+                      {arbitration[7]}
+                      {/* <IdentityBadge
                       // connectedAccount={addressesEqual(creator, connectedAccount)}
-                      //entity={respondent}
-                      />
+                      // entity={respondent}
+                      /> */}
                     </div>
                   </div>
                   <Button
-                    mode='strong'
+                    mode="strong"
                     onClick={() => {
                       openStatement();
                       console.log('WORKSSSS');
@@ -222,7 +225,7 @@ const ArbitrationDetail = () => {
         }
         secondary={
           <React.Fragment>
-            <Box heading='Dispute timeline' padding={0}>
+            <Box heading="Dispute timeline" padding={0}>
               <DisputeTimeline />
             </Box>
           </React.Fragment>
