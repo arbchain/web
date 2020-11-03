@@ -16,7 +16,7 @@ import { useHistory } from 'react-router-dom';
 
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
-import statementForm from './modals/StatementForm';
+import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
 const ArbitrationDetail = () => {
@@ -35,7 +35,7 @@ const ArbitrationDetail = () => {
           width: '100%',
         }}
       >
-        <statementForm
+        <StatementForm
           statementModal={statementModal}
           setStatementModal={setStatementModal}
           // account={walletAccount.account}
