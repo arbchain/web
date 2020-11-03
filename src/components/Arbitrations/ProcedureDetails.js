@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-//import { AgreementContext } from './Contexts';
+import React from 'react';
 import {
   BackButton,
   Bar,
@@ -16,32 +15,14 @@ import { useHistory } from 'react-router-dom';
 
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
-import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-const ArbitrationDetail = () => {
-  const [statementModal, setStatementModal] = useState(false);
-  const openStatement = () => setStatementModal(true);
+const ProcedureDetails = () => {
   let history = useHistory();
   const theme = useTheme();
 
   return (
     <React.Fragment>
-      {/* statement  modal */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <StatementForm
-          statementModal={statementModal}
-          setStatementModal={setStatementModal}
-          // account={walletAccount.account}
-          // node={NODES[0]}
-        />
-      </div>
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
@@ -49,7 +30,7 @@ const ArbitrationDetail = () => {
       <Split
         primary={
           <React.Fragment>
-            <Box heading='Agreement Details'>
+            <Box heading='Procedure Details'>
               <Box>
                 <section
                   css={`
@@ -204,16 +185,13 @@ const ArbitrationDetail = () => {
                   </div>
                   <Button
                     mode='strong'
-                    onClick={() => {
-                      openStatement();
-                      console.log('WORKSSSS');
-                    }}
+                    onClick={() => {}}
                     wide
                     css={`
                       background: ${theme.selected};
                     `}
                   >
-                    + NEW STATEMENT
+                    PERFORM ACTION
                   </Button>
                 </section>
               </Box>
@@ -232,4 +210,4 @@ const ArbitrationDetail = () => {
   );
 };
 
-export default ArbitrationDetail;
+export default ProcedureDetails;
