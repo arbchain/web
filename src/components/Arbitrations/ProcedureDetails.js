@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BackButton,
+  DropDown,
+  IconEdit,
   Bar,
   Box,
   Split,
@@ -12,20 +14,42 @@ import {
   Button,
 } from '@aragon/ui';
 import { useHistory } from 'react-router-dom';
-
+import ProcedureStatementForm from './modals/ProcedureStatement';
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
+const languages = ['English', 'French', 'Spanish'];
+const arbitrationSeats = ['London', 'lorem', 'lorem'];
+
 const ProcedureDetails = () => {
   let history = useHistory();
   const theme = useTheme();
+
+  const [language, setLanguage] = useState(0);
+  const [seat, setSeat] = useState(0);
+
+  const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
+  const openProcedureStatement = () => setProcedureStatementModal(true);
 
   return (
     <React.Fragment>
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <ProcedureStatementForm
+          ProcedureStatementModal={ProcedureStatementModal}
+          setProcedureStatementModal={setProcedureStatementModal}
+        />
+      </div>
 
       <Split
         primary={
@@ -133,6 +157,7 @@ const ProcedureDetails = () => {
                         // connectedAccount={addressesEqual(creator, connectedAccount)}
                         //   entity={claimant}
                         />
+                        Lorem ipsum dolor sit amet.
                       </div>
                     </div>
                   </div>
@@ -144,17 +169,15 @@ const ProcedureDetails = () => {
                     `}
                   >
                     <div>
-                      <span
+                      <h2
                         css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
+                          ${textStyle('label2')};
+                          color: ${theme.surfaceContentSecondary};
+                          margin-bottom: ${2 * GU}px;
+                        `}
                       >
                         ARBITRATION AGREEMENT
-                      </span>
+                      </h2>
                       <Text
                         css={`
                           display: inline-block;
@@ -166,20 +189,71 @@ const ProcedureDetails = () => {
                     </div>
 
                     <div>
-                      <span
+                      <h2
                         css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
+                          ${textStyle('label2')};
+                          color: ${theme.surfaceContentSecondary};
+                          margin-bottom: ${2 * GU}px;
+                        `}
                       >
                         Respondent
-                      </span>
+                      </h2>
                       <IdentityBadge
                       // connectedAccount={addressesEqual(creator, connectedAccount)}
                       //entity={respondent}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    css={`
+                      display: grid;
+                      grid-template-columns: repeat(2, 1fr);
+                      grid-column-gap: 8px;
+                    `}
+                  >
+                    <div>
+                      <h1
+                        css={`
+                          color: ${theme.surfaceContentSecondary};
+                        `}
+                      >
+                        Selected Language{' '}
+                        <span>
+                          <IconEdit />
+                        </span>
+                      </h1>
+                      <DropDown
+                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+                        disabled
+                        items={languages}
+                        selected={language}
+                        wide
+                        onChange={(index, items) => {
+                          setLanguage(index);
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <h1
+                        css={`
+                          color: ${theme.surfaceContentSecondary};
+                        `}
+                      >
+                        Selected Arbitration Seat
+                        <span>
+                          <IconEdit />
+                        </span>
+                      </h1>
+                      <DropDown
+                        wide
+                        disabled={true}
+                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+                        items={arbitrationSeats}
+                        selected={seat}
+                        onChange={(index, items) => {
+                          setLanguage(index);
+                        }}
                       />
                     </div>
                   </div>
@@ -193,6 +267,22 @@ const ProcedureDetails = () => {
                   >
                     PERFORM ACTION
                   </Button>
+
+                  <div>
+                    <Button
+                      mode='strong'
+                      onClick={() => {
+                        openProcedureStatement();
+                        console.log('WORKSSSS');
+                      }}
+                      wide
+                      css={`
+                        background: ${theme.selected};
+                      `}
+                    >
+                      + New LOREM---
+                    </Button>
+                  </div>
                 </section>
               </Box>
             </Box>

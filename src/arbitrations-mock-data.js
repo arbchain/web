@@ -1,7 +1,7 @@
 import {
   DISPUTE_STATUS_OPEN,
   DISPUTE_STATUS_CLOSED,
-} from './dispute-status-type'
+} from './dispute-status-type';
 
 import {
   IconChat,
@@ -9,11 +9,11 @@ import {
   IconFlag,
   IconGroup,
   IconFundraising,
-} from '@aragon/ui'
+} from '@aragon/ui';
 
-import DAIIcon from './assets/dai.svg'
-import ANTIcon from './assets/ant.svg'
-import ANJIcon from './assets/anj.svg'
+import DAIIcon from './assets/dai.svg';
+import ANTIcon from './assets/ant.svg';
+import ANJIcon from './assets/anj.svg';
 
 export const balances = {
   wallet: [
@@ -30,7 +30,7 @@ export const balances = {
     { amount: '3.304,76', tokenSymbol: 'DAI', value: '3.300', icon: DAIIcon },
     { amount: '3.304,76', tokenSymbol: 'ANJ', value: '3.300', icon: ANJIcon },
   ],
-}
+};
 
 export const latestActivity = [
   {
@@ -51,7 +51,7 @@ export const latestActivity = [
     target: { label: 'ruling', link: 'url' },
     date: '26/11/19 AT 16:00',
   },
-]
+];
 
 export const arbitrations = [
   {
@@ -108,40 +108,40 @@ export const arbitrations = [
     arbitratorCount: 2,
     arguments: [],
   },
-]
+];
 
 export const timeline = [
   {
-    label: 'Award announced',
+    label: 'Aribtration Created',
     date: '20/11/2019',
     Icon: IconFundraising,
   },
   {
-    label: 'Expert hearing',
+    label: 'Response Submitted',
     date: '20/11/2019',
     Icon: IconChat,
   },
   {
-    label: 'Witness hearing',
+    label: 'Tribunal Formed',
     date: '20/11/2019',
     Icon: IconChat,
   },
   {
-    label: 'Arguments submitted',
+    label: 'Arbitration seat',
     date: '20/11/2019',
     Icon: IconFolder,
   },
   {
-    label: 'Tribunal created',
+    label: 'Nomination',
     date: '20/11/2019',
     Icon: IconGroup,
   },
   {
-    label: 'Arbitration requested',
+    label: 'Award init',
     date: '20/11/2019',
     Icon: IconFlag,
   },
-]
+];
 
 export const tasks = [
   {
@@ -172,4 +172,4 @@ export const tasks = [
     juror: '0x099278297012066d61c9505132b3Aa71F625E414',
     dueDate: 1575394000000,
   },
-]
+];

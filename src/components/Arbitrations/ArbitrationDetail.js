@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 // import { AgreementContext } from './Contexts';
+import ProcedureStatementForm from './modals/ProcedureStatement';
 import {
   BackButton,
+  IconEdit,
+  DropDown,
   Bar,
   Box,
   Split,
@@ -19,13 +22,21 @@ import DisputeTimeline from './DisputeTimeline';
 import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-const ArbitrationDetail = props => {
+const languages = ['English', 'French', 'Spanish'];
+const arbitrationSeats = ['London', 'lorem', 'lorem'];
+
+const ArbitrationDetail = (props) => {
   const [statementModal, setStatementModal] = useState(false);
+  const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
   const openStatement = () => setStatementModal(true);
+  const openProcedureStatement = () => setProcedureStatementModal(true);
+
   const history = useHistory();
   const theme = useTheme();
 
   const status = ['Open', 'Close'];
+  const [language, setLanguage] = useState(0);
+  const [seat, setSeat] = useState(0);
 
   const { arbitration } = props.location;
   console.log();
@@ -47,6 +58,19 @@ const ArbitrationDetail = props => {
           // node={NODES[0]}
         />
       </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <ProcedureStatementForm
+          ProcedureStatementModal={ProcedureStatementModal}
+          setProcedureStatementModal={setProcedureStatementModal}
+        />
+      </div>
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
@@ -54,7 +78,7 @@ const ArbitrationDetail = props => {
       <Split
         primary={
           <React.Fragment>
-            <Box heading="Agreement Details">
+            <Box heading='Agreement Details'>
               <Box>
                 <section
                   css={`
@@ -205,8 +229,63 @@ const ArbitrationDetail = props => {
                       /> */}
                     </div>
                   </div>
+
+                  <div
+                    css={`
+                      display: grid;
+                      grid-template-columns: repeat(2, 1fr);
+                      grid-column-gap: 8px;
+                    `}
+                  >
+                    <div>
+                      <h1
+                        css={`
+                          color: ${theme.surfaceContentSecondary};
+                        `}
+                      >
+                        Selected Language{' '}
+                        <span>
+                          <IconEdit />
+                        </span>
+                      </h1>
+                      <DropDown
+                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+                        disabled
+                        items={languages}
+                        selected={language}
+                        wide
+                        onChange={(index, items) => {
+                          setLanguage(index);
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <h1
+                        css={`
+                          color: ${theme.surfaceContentSecondary};
+                        `}
+                      >
+                        Selected Arbitration Seat
+                        <span>
+                          <IconEdit />
+                        </span>
+                      </h1>
+                      <DropDown
+                        wide
+                        disabled={true}
+                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+                        items={arbitrationSeats}
+                        selected={seat}
+                        onChange={(index, items) => {
+                          setLanguage(index);
+                        }}
+                      />
+                    </div>
+                  </div>
+
                   <Button
-                    mode="strong"
+                    mode='strong'
                     onClick={() => {
                       openStatement();
                       console.log('WORKSSSS');
@@ -218,6 +297,21 @@ const ArbitrationDetail = props => {
                   >
                     + NEW STATEMENT
                   </Button>
+                  <div>
+                    <Button
+                      mode='strong'
+                      onClick={() => {
+                        openProcedureStatement();
+                        console.log('WORKSSSS');
+                      }}
+                      wide
+                      css={`
+                        background: ${theme.selected};
+                      `}
+                    >
+                      + New
+                    </Button>
+                  </div>
                 </section>
               </Box>
             </Box>
@@ -225,7 +319,7 @@ const ArbitrationDetail = props => {
         }
         secondary={
           <React.Fragment>
-            <Box heading="Dispute timeline" padding={0}>
+            <Box heading='Dispute timeline' padding={0}>
               <DisputeTimeline />
             </Box>
           </React.Fragment>
