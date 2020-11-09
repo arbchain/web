@@ -116,6 +116,7 @@ export function userMap(nodeSelected, account) {
 export function getProcedureAddress (nodeSelected, account) {
   const {connected} = useContract(nodeSelected);
   const [procedureAddress, setProcedureAddress] = useState([])
+  const [loading, setLoading] = useState(true) 
 
   useEffect(() => {
     async function procedureAddressCall(){
@@ -124,6 +125,7 @@ export function getProcedureAddress (nodeSelected, account) {
         if(connected){
           const res = await web3Contract.call('getAllProcedureAddress',[userAddress], account);
           setProcedureAddress(res[0]);
+          setLoading(false);
         }
       }catch(err) {
         return false
@@ -131,12 +133,13 @@ export function getProcedureAddress (nodeSelected, account) {
     }
     procedureAddressCall()
   },[connected, account])
-  return { procedureAddress };
+  return [loading, procedureAddress];
 }
 
 export function getAgreementAddress (nodeSelected, account) {
   const {connected} = useContract(nodeSelected);
   const [agreementAddress, setAgreementAddress] = useState([])
+  const [loading, setLoading] = useState(true) 
 
   useEffect(() => {
     async function agreementAddressCall(){
@@ -145,6 +148,7 @@ export function getAgreementAddress (nodeSelected, account) {
         if(connected){
           const res = await web3Contract.call('getAllAgreementAddress',[userAddress], account);
           setAgreementAddress(res[0]);
+          setLoading(false);
         }
       }catch(err) {
         return false
@@ -152,7 +156,7 @@ export function getAgreementAddress (nodeSelected, account) {
     }
     agreementAddressCall()
   },[connected, account])
-  return { agreementAddress };
+  return [loading, agreementAddress];
 }
 
 // export function getAgreementAddress (nodeSelected, userAddress, account) {

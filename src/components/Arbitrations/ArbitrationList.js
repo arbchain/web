@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import {
   Bar,
   Button,
-  CardLayout,
+  EmptyStateCard, 
+  LoadingRing,
   DateRangePicker,
   DropDown,
   IconRefresh,
@@ -36,6 +37,7 @@ const NODES = Object.keys(networks).map(node => {
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
+  const [loading, setLoading] = useState(false)
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
@@ -63,12 +65,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     load();
   }, []);
 
-  const { procedureAddress } = getProcedureAddress(NODES[0], walletAccount.account);
+  const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
 
   useEffect(() => {
     async function procedureAddressCall() {
+      console.log(procedureAddress.length)
       try {
         if (procedureAddress.length) {
+          setLoading(true);
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
@@ -83,6 +87,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           }
           console.log(allDetails);
           setArbitrationDetails(allDetails);
+          setLoading(false);
         }
       } catch (err) {
         return false;
@@ -210,6 +215,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       {selected ? (
         <AgreementList walletAccount={walletAccount} />
       ) : (
+
+        
+        loading || proceduresLoading?
+      <div style={{justifyContent: "center", display: "flex", height: "300px", alignItems: "center"}}>
+      <span> Fetching arbitrations </span> <br/>
+      <LoadingRing mode="half-circle"/> 
+      </div> :
+      (procedureAddress.length ?
         arbitrationDetails.map((arbitration, index) => {
           return (
             <ArbitrationCard
@@ -219,7 +232,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               procedureAddress={procedureAddress[index]}
             />
           );
-        })
+        }) : 
+        <EmptyStateCard text="No arbitrations found." />
+      )
       )}
     </div>
   );
