@@ -177,8 +177,8 @@ export function revokeArbitrator(nodeSelected) {
 /**
  * Function 8: createStatement
  */
-export function createStatement(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function createStatement(nodeSelected,contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress,privacyGroupId);
 
   const statementCreation = useCallback(
     async (
@@ -190,11 +190,13 @@ export function createStatement(nodeSelected) {
       documentIpfsHash,
       account
     ) => {
-      return web3Contract.call(
+      // const docHash = Web3.utils.fromAscii(documentHash)
+      const res = await web3Contract.call(
         'createStatement',
         [parties, stakeholder, statementType, subject, documentHash, documentIpfsHash],
         account
       );
+      console.log("RES:",res)
     },
     [connected]
   );

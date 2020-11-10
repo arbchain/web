@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 // import { AgreementContext } from './Contexts';
 import {
   BackButton,
@@ -18,6 +18,8 @@ import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
+import {useAccount} from "../../wallet/Account";
+import wallet from "wallet-besu";
 
 const ArbitrationDetail = props => {
   const [statementModal, setStatementModal] = useState(false);
@@ -26,8 +28,26 @@ const ArbitrationDetail = props => {
   const theme = useTheme();
 
   const status = ['Open', 'Close'];
+  const walletAccount = useAccount();
+    useEffect(() => {
+        async function load() {
+            try {
+                // Fetching the password locally. Need a secure way to do this for prod
+                const account = await wallet.login(localStorage.getItem('wpassword'));
 
-  const { arbitration } = props.location;
+                // Update the account context by using a callback function
+                walletAccount.changeAccount({
+                    privateKey: account[0],
+                    orionPublicKey: localStorage.getItem('orionKey'),
+                });
+            } catch (err) {
+                return false;
+            }
+        }
+        load();
+    }, []);
+
+  const { procedureAddress, arbitration } = props.location;
   console.log();
 
   return (
@@ -43,8 +63,8 @@ const ArbitrationDetail = props => {
         <StatementForm
           statementModal={statementModal}
           setStatementModal={setStatementModal}
-          // account={walletAccount.account}
-          // node={NODES[0]}
+          procedureAddress={procedureAddress}
+          account = {walletAccount.account}
         />
       </div>
       <Bar style={{ marginTop: '12px' }}>

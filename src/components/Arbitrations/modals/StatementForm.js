@@ -3,40 +3,59 @@ import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
+import { createStatement} from "../../../lib/contracts/SPC";
+import wallet from "wallet-besu";
+const networks = require('../../../wallet/network.js');
+
+const NODES = Object.keys(networks).map((node) => {
+    return `${networks[node].host}:${networks[node].port}`;
+});
 
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
 
-export default function StatementForm({
-  statementModal,
-  setStatementModal,
-  account,
-  node,
-}) {
-  const theme = useTheme();
+export default function StatementForm({statementModal, setStatementModal, procedureAddress, account}) {
 
+  const theme = useTheme();
+  const [network, setNetwork] = useState(0);
   const [parties, setParties] = useState('');
   const [stakeHolder, setStakeHolder] = useState(0);
-  const [StatementType, setStatementType] = useState(0);
+  const [statementType, setStatementType] = useState(0);
   const [subject, setSubject] = useState('');
-  const [documentHash, setDocumentHash] = useState('');
+  const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   const [statementSubmit, setStatementSubmit] = useState(false);
+
+  const { connected, statementCreation } = createStatement(NODES[0],
+      procedureAddress.procedureContractAddress, procedureAddress.groupId);
+
+  //const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
 
   const closeStatement = () => {
     setStatementModal(false);
     setStatementModal(false);
   };
 
-  const handleClick = () => {
-    statementSubmit(true);
+  const handleClick = async () => {
+    setStatementSubmit(true);
+    console.log("Procedure Add:",procedureAddress)
+    const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732',parties]]
+    await statementCreation(
+        partiesInvolved,
+        stakeHolder,
+        statementType,
+        subject,
+        documentHash,
+        documentIpfsHash,
+        account
+    );
     console.log('submitted');
+    setStatementSubmit(false)
   };
 
   const createAgain = () => {
-    statementSubmit(false);
+    setStatementSubmit(false);
   };
 
   return (
@@ -115,7 +134,7 @@ export default function StatementForm({
           <DropDown
             style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
             items={['Normal', 'Claim', 'Written']}
-            selected={StatementType}
+            selected={statementType}
             onChange={(index, items) => {
               setStatementType(index);
               setStatementModal(true);
