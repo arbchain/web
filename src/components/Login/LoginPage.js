@@ -85,7 +85,7 @@ function LoginPage() {
           </Form.Item>
 
           <Button type='primary' style={{ width: '100%' }} onClick={openWallet}>
-            Sign up
+            Sign in
           </Button>
           <div
             css={`
