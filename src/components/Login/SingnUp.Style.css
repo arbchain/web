@@ -283,7 +283,7 @@ section h2 {
 .form__container {
   max-width: 900px;
 
-  width: 40%;
+  width: 33%;
 }
 
 .form__grid {
@@ -291,4 +291,12 @@ section h2 {
 
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 6px;
+}
+
+.form__heading {
+  margin-bottom: 14px;
+}
+
+.form__heading > h2 {
+  font-size: 20px;
 }

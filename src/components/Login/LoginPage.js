@@ -2,37 +2,17 @@
 
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import {
-  Main,
-  Button,
-  DropDown,
-  // Modal,
-  Layout,
-  textStyle,
-  TextInput,
-} from '@aragon/ui';
-import Connection from './Connection.js';
-import BrandLogo from '../../assets/arbchainLogo.png';
-import { fetchCount, increaseCounter } from '../../lib/contracts/Counter.js';
+import { Main, Layout, Header } from '@aragon/ui';
+
 import { useAccount } from '../../wallet/Account.js';
 import wallet from 'wallet-besu';
-import LoginPageBanner from '../../assets/login-page-banner.png';
+
 import { Link } from 'react-router-dom';
-import { Input, Result, Spin, Form, Select, Modal, notification } from 'antd';
-
+import { Form, Button, Input, notification } from 'antd';
+import Logo from '../../assets/mainLogo.png';
 import 'antd/dist/antd.css';
-import Dashboard from '../Dashboard/Dashboard.js';
-
-const { Option, OptGroup } = Select;
-const { Password } = Input;
 
 // Toast message
-
-const openSuccessNotification = (type) => {
-  notification[type]({
-    message: 'User Account has been created, please Login to continue',
-  });
-};
 
 function LoginPage() {
   // state for account dropdown
@@ -65,114 +45,61 @@ function LoginPage() {
 
   const history = useHistory();
   return (
-    <Main layout={false}>
-      <div
-        css={`
-          //   padding: 1px 1px 1px 120px;
-          background-color: pink;
-          display: flex;
-          justify-content: space-between;
-        `}
-      >
-        <div
-          style={{ backgroundColor: 'white', width: '40%', height: '100vh' }}
-        >
-          <div
-            css={`
-              ${textStyle('title1')};
-              text-align: center;
-              margin-top: 15%;
-              display: flex;
-              justify-content: center;
-            `}
-          >
-            <div>
-              <img style={{ width: '80px' }} src={BrandLogo} />
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                fontSize: '1.5rem',
-                letterSpacing: '1px',
+    <Main layout={true}>
+      <Header
+        primary={<img src={Logo} alt='LOGO' srcset='' />}
+        secondary={
+          <>
+            <h1>
+              Having Trouble? <Link>Request Help </Link>
+            </h1>
+          </>
+        }
+      />
 
-                color: '#4D4CBB',
-              }}
-            >
-              Arbchain
-            </div>
-          </div>
-          <div
-            css={`
-              text-align: center;
-              margin-top: '10%';
-            `}
+      <div className='registration__container'>
+        <div className='form__heading'>
+          <h2> Welcome to Arbchain</h2>
+        </div>
+
+        <Form
+          className='form__container'
+          layout='vertical'
+          id='form'
+          name='nest-messages'
+        >
+          <Form.Item
+            label='Password'
+            rules={[
+              {
+                required: true,
+              },
+            ]}
           >
-            <h1>Welcome to Arbchain</h1>
-          </div>
-          <div
-            style={{
-              marginTop: '10%',
-              marginLeft: '10%',
-              marginRight: '10%',
-            }}
-          >
-            <p>Password</p>
             <Input.Password
               value={password}
               onChange={(event) => {
                 setPassword(event.target.value);
               }}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your password!',
-                },
-              ]}
-              hasFeedback
             />
+          </Form.Item>
 
-            <div
-              style={{
-                marginTop: '10%',
-                textAlign: 'center',
-              }}
-            >
-              <Button
-                style={{
-                  background: '#4d4cbb',
-                  color: '#fff',
-                }}
-                wide
-                label='Login'
-                onClick={openWallet}
-              ></Button>
-            </div>
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '3%' }}>
-            <p>
-              New to Arbchain?
-              <span style={{ color: '#4d4cbb', fontWeight: 'bold' }}>
-                <Link
-                  to='/signup'
-                  style={{ textDecoration: 'none', marginRight: '1rem' }}
-                >
-                  Sign-Up here
-                </Link>
-              </span>
-            </p>
-          </div>
+          <Button type='primary' style={{ width: '100%' }} onClick={openWallet}>
+            Sign up
+          </Button>
           <div
-            style={{
-              textAlign: 'center',
-              marginTop: '42%',
-            }}
+            css={`
+              margin-top: 14px;
+            `}
           >
-            <p>Terms of Service</p>
+            <h1>
+              New to Arbchain?
+              <span style={{ marginLeft: '4px' }}>
+                <Link to='/signup'>Register Here</Link>
+              </span>
+            </h1>
           </div>
-        </div>
+        </Form>
       </div>
     </Main>
   );

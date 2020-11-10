@@ -1,10 +1,11 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { Steps, Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
 import { Main, Header } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
+import Logo from '../../assets/mainLogo.png';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
 
@@ -124,17 +125,21 @@ const Signup = () => {
   return (
     <Main layout={true}>
       <Header
-        primary='Arbchain'
+        primary={<img src={Logo} alt='LOGO' srcset='' />}
         secondary={
           <>
             <h1>
-              Don't have an account? <span>Register Here</span>
+              Having Trouble? <Link>Request Help </Link>
             </h1>
           </>
         }
       />
 
       <div className='registration__container'>
+        <div className='form__heading'>
+          <h2> Welcome to Arbchain</h2>
+        </div>
+
         <Form
           className='form__container'
           layout='vertical'
@@ -163,6 +168,7 @@ const Signup = () => {
               rules={[
                 {
                   type: 'email',
+                  required: true,
                 },
               ]}
             >
@@ -236,6 +242,18 @@ const Signup = () => {
           >
             Sign up
           </Button>
+          <div
+            css={`
+              margin-top: 14px;
+            `}
+          >
+            <h1>
+              Already have an account?
+              <span style={{ marginLeft: '4px' }}>
+                <Link to='/login'>Login Here</Link>
+              </span>
+            </h1>
+          </div>
         </Form>
       </div>
     </Main>
