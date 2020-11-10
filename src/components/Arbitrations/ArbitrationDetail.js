@@ -1,4 +1,5 @@
-import React, {useEffect, useState} from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from 'react';
 // import { AgreementContext } from './Contexts';
 import {
   BackButton,
@@ -18,37 +19,63 @@ import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
-import {useAccount} from "../../wallet/Account";
-import wallet from "wallet-besu";
+import { getAllStatements } from '../../lib/contracts/SPC';
+import { useAccount } from '../../wallet/Account';
+import wallet from 'wallet-besu';
+const networks = require('../../wallet/network');
+
+const NODES = Object.keys(networks).map(node => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
 
 const ArbitrationDetail = props => {
   const [statementModal, setStatementModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const openStatement = () => setStatementModal(true);
   const history = useHistory();
   const theme = useTheme();
 
   const status = ['Open', 'Close'];
   const walletAccount = useAccount();
-    useEffect(() => {
-        async function load() {
-            try {
-                // Fetching the password locally. Need a secure way to do this for prod
-                const account = await wallet.login(localStorage.getItem('wpassword'));
-
-                // Update the account context by using a callback function
-                walletAccount.changeAccount({
-                    privateKey: account[0],
-                    orionPublicKey: localStorage.getItem('orionKey'),
-                });
-            } catch (err) {
-                return false;
-            }
-        }
-        load();
-    }, []);
-
   const { procedureAddress, arbitration } = props.location;
   console.log();
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // Fetching the password locally. Need a secure way to do this for prod
+        const account = await wallet.login(localStorage.getItem('wpassword'));
+
+        // Update the account context by using a callback function
+        walletAccount.changeAccount({
+          privateKey: account[0],
+          orionPublicKey: localStorage.getItem('orionKey'),
+        });
+      } catch (err) {
+        return false;
+      }
+    }
+    load();
+  }, []);
+
+  useEffect(() => {
+    async function getStatment() {
+      try {
+        if (procedureAddress) {
+          const details = await getAllStatements(
+            NODES[0],
+            procedureAddress.procedureContractAddress,
+            procedureAddress.groupId,
+            walletAccount.account
+          );
+          console.log(details);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getStatment();
+  }, []);
 
   return (
     <React.Fragment>
@@ -64,7 +91,7 @@ const ArbitrationDetail = props => {
           statementModal={statementModal}
           setStatementModal={setStatementModal}
           procedureAddress={procedureAddress}
-          account = {walletAccount.account}
+          account={walletAccount.account}
         />
       </div>
       <Bar style={{ marginTop: '12px' }}>

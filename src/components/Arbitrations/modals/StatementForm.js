@@ -3,20 +3,22 @@ import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { createStatement} from "../../../lib/contracts/SPC";
-import wallet from "wallet-besu";
+import { createStatement } from '../../../lib/contracts/SPC';
+import wallet from 'wallet-besu';
 const networks = require('../../../wallet/network.js');
 
-const NODES = Object.keys(networks).map((node) => {
-    return `${networks[node].host}:${networks[node].port}`;
+const NODES = Object.keys(networks).map(node => {
+  return `${networks[node].host}:${networks[node].port}`;
 });
 
-const antIcon = (
-  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
-);
+const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 
-export default function StatementForm({statementModal, setStatementModal, procedureAddress, account}) {
-
+export default function StatementForm({
+  statementModal,
+  setStatementModal,
+  procedureAddress,
+  account,
+}) {
   const theme = useTheme();
   const [network, setNetwork] = useState(0);
   const [parties, setParties] = useState('');
@@ -27,10 +29,13 @@ export default function StatementForm({statementModal, setStatementModal, proced
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   const [statementSubmit, setStatementSubmit] = useState(false);
 
-  const { connected, statementCreation } = createStatement(NODES[0],
-      procedureAddress.procedureContractAddress, procedureAddress.groupId);
+  const { connected, statementCreation } = createStatement(
+    NODES[0],
+    procedureAddress.procedureContractAddress,
+    procedureAddress.groupId
+  );
 
-  //const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
+  // const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
 
   const closeStatement = () => {
     setStatementModal(false);
@@ -39,27 +44,23 @@ export default function StatementForm({statementModal, setStatementModal, proced
 
   const handleClick = async () => {
     setStatementSubmit(true);
-    console.log("Procedure Add:",procedureAddress)
-    const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732',parties]]
+    console.log('Procedure Add:', procedureAddress);
+    const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties]];
     await statementCreation(
-        partiesInvolved,
-        stakeHolder,
-        statementType,
-        subject,
-        documentHash,
-        documentIpfsHash,
-        account
+      partiesInvolved,
+      stakeHolder,
+      statementType,
+      subject,
+      documentHash,
+      documentIpfsHash,
+      account
     );
     console.log('submitted');
-    setStatementSubmit(false)
-  };
-
-  const createAgain = () => {
     setStatementSubmit(false);
   };
 
   return (
-    <Modal width='50rem' visible={statementModal} onClose={closeStatement}>
+    <Modal width="50rem" visible={statementModal} onClose={closeStatement}>
       <div
         style={{
           fontSize: '1.5rem',
@@ -96,7 +97,7 @@ export default function StatementForm({statementModal, setStatementModal, proced
           <TextInput
             style={{ flexBasis: '100%' }}
             value={parties}
-            onChange={(event) => {
+            onChange={event => {
               setParties(event.target.value);
             }}
           />
@@ -154,7 +155,7 @@ export default function StatementForm({statementModal, setStatementModal, proced
           <TextInput
             style={{ flexBasis: '100%' }}
             value={subject}
-            onChange={(event) => {
+            onChange={event => {
               setSubject(event.target.value);
             }}
           />
@@ -172,7 +173,7 @@ export default function StatementForm({statementModal, setStatementModal, proced
           <TextInput
             style={{ flexBasis: '100%' }}
             value={documentHash}
-            onChange={(event) => {
+            onChange={event => {
               setDocumentHash(event.target.value);
             }}
           />
@@ -190,14 +191,14 @@ export default function StatementForm({statementModal, setStatementModal, proced
           <TextInput
             style={{ flexBasis: '100%' }}
             value={documentIpfsHash}
-            onChange={(event) => {
+            onChange={event => {
               setDocumentIpfsHash(event.target.value);
             }}
           />
         </div>
 
         <Button
-          label='SUBMIT'
+          label="SUBMIT"
           style={{
             backgroundColor: theme.selected,
             color: 'white',

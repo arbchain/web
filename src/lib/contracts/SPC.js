@@ -177,8 +177,8 @@ export function revokeArbitrator(nodeSelected) {
 /**
  * Function 8: createStatement
  */
-export function createStatement(nodeSelected,contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress,privacyGroupId);
+export function createStatement(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const statementCreation = useCallback(
     async (
@@ -196,7 +196,7 @@ export function createStatement(nodeSelected,contractAddress, privacyGroupId) {
         [parties, stakeholder, statementType, subject, documentHash, documentIpfsHash],
         account
       );
-      console.log("RES:",res)
+      console.log('RES:', res);
     },
     [connected]
   );
@@ -312,6 +312,21 @@ export function setLanguage(nodeSelected) {
     [connected]
   );
   return { connected, languageSelection };
+}
+
+export async function getAllStatements(nodeSelected, contractAddress, privacyGroupId, account) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getAllStatements', [], account);
+      console.log(res);
+    }
+  } catch (err) {
+    return false;
+  }
+  return res;
 }
 
 export async function getArbitrationDetails(
