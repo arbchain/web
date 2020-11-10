@@ -62,3 +62,11 @@
 .ant-result-rtl .ant-result-extra > *:last-child {
   margin-left: 0;
 }
+
+/* ::-webkit-scrollbar {
+  display: none;
+} */
+
+body {
+  overflow: hidden; /* Hide scrollbars */
+}

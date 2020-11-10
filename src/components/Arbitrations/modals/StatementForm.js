@@ -3,7 +3,13 @@ import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
+import { createStatement } from '../../../lib/contracts/SPC';
+import wallet from 'wallet-besu';
+const networks = require('../../../wallet/network.js');
+
+const NODES = Object.keys(networks).map((node) => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
 
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
@@ -12,31 +18,55 @@ const antIcon = (
 export default function StatementForm({
   statementModal,
   setStatementModal,
+  procedureAddress,
   account,
-  node,
 }) {
   const theme = useTheme();
-
+  const [network, setNetwork] = useState(0);
   const [parties, setParties] = useState('');
   const [stakeHolder, setStakeHolder] = useState(0);
-  const [StatementType, setStatementType] = useState(0);
+  const [statementType, setStatementType] = useState(0);
   const [subject, setSubject] = useState('');
-  const [documentHash, setDocumentHash] = useState('');
+  const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   const [statementSubmit, setStatementSubmit] = useState(false);
 
+  const { connected, statementCreation } = createStatement(
+    NODES[0],
+    procedureAddress.procedureContractAddress,
+    procedureAddress.groupId
+  );
+
+  // const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
+
   const closeStatement = () => {
     setStatementModal(false);
-    setStatementModal(false);
-  };
-
-  const handleClick = () => {
-    statementSubmit(true);
-    console.log('submitted');
+    setStatementSubmit(false);
   };
 
   const createAgain = () => {
-    statementSubmit(false);
+    statementSubmit(true);
+  };
+
+  const handleClick = async () => {
+    setStatementSubmit(true);
+    console.log('Procedure Add:', procedureAddress);
+
+    const partiesInvolved = [
+      ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
+    ];
+    await statementCreation(
+      partiesInvolved,
+      stakeHolder,
+      statementType,
+      subject,
+      documentHash,
+      documentIpfsHash,
+      account
+    );
+    console.log(statementCreation);
+    console.log('submitted');
+    setStatementSubmit(true);
   };
 
   return (
@@ -52,140 +82,166 @@ export default function StatementForm({
       >
         <h2> Create an Statement Agreement</h2>
       </div>
-
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          borderRadius: 10,
-          borderColor: '#D9D9D9',
-          borderWidth: 'thin',
-          borderStyle: 'solid',
-          margin: '30px',
-          padding: '30px',
-        }}
-      >
+      {statementSubmit ? (
+        procedureAddress ? (
+          <Result
+            status='success'
+            title='Successfully created Arbitration Agreement!'
+            subTitle={'Transaction ID: '}
+            extra={[
+              <Button
+                style={{
+                  backgroundColor: theme.selected,
+                  color: 'white',
+                }}
+                onClick={statementModal}
+              >
+                Create Again
+              </Button>,
+              <Button onClick={closeStatement}>Done</Button>,
+            ]}
+          />
+        ) : (
+          <div style={{ textAlign: 'center', padding: '150px' }}>
+            <Spin indicator={antIcon} />
+            <span> Submitting Statement</span>
+          </div>
+        )
+      ) : (
         <div
           style={{
             display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
+            flexDirection: 'column',
+            borderRadius: 10,
+            borderColor: '#D9D9D9',
+            borderWidth: 'thin',
+            borderStyle: 'solid',
+            margin: '30px',
+            padding: '30px',
           }}
         >
-          <div style={{ flexBasis: '100%' }}> Parties:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={parties}
-            onChange={(event) => {
-              setParties(event.target.value);
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              margin: '20px',
+              alignItems: 'center',
             }}
+          >
+            <div style={{ flexBasis: '100%' }}> Parties:</div>
+            <TextInput
+              style={{ flexBasis: '100%' }}
+              value={parties}
+              onChange={(event) => {
+                setParties(event.target.value);
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              margin: '20px',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
+            <DropDown
+              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+              items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
+              selected={stakeHolder}
+              onChange={(index, items) => {
+                setStakeHolder(index);
+                setStatementModal(true);
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              margin: '20px',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ flexBasis: '100%' }}> Statement Type:</div>
+            <DropDown
+              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+              items={['Normal', 'Claim', 'Written']}
+              selected={statementType}
+              onChange={(index, items) => {
+                setStatementType(index);
+                setStatementModal(true);
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              margin: '20px',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ flexBasis: '100%' }}> Subject :</div>
+            <TextInput
+              style={{ flexBasis: '100%' }}
+              value={subject}
+              onChange={(event) => {
+                setSubject(event.target.value);
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              margin: '20px',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ flexBasis: '100%' }}> Document Hash:</div>
+            <TextInput
+              style={{ flexBasis: '100%' }}
+              value={documentHash}
+              onChange={(event) => {
+                setDocumentHash(event.target.value);
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              margin: '20px',
+              alignItems: 'center',
+            }}
+          >
+            <div style={{ flexBasis: '100%' }}> Document IPFS Hash:</div>
+            <TextInput
+              style={{ flexBasis: '100%' }}
+              value={documentIpfsHash}
+              onChange={(event) => {
+                setDocumentIpfsHash(event.target.value);
+              }}
+            />
+          </div>
+
+          <Button
+            label='SUBMIT'
+            style={{
+              backgroundColor: theme.selected,
+              color: 'white',
+            }}
+            onClick={handleClick}
           />
         </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
-          <DropDown
-            style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-            items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
-            selected={stakeHolder}
-            onChange={(index, items) => {
-              setStakeHolder(index);
-              setStatementModal(true);
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Statement Type:</div>
-          <DropDown
-            style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-            items={['Normal', 'Claim', 'Written']}
-            selected={StatementType}
-            onChange={(index, items) => {
-              setStatementType(index);
-              setStatementModal(true);
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Subject :</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={subject}
-            onChange={(event) => {
-              setSubject(event.target.value);
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Document Hash:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={documentHash}
-            onChange={(event) => {
-              setDocumentHash(event.target.value);
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Document IPFS Hash:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={documentIpfsHash}
-            onChange={(event) => {
-              setDocumentIpfsHash(event.target.value);
-            }}
-          />
-        </div>
-
-        <Button
-          label='SUBMIT'
-          style={{
-            backgroundColor: theme.selected,
-            color: 'white',
-          }}
-          onClick={handleClick}
-        />
-      </div>
+      )}
     </Modal>
   );
 }
