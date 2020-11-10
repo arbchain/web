@@ -14,6 +14,8 @@ import SignUp from './components/Login/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
 import Arbitrations from './components/Arbitrations/Arbitrations';
+import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
+import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
 import { AccountProvider } from './wallet/Account.js';
 
@@ -31,6 +33,11 @@ function App() {
                 <Route exact path='/dashboard' component={Dashboard} />
                 <Route exact path='/arbitrations' component={Arbitrations} />
                 <Route path='/profile' component={Profile} />
+                <Route
+                  path='/arbitrations/:address'
+                  component={ArbitrationDetail}
+                />
+                <Route path='/proceduredetails' component={ProcedureDetails} />
                 <Route component={ErrorPage} />
               </Switch>
             </MainView>

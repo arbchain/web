@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-// import { AgreementContext } from './Contexts';
+import React from 'react';
 import {
   BackButton,
   Bar,
@@ -16,37 +15,14 @@ import { useHistory } from 'react-router-dom';
 
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
-import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-const ArbitrationDetail = props => {
-  const [statementModal, setStatementModal] = useState(false);
-  const openStatement = () => setStatementModal(true);
-  const history = useHistory();
+const ProcedureDetails = () => {
+  let history = useHistory();
   const theme = useTheme();
-
-  const status = ['Open', 'Close'];
-
-  const { arbitration } = props.location;
-  console.log();
 
   return (
     <React.Fragment>
-      {/* statement  modal */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <StatementForm
-          statementModal={statementModal}
-          setStatementModal={setStatementModal}
-          // account={walletAccount.account}
-          // node={NODES[0]}
-        />
-      </div>
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
@@ -54,7 +30,7 @@ const ArbitrationDetail = props => {
       <Split
         primary={
           <React.Fragment>
-            <Box heading="Agreement Details">
+            <Box heading='Procedure Details'>
               <Box>
                 <section
                   css={`
@@ -97,13 +73,13 @@ const ArbitrationDetail = props => {
                             ${textStyle('title3')};
                           `}
                         >
-                          {arbitration[0]}
+                          Test Title
                         </Text>
                       </div>
                     </div>
                     <div>
                       {/* <DisputeStatus dispute={dispute} /> */}
-                      <h1>{status[arbitration[3]]}</h1>
+                      <h1>Status</h1>
                     </div>
                   </div>
 
@@ -130,7 +106,11 @@ const ArbitrationDetail = props => {
                           ${textStyle('body2')};
                         `}
                       >
-                        {arbitration[1]}
+                        Lorem ipsum, dolor sit amet consectetur adipisicing
+                        elit. Iste quod error ea esse inventore officia
+                        obcaecati praesentium consequuntur id provident velit,
+                        excepturi temporibus mollitia quaerat laudantium in
+                        corporis rerum veniam!
                       </Text>
                     </div>
                     <div>
@@ -149,7 +129,6 @@ const ArbitrationDetail = props => {
                           align-items: flex-start;
                         `}
                       >
-                        {arbitration[6]}
                         <IdentityBadge
                         // connectedAccount={addressesEqual(creator, connectedAccount)}
                         //   entity={claimant}
@@ -182,7 +161,7 @@ const ArbitrationDetail = props => {
                           ${textStyle('body2')};
                         `}
                       >
-                        {arbitration[2]}
+                        {`Apple Inc - Consenso Corp agreement`}
                       </Text>
                     </div>
 
@@ -198,25 +177,21 @@ const ArbitrationDetail = props => {
                       >
                         Respondent
                       </span>
-                      {arbitration[7]}
-                      {/* <IdentityBadge
+                      <IdentityBadge
                       // connectedAccount={addressesEqual(creator, connectedAccount)}
-                      // entity={respondent}
-                      /> */}
+                      //entity={respondent}
+                      />
                     </div>
                   </div>
                   <Button
-                    mode="strong"
-                    onClick={() => {
-                      openStatement();
-                      console.log('WORKSSSS');
-                    }}
+                    mode='strong'
+                    onClick={() => {}}
                     wide
                     css={`
                       background: ${theme.selected};
                     `}
                   >
-                    + NEW STATEMENT
+                    PERFORM ACTION
                   </Button>
                 </section>
               </Box>
@@ -225,7 +200,7 @@ const ArbitrationDetail = props => {
         }
         secondary={
           <React.Fragment>
-            <Box heading="Dispute timeline" padding={0}>
+            <Box heading='Dispute timeline' padding={0}>
               <DisputeTimeline />
             </Box>
           </React.Fragment>
@@ -235,4 +210,4 @@ const ArbitrationDetail = props => {
   );
 };
 
-export default ArbitrationDetail;
+export default ProcedureDetails;

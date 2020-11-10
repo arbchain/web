@@ -1,5 +1,6 @@
 /*eslint-disable */
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { textStyle } from '@aragon/ui';
 import ArbitrationCardName from '../../assets/ArbitrationCardName.svg';
 import ArbitrationArgument from '../../assets/ArbitrationArgument.svg';
@@ -7,6 +8,7 @@ import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 import ArbitrationCompanyName from '../../assets/ArbitrationCompanyName.svg';
 import Arbitrators from '../../assets/Arbitrators.svg';
 import DisputeStatus from './DisputeStatus';
+
 import styled from 'styled-components';
 
 const ArbitrationCardNameStyle = <img src={ArbitrationCardName} />;
@@ -22,59 +24,92 @@ function AgreementCard({ agreement, selectDispute }) {
   //   DISPUTE_STATUS_APPEAL,
   //   DISPUTE_STATUS_CLOSED,]
 
-  const disputeType = ["Future", "Existing"]
+  const disputeType = ['Future', 'Existing'];
   console.log('Card logging', agreement);
   return (
     <>
       <section>
-        <div
-          style={{
-            padding: '2rem',
-            marginTop: '1.5rem',
-            borderRadius: '0.7rem',
-            boxShadow: '0px 1px 3px rgba(51, 77, 117, 0.2)',
-            cursor: 'pointer',
-          }}
-          // onClick={() => selectDispute(arbitration.id)}
-        >
-          <div style={{ display: 'grid', gridTemplateColumns: '5fr 2fr 1fr' }}>
+        <Link to='/arbitrations/:address' style={{ color: '#000000d9' }}>
+          <div
+            style={{
+              padding: '2rem',
+              marginTop: '1.5rem',
+              borderRadius: '0.7rem',
+              boxShadow: '0px 1px 3px rgba(51, 77, 117, 0.2)',
+              cursor: 'pointer',
+            }}
+          >
             <div
-              css={`
-                ${textStyle('title4')}
-              `}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '5fr 2fr 1fr',
+              }}
             >
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}>
-                <p>{ArbitrationCardDisputeStyle}</p>
-                <p>Law: {agreement[3]}</p>
+              <div
+                css={`
+                  ${textStyle('title4')}
+                `}
+              >
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 7fr',
+                  }}
+                >
+                  <p>{ArbitrationCardDisputeStyle}</p>
+                  <p>Law: {agreement[3]}</p>
+                </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 7fr',
+                  }}
+                >
+                  <p>{ArbitrationCardNameStyle}</p>
+                  <CardSubText>Agreement : {agreement[5]}</CardSubText>
+                </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}>
-                <p>{ArbitrationCardNameStyle}</p>
-                <CardSubText>Agreement : {agreement[5]}</CardSubText>
+              <div
+                css={`
+                  ${textStyle('body1')}
+                `}
+              >
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '2fr 7fr',
+                  }}
+                >
+                  <p>{ArbitratorsStyle}</p>
+                  <CardSubText>{agreement[0]} arbitrators</CardSubText>
+                </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '2fr 7fr',
+                  }}
+                >
+                  <p>{ArbitrationCompanyNameStyle}</p>
+                  <CardSubText>Seat - {agreement[1]}</CardSubText>
+                </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '2fr 7fr',
+                  }}
+                >
+                  <p>{ArbitrationArgumentStyle}</p>
+                  <CardSubText>
+                    Dispute Type: {disputeType[parseInt(agreement[4])]}
+                  </CardSubText>
+                </div>
               </div>
-            </div>
-            <div
-              css={`
-                ${textStyle('body1')}
-              `}
-            >
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
-                <p>{ArbitratorsStyle}</p>
-                <CardSubText>{agreement[0]} arbitrators</CardSubText>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
-                <p>{ArbitrationCompanyNameStyle}</p>
-                <CardSubText>Seat - {agreement[1]}</CardSubText>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}>
-                <p>{ArbitrationArgumentStyle}</p>
-        <CardSubText>Dispute Type: {disputeType[parseInt(agreement[4])]}</CardSubText>
-              </div>
-            </div>
-            {/* <div>
+              {/* <div>
               <DisputeStatus dispute={DISPUTE_STATUS_OPEN} />
             </div> */}
+            </div>
           </div>
-        </div>
+        </Link>
       </section>
     </>
   );
