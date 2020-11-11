@@ -4,7 +4,6 @@ import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createStatement } from '../../../lib/contracts/SPC';
-import wallet from 'wallet-besu';
 import styled from 'styled-components';
 
 // styledcomponent -css

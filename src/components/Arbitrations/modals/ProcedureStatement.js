@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
-
+import {createProcedureStatement} from '../../../lib/contracts/SPC';
 import styled from 'styled-components';
 
 // styledcomponent -css
@@ -22,6 +21,13 @@ const ModalWrapper = styled(Modal)`
   z-index: 50;
 `;
 
+const networks = require('../../../wallet/network.js');
+
+const NODES = Object.keys(networks).map((node) => {
+    return `${networks[node].host}:${networks[node].port}`;
+});
+
+
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
@@ -32,40 +38,58 @@ const arbitrationSeats = ['London', 'lorem', 'lorem'];
 export default function ProcedureStatementForm({
   ProcedureStatementModal,
   setProcedureStatementModal,
+  procedureAddress,
   account,
-  node,
 }) {
   const theme = useTheme();
-
   const [parties, setParties] = useState([]);
   const [seat, setSeat] = useState(0);
   const [language, setLanguage] = useState(0);
-  const [stakeHolder, setStakeHolder] = useState(0);
-  const [StatementType, setStatementType] = useState(0);
-  const [subject, setSubject] = useState('');
-  const [documentHash, setDocumentHash] = useState('');
+  const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   //   loader
   const [statementSubmit, setStatementSubmit] = useState(false);
 
-  const closePeocedureStatement = () => {
+  const { connected, procedureStatementCreation } = createProcedureStatement(
+      NODES[0],
+      procedureAddress.procedureContractAddress,
+      procedureAddress.groupId
+  );
+
+  const closeProcedureStatement = () => {
     setProcedureStatementModal(false);
   };
 
-  const handleClick = () => {
-    statementSubmit(true);
-    console.log('submitted');
+  const handleClick = async () => {
+      setStatementSubmit(true);
+      console.log('Procedure Add:', procedureAddress);
+      const partiesInvolved = [
+          ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
+      ];
+      console.log('Seat:',seat)
+      console.log('Lan:',language)
+      console.log("Hash:",documentIpfsHash)
+      await procedureStatementCreation(
+          partiesInvolved,
+          arbitrationSeats[seat],
+          languages[language],
+          documentIpfsHash,
+          documentHash,
+          account
+      );
+      console.log('submitted');
+      setStatementSubmit(false);
   };
 
   const createAgain = () => {
-    statementSubmit(false);
+    setStatementSubmit(false);
   };
 
   return (
     <ModalWrapper
       width='50rem'
       visible={ProcedureStatementModal}
-      onClose={closePeocedureStatement}
+      onClose={closeProcedureStatement}
     >
       <Title> Create an Procedure Statement</Title>
 
@@ -111,7 +135,7 @@ export default function ProcedureStatementForm({
           <DropDown
             style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
             items={['London', 'France', 'Lorem1']}
-            selected={setSeat}
+            selected={seat}
             onChange={(index, items) => {
               setSeat(index);
               setProcedureStatementModal(true);

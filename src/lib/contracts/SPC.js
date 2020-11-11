@@ -97,16 +97,17 @@ export function createClaim(nodeSelected) {
 /**
  * Function 3: createProcedureStatement
  */
-export function createProcedureStatement(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function createProcedureStatement(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const procedureStatementCreation = useCallback(
     async (parties, seat, language, documentIpfsHash, documentHash, account) => {
-      return web3Contract.call(
+      const res = await web3Contract.call(
         'createProcedureStatement',
         [parties, seat, language, documentIpfsHash, documentHash],
         account
       );
+      console.log('RES:', res);
     },
     [connected]
   );
@@ -324,6 +325,22 @@ export async function getAllStatements(nodeSelected, contractAddress, privacyGro
       console.log(res);
     }
   } catch (err) {
+    return false;
+  }
+  return res;
+}
+
+export async function getProcedureStatements(nodeSelected, contractAddress, privacyGroupId, account) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getAllProcedureStatements', [], account);
+      console.log(res);
+    }
+  } catch (err) {
+    console.log("ERR:",err)
     return false;
   }
   return res;

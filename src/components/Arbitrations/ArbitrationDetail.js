@@ -20,7 +20,7 @@ import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
-import { getAllStatements } from '../../lib/contracts/SPC';
+import {getAllStatements, getProcedureStatements} from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account';
 import wallet from 'wallet-besu';
 const networks = require('../../wallet/network');
@@ -37,12 +37,13 @@ const ArbitrationDetail = (props) => {
 
   const [language, setLanguage] = useState(0);
   const [seat, setSeat] = useState(0);
-
   const [loading, setLoading] = useState(false);
+  const [procedureStatement, setProcedureStatement] = useState([]);
+  const [statement, setStatement] = useState([]);
+
   const openStatement = () => setStatementModal(true);
   const history = useHistory();
   const theme = useTheme();
-
   const status = ['Open', 'Close'];
   const walletAccount = useAccount();
   const { procedureAddress, arbitration } = props.location;
@@ -73,22 +74,32 @@ const ArbitrationDetail = (props) => {
   }, []);
 
   useEffect(() => {
-    async function getStatment() {
+    async function getStatement() {
       try {
         if (procedureAddress) {
-          const details = await getAllStatements(
+          let result = await getAllStatements(
             NODES[0],
             procedureAddress.procedureContractAddress,
             procedureAddress.groupId,
             walletAccount.account
           );
-          console.log(details);
+          console.log("Statements:",result[0]);
+          setStatement(result[0])
+
+          result = await getProcedureStatements(
+              NODES[0],
+              procedureAddress.procedureContractAddress,
+              procedureAddress.groupId,
+              walletAccount.account
+          );
+          console.log("ProcedureStatement:",result[0]);
+          setProcedureStatement(result[0])
         }
       } catch (err) {
         return false;
       }
     }
-    getStatment();
+    getStatement()
   }, []);
 
   const StatementDetails = (
@@ -246,6 +257,8 @@ const ArbitrationDetail = (props) => {
         <ProcedureStatementForm
           ProcedureStatementModal={ProcedureStatementModal}
           setProcedureStatementModal={setProcedureStatementModal}
+          procedureAddress={procedureAddress}
+          account={walletAccount.account}
         />
       </div>
       <Bar style={{ marginTop: '12px' }}>
@@ -424,11 +437,18 @@ const ArbitrationDetail = (props) => {
                 </section>
               </Box>
 
-              <Accordion
-                style={{}}
-                accordion
-                items={[['Procedure Statements', [StatementDetails]]]}
-              />
+              {
+                statement.length>0 && statement.map((value => {
+                  return(
+                      <
+                          Accordion
+                          style={{}}
+                          accordion
+                          items={[['Statements', [StatementDetails]]]}
+                      />
+                  )
+                }))
+              }
 
               <Box heading='Arbitrator Nomination'>
                 <>
