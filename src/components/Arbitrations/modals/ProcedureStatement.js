@@ -5,6 +5,23 @@ import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 
+import styled from 'styled-components';
+
+// styledcomponent -css
+
+const Title = styled.div`
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  font-weight: 500;
+
+  color: #3d4857;
+  text-align: center;
+`;
+
+const ModalWrapper = styled(Modal)`
+  z-index: 50;
+`;
+
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
@@ -45,22 +62,12 @@ export default function ProcedureStatementForm({
   };
 
   return (
-    <Modal
+    <ModalWrapper
       width='50rem'
       visible={ProcedureStatementModal}
       onClose={closePeocedureStatement}
     >
-      <div
-        style={{
-          fontSize: '1.5rem',
-          letterSpacing: '1px',
-          fontWeight: '900',
-          color: '#3D4857   ',
-          textAlign: 'center',
-        }}
-      >
-        <h2> Create an Procedure Statement</h2>
-      </div>
+      <Title> Create an Procedure Statement</Title>
 
       <div
         style={{
@@ -177,6 +184,6 @@ export default function ProcedureStatementForm({
           onClick={handleClick}
         />
       </div>
-    </Modal>
+    </ModalWrapper>
   );
 }

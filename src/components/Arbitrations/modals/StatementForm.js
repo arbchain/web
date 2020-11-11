@@ -5,6 +5,23 @@ import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createStatement } from '../../../lib/contracts/SPC';
 import wallet from 'wallet-besu';
+import styled from 'styled-components';
+
+// styledcomponent -css
+
+const Title = styled.div`
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  font-weight: 500;
+
+  color: #3d4857;
+  text-align: center;
+`;
+
+const ModalWrapper = styled(Modal)`
+  z-index: 50;
+`;
+
 const networks = require('../../../wallet/network.js');
 
 const NODES = Object.keys(networks).map((node) => {
@@ -41,17 +58,12 @@ export default function StatementForm({
 
   const closeStatement = () => {
     setStatementModal(false);
-    setStatementSubmit(false);
-  };
-
-  const createAgain = () => {
-    statementSubmit(true);
+    setStatementModal(false);
   };
 
   const handleClick = async () => {
     setStatementSubmit(true);
     console.log('Procedure Add:', procedureAddress);
-
     const partiesInvolved = [
       ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
     ];
@@ -64,184 +76,151 @@ export default function StatementForm({
       documentIpfsHash,
       account
     );
-    console.log(statementCreation);
     console.log('submitted');
-    setStatementSubmit(true);
+    setStatementSubmit(false);
   };
 
   return (
-    <Modal width='50rem' visible={statementModal} onClose={closeStatement}>
+    <ModalWrapper
+      width='50rem'
+      visible={statementModal}
+      onClose={closeStatement}
+    >
+      <Title> Create an Statement Agreement</Title>
+
       <div
         style={{
-          fontSize: '1.5rem',
-          letterSpacing: '1px',
-          fontWeight: '900',
-          color: '#3D4857   ',
-          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          borderRadius: 10,
+          borderColor: '#D9D9D9',
+          borderWidth: 'thin',
+          borderStyle: 'solid',
+          margin: '30px',
+          padding: '30px',
         }}
       >
-        <h2> Create an Statement Agreement</h2>
-      </div>
-      {statementSubmit ? (
-        procedureAddress ? (
-          <Result
-            status='success'
-            title='Successfully created Arbitration Agreement!'
-            subTitle={'Transaction ID: '}
-            extra={[
-              <Button
-                style={{
-                  backgroundColor: theme.selected,
-                  color: 'white',
-                }}
-                onClick={statementModal}
-              >
-                Create Again
-              </Button>,
-              <Button onClick={closeStatement}>Done</Button>,
-            ]}
-          />
-        ) : (
-          <div style={{ textAlign: 'center', padding: '150px' }}>
-            <Spin indicator={antIcon} />
-            <span> Submitting Statement</span>
-          </div>
-        )
-      ) : (
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            borderRadius: 10,
-            borderColor: '#D9D9D9',
-            borderWidth: 'thin',
-            borderStyle: 'solid',
-            margin: '30px',
-            padding: '30px',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
+          <div style={{ flexBasis: '100%' }}> Parties:</div>
+          <TextInput
+            style={{ flexBasis: '100%' }}
+            value={parties}
+            onChange={(event) => {
+              setParties(event.target.value);
             }}
-          >
-            <div style={{ flexBasis: '100%' }}> Parties:</div>
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={parties}
-              onChange={(event) => {
-                setParties(event.target.value);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
-            <DropDown
-              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
-              selected={stakeHolder}
-              onChange={(index, items) => {
-                setStakeHolder(index);
-                setStatementModal(true);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Statement Type:</div>
-            <DropDown
-              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={['Normal', 'Claim', 'Written']}
-              selected={statementType}
-              onChange={(index, items) => {
-                setStatementType(index);
-                setStatementModal(true);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Subject :</div>
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={subject}
-              onChange={(event) => {
-                setSubject(event.target.value);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Document Hash:</div>
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={documentHash}
-              onChange={(event) => {
-                setDocumentHash(event.target.value);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Document IPFS Hash:</div>
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={documentIpfsHash}
-              onChange={(event) => {
-                setDocumentIpfsHash(event.target.value);
-              }}
-            />
-          </div>
-
-          <Button
-            label='SUBMIT'
-            style={{
-              backgroundColor: theme.selected,
-              color: 'white',
-            }}
-            onClick={handleClick}
           />
         </div>
-      )}
-    </Modal>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
+          <DropDown
+            style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+            items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
+            selected={stakeHolder}
+            onChange={(index, items) => {
+              setStakeHolder(index);
+              setStatementModal(true);
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Statement Type:</div>
+          <DropDown
+            style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+            items={['Normal', 'Claim', 'Written']}
+            selected={statementType}
+            onChange={(index, items) => {
+              setStatementType(index);
+              setStatementModal(true);
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Subject :</div>
+          <TextInput
+            style={{ flexBasis: '100%' }}
+            value={subject}
+            onChange={(event) => {
+              setSubject(event.target.value);
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Document Hash:</div>
+          <TextInput
+            style={{ flexBasis: '100%' }}
+            value={documentHash}
+            onChange={(event) => {
+              setDocumentHash(event.target.value);
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Document IPFS Hash:</div>
+          <TextInput
+            style={{ flexBasis: '100%' }}
+            value={documentIpfsHash}
+            onChange={(event) => {
+              setDocumentIpfsHash(event.target.value);
+            }}
+          />
+        </div>
+
+        <Button
+          label='SUBMIT'
+          style={{
+            backgroundColor: theme.selected,
+            color: 'white',
+          }}
+          onClick={handleClick}
+        />
+      </div>
+    </ModalWrapper>
   );
 }

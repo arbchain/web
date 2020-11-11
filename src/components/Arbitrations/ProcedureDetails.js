@@ -12,6 +12,7 @@ import {
   IdentityBadge,
   useTheme,
   Button,
+  Accordion,
 } from '@aragon/ui';
 import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from './modals/ProcedureStatement';
@@ -32,6 +33,132 @@ const ProcedureDetails = () => {
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
   const openProcedureStatement = () => setProcedureStatementModal(true);
 
+  const StatementDetails = (
+    <>
+      <section
+        css={`
+          align-items: center;
+          margin: 18px 0 18px 0;
+
+          width: 100%;
+        `}
+      >
+        <div
+          css={`
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-column-gap: 8px;
+            margin-bottom: 18px;
+            width: 100%;
+          `}
+        >
+          <div
+            css={`
+              margin-bottom: 18px;
+            `}
+          >
+            <h2
+              css={`
+                ${textStyle('label2')};
+                color: ${theme.surfaceContentSecondary};
+                margin-bottom: ${2 * GU}px;
+              `}
+            >
+              Initiated By
+            </h2>
+            <Text
+              css={`
+                ${textStyle('body2')};
+              `}
+            >
+              0x0x0x0x
+            </Text>
+          </div>
+
+          <div>
+            <h2
+              css={`
+                ${textStyle('label2')};
+                color: ${theme.surfaceContentSecondary};
+                margin-bottom: ${2 * GU}px;
+              `}
+            >
+              Initiated Date
+            </h2>
+            <Text
+              css={`
+                ${textStyle('body2')};
+              `}
+            >
+              Date
+            </Text>
+          </div>
+
+          <div>
+            <h1
+              css={`
+                color: ${theme.surfaceContentSecondary};
+              `}
+            >
+              Selected Language{' '}
+            </h1>
+            <DropDown
+              style={{
+                flexBasis: '100%',
+                borderColor: '#D9D9D9',
+                background: '#fff',
+              }}
+              disabled={true}
+              items={languages}
+              selected={language}
+              wide
+              onChange={(index, items) => {
+                setLanguage(index);
+              }}
+            />
+          </div>
+
+          <div>
+            <h1
+              css={`
+                color: ${theme.surfaceContentSecondary};
+              `}
+            >
+              Selected Arbitration Seat
+            </h1>
+            <DropDown
+              wide
+              disabled={true}
+              style={{
+                flexBasis: '100%',
+                borderColor: '#D9D9D9',
+                background: '#fff',
+              }}
+              items={arbitrationSeats}
+              selected={seat}
+              onChange={(index, items) => {
+                setLanguage(index);
+              }}
+            />
+          </div>
+        </div>
+        <div>
+          <Button
+            mode='strong'
+            onClick={() => {
+              console.log('WORKSSSS');
+            }}
+            wide
+            css={`
+              background: ${theme.selected};
+            `}
+          >
+            Agree and Continue
+          </Button>
+        </div>
+      </section>
+    </>
+  );
   return (
     <React.Fragment>
       <Bar style={{ marginTop: '12px' }}>
@@ -161,102 +288,43 @@ const ProcedureDetails = () => {
                       </div>
                     </div>
                   </div>
-                  <div
-                    css={`
-                      display: grid;
-                      grid-template-columns: 1fr minmax(250px, auto);
-                      margin-bottom: ${5 * GU}px;
-                    `}
-                  >
-                    <div>
-                      <h2
-                        css={`
-                          ${textStyle('label2')};
-                          color: ${theme.surfaceContentSecondary};
-                          margin-bottom: ${2 * GU}px;
-                        `}
-                      >
-                        ARBITRATION AGREEMENT
-                      </h2>
-                      <Text
-                        css={`
-                          display: inline-block;
-                          ${textStyle('body2')};
-                        `}
-                      >
-                        {`Apple Inc - Consenso Corp agreement`}
-                      </Text>
-                    </div>
 
-                    <div>
-                      <h2
-                        css={`
-                          ${textStyle('label2')};
-                          color: ${theme.surfaceContentSecondary};
-                          margin-bottom: ${2 * GU}px;
-                        `}
-                      >
-                        Respondent
-                      </h2>
-                      <IdentityBadge
-                      // connectedAccount={addressesEqual(creator, connectedAccount)}
-                      //entity={respondent}
-                      />
-                    </div>
+                  <div>
+                    <h2
+                      css={`
+                        ${textStyle('label2')};
+                        color: ${theme.surfaceContentSecondary};
+                        margin-bottom: ${2 * GU}px;
+                      `}
+                    >
+                      ARBITRATION AGREEMENT
+                    </h2>
+                    <Text
+                      css={`
+                        display: inline-block;
+                        ${textStyle('body2')};
+                      `}
+                    >
+                      {`Apple Inc - Consenso Corp `}
+                    </Text>
                   </div>
-                  <div
-                    css={`
-                      display: grid;
-                      grid-template-columns: repeat(2, 1fr);
-                      grid-column-gap: 8px;
-                    `}
-                  >
-                    <div>
-                      <h1
-                        css={`
-                          color: ${theme.surfaceContentSecondary};
-                        `}
-                      >
-                        Selected Language{' '}
-                        <span>
-                          <IconEdit />
-                        </span>
-                      </h1>
-                      <DropDown
-                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-                        disabled
-                        items={languages}
-                        selected={language}
-                        wide
-                        onChange={(index, items) => {
-                          setLanguage(index);
-                        }}
-                      />
-                    </div>
 
-                    <div>
-                      <h1
-                        css={`
-                          color: ${theme.surfaceContentSecondary};
-                        `}
-                      >
-                        Selected Arbitration Seat
-                        <span>
-                          <IconEdit />
-                        </span>
-                      </h1>
-                      <DropDown
-                        wide
-                        disabled={true}
-                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-                        items={arbitrationSeats}
-                        selected={seat}
-                        onChange={(index, items) => {
-                          setLanguage(index);
-                        }}
-                      />
-                    </div>
+                  <div>
+                    <h2
+                      css={`
+                        ${textStyle('label2')};
+                        color: ${theme.surfaceContentSecondary};
+                        margin-bottom: ${2 * GU}px;
+                      `}
+                    >
+                      Respondent
+                    </h2>
+                    <IdentityBadge
+                    // connectedAccount={addressesEqual(creator, connectedAccount)}
+                    //entity={respondent}
+                    />
                   </div>
+
                   <Button
                     mode='strong'
                     onClick={() => {}}
@@ -280,10 +348,66 @@ const ProcedureDetails = () => {
                         background: ${theme.selected};
                       `}
                     >
-                      + New LOREM---
+                      + New Procedure Statement
                     </Button>
                   </div>
                 </section>
+              </Box>
+
+              <Accordion
+                style={{}}
+                accordion
+                items={[['Procedure Statements', [StatementDetails]]]}
+              />
+
+              <Box heading='Arbitrator Nomination'>
+                <>
+                  <div
+                    className='nomination__container'
+                    css={`
+                      display: grid;
+                      grid-template-columns: repeat(2, 1fr);
+                      grid-column-gap: 8px;
+                      margin-bottom: 18px;
+                    `}
+                  >
+                    <div>
+                      <h1
+                        css={`
+                          color: ${theme.surfaceContentSecondary};
+                        `}
+                      >
+                        Select Arbitrator
+                      </h1>
+                      <DropDown
+                        placeholder='Select an Arbitrator'
+                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+                        disabled={false}
+                        items={['lorem', 'lorem']}
+                        wide
+                      />
+                    </div>
+
+                    <div
+                      css={`
+                        align-self: end;
+                      `}
+                    >
+                      <Button
+                        mode='strong'
+                        onClick={() => {
+                          console.log('WORKSSSS');
+                        }}
+                        wide
+                        css={`
+                          background: ${theme.selected};
+                        `}
+                      >
+                        Nominate
+                      </Button>
+                    </div>
+                  </div>
+                </>
               </Box>
             </Box>
           </React.Fragment>
