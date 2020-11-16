@@ -13,14 +13,21 @@ import {
   Button,
   Accordion,
   DropDown,
+  Tabs,
 } from '@aragon/ui';
 import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from './modals/ProcedureStatement';
+import AllProcedureStatements from './procedureDetails/AllProcedureStatements';
+import AllAgreementStatements from './procedureDetails/AllAgreementStatements';
+
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import StatementForm from './modals/StatementForm';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
-import {getAllStatements, getProcedureStatements} from '../../lib/contracts/SPC';
+import {
+  getAllStatements,
+  getProcedureStatements,
+} from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account';
 import wallet from 'wallet-besu';
 const networks = require('../../wallet/network');
@@ -42,6 +49,7 @@ const ArbitrationDetail = (props) => {
   const [statement, setStatement] = useState([]);
 
   const openStatement = () => setStatementModal(true);
+
   const history = useHistory();
   const theme = useTheme();
   const status = ['Open', 'Close'];
@@ -49,11 +57,12 @@ const ArbitrationDetail = (props) => {
   const { procedureAddress, arbitration } = props.location;
 
   // Procedure statement modal
-
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
 
   // Procedure Statement form
   const openProcedureStatement = () => setProcedureStatementModal(true);
+
+  const [tabs, selectTabs] = useState(0);
 
   useEffect(() => {
     async function load() {
@@ -83,151 +92,24 @@ const ArbitrationDetail = (props) => {
             procedureAddress.groupId,
             walletAccount.account
           );
-          console.log("Statements:",result[0]);
-          setStatement(result[0])
+          console.log('Statements-----:', result[0]);
+          setStatement(result[0]);
 
           result = await getProcedureStatements(
-              NODES[0],
-              procedureAddress.procedureContractAddress,
-              procedureAddress.groupId,
-              walletAccount.account
+            NODES[0],
+            procedureAddress.procedureContractAddress,
+            procedureAddress.groupId,
+            walletAccount.account
           );
-          console.log("ProcedureStatement:",result[0]);
-          setProcedureStatement(result[0])
+          console.log('ProcedureStatement:', result[0]);
+          setProcedureStatement(result[0]);
         }
       } catch (err) {
         return false;
       }
     }
-    getStatement()
+    getStatement();
   }, []);
-
-  const StatementDetails = (
-    <>
-      <section
-        css={`
-          align-items: center;
-          margin: 18px 0 18px 0;
-
-          width: 100%;
-        `}
-      >
-        <div
-          css={`
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-column-gap: 8px;
-            margin-bottom: 18px;
-            width: 100%;
-          `}
-        >
-          <div
-            css={`
-              margin-bottom: 18px;
-            `}
-          >
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Initiated By
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              0x0x0x0x
-            </Text>
-          </div>
-
-          <div>
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Initiated Date
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              Date
-            </Text>
-          </div>
-
-          <div>
-            <h1
-              css={`
-                color: ${theme.surfaceContentSecondary};
-              `}
-            >
-              Selected Language{' '}
-            </h1>
-            <DropDown
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              disabled={true}
-              items={languages}
-              selected={language}
-              wide
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
-            />
-          </div>
-
-          <div>
-            <h1
-              css={`
-                color: ${theme.surfaceContentSecondary};
-              `}
-            >
-              Selected Arbitration Seat
-            </h1>
-            <DropDown
-              wide
-              disabled={true}
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              items={arbitrationSeats}
-              selected={seat}
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
-            />
-          </div>
-        </div>
-        <div>
-          <Button
-            mode='strong'
-            onClick={() => {
-              console.log('WORKSSSS');
-            }}
-            wide
-            css={`
-              background: ${theme.selected};
-            `}
-          >
-            Agree and Continue
-          </Button>
-        </div>
-      </section>
-    </>
-  );
 
   return (
     <React.Fragment>
@@ -409,7 +291,7 @@ const ArbitrationDetail = (props) => {
                     mode='strong'
                     onClick={() => {
                       openStatement();
-                      console.log('WORKSSSS');
+                      console.log('WORKSSSS', statement);
                     }}
                     wide
                     css={`
@@ -437,18 +319,39 @@ const ArbitrationDetail = (props) => {
                 </section>
               </Box>
 
-              {
-                statement.length>0 && statement.map((value => {
-                  return(
-                      <
-                          Accordion
-                          style={{}}
-                          accordion
-                          items={[['Statements', [StatementDetails]]]}
-                      />
-                  )
-                }))
-              }
+              <div style={{ marginTop: '14px' }}>
+                <Tabs
+                  items={[
+                    'All Agreements',
+                    'All Procedure Statements',
+                    'All Proposals',
+                  ]}
+                  selected={tabs}
+                  onChange={selectTabs}
+                />
+              </div>
+
+              {tabs ? (
+                statement.length > 0 &&
+                statement.map((value) => {
+                  return (
+                    <Accordion
+                      accordion
+                      items={[
+                        ['Procedure Statements', [<AllAgreementStatements />]],
+                      ]}
+                    />
+                  );
+                })
+              ) : (
+                <Accordion
+                  style={{}}
+                  accordion
+                  items={[
+                    ['Agreement Statements', [<AllProcedureStatements />]],
+                  ]}
+                />
+              )}
 
               <Box heading='Arbitrator Nomination'>
                 <>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   BackButton,
   DropDown,
-  IconEdit,
   Bar,
   Box,
   Split,
@@ -13,159 +12,38 @@ import {
   useTheme,
   Button,
   Accordion,
+  Tabs,
 } from '@aragon/ui';
+
 import { useHistory } from 'react-router-dom';
-import ProcedureStatementForm from './modals/ProcedureStatement';
+//import ProcedureStatementForm from './modals/ProcedureStatement';
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-const languages = ['English', 'French', 'Spanish'];
-const arbitrationSeats = ['London', 'lorem', 'lorem'];
+import AllProcedureStatements from './procedureDetails/AllProcedureStatements';
+import AllAgreementStatements from './procedureDetails/AllAgreementStatements';
+
+const test = ['a', 'b', 'c'];
 
 const ProcedureDetails = () => {
   let history = useHistory();
   const theme = useTheme();
 
-  const [language, setLanguage] = useState(0);
-  const [seat, setSeat] = useState(0);
+  const [dropdown, setDropdown] = useState(0);
+
+  const [tabs, selectTabs] = useState(0);
 
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
   const openProcedureStatement = () => setProcedureStatementModal(true);
 
-  const StatementDetails = (
-    <>
-      <section
-        css={`
-          align-items: center;
-          margin: 18px 0 18px 0;
-
-          width: 100%;
-        `}
-      >
-        <div
-          css={`
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-column-gap: 8px;
-            margin-bottom: 18px;
-            width: 100%;
-          `}
-        >
-          <div
-            css={`
-              margin-bottom: 18px;
-            `}
-          >
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Initiated By
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              0x0x0x0x
-            </Text>
-          </div>
-
-          <div>
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Initiated Date
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              Date
-            </Text>
-          </div>
-
-          <div>
-            <h1
-              css={`
-                color: ${theme.surfaceContentSecondary};
-              `}
-            >
-              Selected Language{' '}
-            </h1>
-            <DropDown
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              disabled={true}
-              items={languages}
-              selected={language}
-              wide
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
-            />
-          </div>
-
-          <div>
-            <h1
-              css={`
-                color: ${theme.surfaceContentSecondary};
-              `}
-            >
-              Selected Arbitration Seat
-            </h1>
-            <DropDown
-              wide
-              disabled={true}
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              items={arbitrationSeats}
-              selected={seat}
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
-            />
-          </div>
-        </div>
-        <div>
-          <Button
-            mode='strong'
-            onClick={() => {
-              console.log('WORKSSSS');
-            }}
-            wide
-            css={`
-              background: ${theme.selected};
-            `}
-          >
-            Agree and Continue
-          </Button>
-        </div>
-      </section>
-    </>
-  );
   return (
     <React.Fragment>
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
 
-      <div
+      {/* <div
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -176,7 +54,7 @@ const ProcedureDetails = () => {
           ProcedureStatementModal={ProcedureStatementModal}
           setProcedureStatementModal={setProcedureStatementModal}
         />
-      </div>
+      </div> */}
 
       <Split
         primary={
@@ -354,11 +232,35 @@ const ProcedureDetails = () => {
                 </section>
               </Box>
 
-              <Accordion
-                style={{}}
-                accordion
-                items={[['Procedure Statements', [StatementDetails]]]}
-              />
+              <div style={{ marginTop: '14px' }}>
+                <Tabs
+                  items={[
+                    'All Agreements',
+                    'All Procedure Statements',
+                    'All Proposals',
+                  ]}
+                  selected={tabs}
+                  onChange={selectTabs}
+                />
+              </div>
+
+              {tabs ? (
+                <Accordion
+                  style={{}}
+                  accordion
+                  items={[
+                    ['Procedure Statements', [<AllProcedureStatements />]],
+                  ]}
+                />
+              ) : (
+                <Accordion
+                  style={{}}
+                  accordion
+                  items={[
+                    ['Agreement Statements', [<AllAgreementStatements />]],
+                  ]}
+                />
+              )}
 
               <Box heading='Arbitrator Nomination'>
                 <>
