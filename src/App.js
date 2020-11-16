@@ -34,7 +34,7 @@ function App() {
                 <Route exact path='/arbitrations' component={Arbitrations} />
                 <Route path='/profile' component={Profile} />
                 <Route
-                  path='/arbitrations/:address'
+                  path='/arbitrations/:address/:groupId'
                   component={ArbitrationDetail}
                 />
                 <Route path='/proceduredetails' component={ProcedureDetails} />

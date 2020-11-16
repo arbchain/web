@@ -23,14 +23,14 @@ function ArbitrationCard({ arbitration, selectDispute, procedureAddress }) {
   //   DISPUTE_STATUS_APPEAL,
   //   DISPUTE_STATUS_CLOSED,]
   console.log("Address", procedureAddress)
+  const uriComponents = [procedureAddress.procedureContractAddress, procedureAddress.groupId]
+  const uri = encodeURIComponent(JSON.stringify(uriComponents));
   console.log('Card logging', arbitration);
   return (
     <>
       <section>
         <Link to={{
-          pathname:`/arbitrations/${procedureAddress.procedureContractAddress}`,
-          procedureAddress:procedureAddress,
-          arbitration:arbitration
+          pathname:`/arbitrations/${procedureAddress.procedureContractAddress}/${procedureAddress.groupId}`,
         }} 
           style={{ color: '#000000d9' }}>
           <div

@@ -16,7 +16,8 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin
 export default function StatementForm({
   statementModal,
   setStatementModal,
-  procedureAddress,
+  contractAddress,
+  groupId,
   account,
 }) {
   const theme = useTheme();
@@ -29,11 +30,7 @@ export default function StatementForm({
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   const [statementSubmit, setStatementSubmit] = useState(false);
 
-  const { connected, statementCreation } = createStatement(
-    NODES[0],
-    procedureAddress.procedureContractAddress,
-    procedureAddress.groupId
-  );
+  const { connected, statementCreation } = createStatement(NODES[0], contractAddress, groupId);
 
   // const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
 
@@ -44,7 +41,6 @@ export default function StatementForm({
 
   const handleClick = async () => {
     setStatementSubmit(true);
-    console.log('Procedure Add:', procedureAddress);
     const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties]];
     await statementCreation(
       partiesInvolved,
