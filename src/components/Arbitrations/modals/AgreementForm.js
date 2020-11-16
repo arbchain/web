@@ -8,6 +8,23 @@ import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
 import { addAgreementContract } from '../../../lib/contracts/MasterContract';
+import styled from 'styled-components';
+
+// styledcomponent -css
+
+const Title = styled.div`
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  font-weight: 500;
+
+  color: #3d4857;
+  text-align: center;
+`;
+
+const ModalWrapper = styled(Modal)`
+  z-index: 50;
+`;
+
 const Web3 = require('web3');
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
@@ -45,7 +62,6 @@ export default function AgreementForm({
     setResult,
     create,
   } = createAgreement(node);
-  
 
   console.log('Agreement Addition Status', agreementAdditionStatus);
   console.log(' Agreement Contract', result);
@@ -74,18 +90,12 @@ export default function AgreementForm({
   };
 
   return (
-    <Modal width='50rem' visible={agreementModal} onClose={closeAgreement}>
-      <div
-        style={{
-          fontSize: '1.5rem',
-          letterSpacing: '1px',
-          fontWeight: '900',
-          color: '#3D4857   ',
-          textAlign: 'center',
-        }}
-      >
-        <h2> Create an Arbitration Agreement</h2>
-      </div>
+    <ModalWrapper
+      width='50rem'
+      visible={agreementModal}
+      onClose={closeAgreement}
+    >
+      <Title>Create an Arbitration Agreement</Title>
 
       {agreementSubmit ? (
         result ? (
@@ -234,6 +244,6 @@ export default function AgreementForm({
           />
         </div>
       )}
-    </Modal>
+    </ModalWrapper>
   );
 }

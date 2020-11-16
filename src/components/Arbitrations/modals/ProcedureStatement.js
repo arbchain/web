@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { createStatement } from '../../../lib/contracts/SPC';
+import { createProcedureStatement } from '../../../lib/contracts/SPC';
 import styled from 'styled-components';
 
 // styledcomponent -css
@@ -29,51 +29,60 @@ const NODES = Object.keys(networks).map(node => {
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 
-export default function StatementForm({
-  statementModal,
-  setStatementModal,
+const languages = ['English', 'French', 'Spanish'];
+const arbitrationSeats = ['London', 'lorem', 'lorem'];
+
+export default function ProcedureStatementForm({
+  ProcedureStatementModal,
+  setProcedureStatementModal,
   contractAddress,
   groupId,
   account,
 }) {
   const theme = useTheme();
-  const [network, setNetwork] = useState(0);
-  const [parties, setParties] = useState('');
-  const [stakeHolder, setStakeHolder] = useState(0);
-  const [statementType, setStatementType] = useState(0);
-  const [subject, setSubject] = useState('');
+  const [parties, setParties] = useState([]);
+  const [seat, setSeat] = useState(0);
+  const [language, setLanguage] = useState(0);
   const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
+  //   loader
   const [statementSubmit, setStatementSubmit] = useState(false);
 
-  const { connected, statementCreation } = createStatement(NODES[0], contractAddress, groupId);
+  const { connected, procedureStatementCreation } = createProcedureStatement(
+    NODES[0],
+    contractAddress,
+    groupId
+  );
 
-  // const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
-
-  const closeStatement = () => {
-    setStatementModal(false);
-    setStatementModal(false);
+  const closeProcedureStatement = () => {
+    setProcedureStatementModal(false);
   };
 
   const handleClick = async () => {
     setStatementSubmit(true);
     const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties]];
-    await statementCreation(
+    console.log('Seat:', seat);
+    console.log('Lan:', language);
+    console.log('Hash:', documentIpfsHash);
+    await procedureStatementCreation(
       partiesInvolved,
-      stakeHolder,
-      statementType,
-      subject,
-      documentHash,
+      arbitrationSeats[seat],
+      languages[language],
       documentIpfsHash,
+      documentHash,
       account
     );
     console.log('submitted');
     setStatementSubmit(false);
   };
 
+  const createAgain = () => {
+    setStatementSubmit(false);
+  };
+
   return (
-    <ModalWrapper width="50rem" visible={statementModal} onClose={closeStatement}>
-      <Title> Create an Statement Agreement</Title>
+    <ModalWrapper width="50rem" visible={ProcedureStatementModal} onClose={closeProcedureStatement}>
+      <Title> Create an Procedure Statement</Title>
 
       <div
         style={{
@@ -113,14 +122,14 @@ export default function StatementForm({
             alignItems: 'center',
           }}
         >
-          <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
+          <div style={{ flexBasis: '100%' }}> Seat:</div>
           <DropDown
             style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-            items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
-            selected={stakeHolder}
+            items={['London', 'France', 'Lorem1']}
+            selected={seat}
             onChange={(index, items) => {
-              setStakeHolder(index);
-              setStatementModal(true);
+              setSeat(index);
+              setProcedureStatementModal(true);
             }}
           />
         </div>
@@ -133,14 +142,14 @@ export default function StatementForm({
             alignItems: 'center',
           }}
         >
-          <div style={{ flexBasis: '100%' }}> Statement Type:</div>
+          <div style={{ flexBasis: '100%' }}> Language:</div>
           <DropDown
             style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-            items={['Normal', 'Claim', 'Written']}
-            selected={statementType}
+            items={['English', 'French', 'Gernam']}
+            selected={language}
             onChange={(index, items) => {
-              setStatementType(index);
-              setStatementModal(true);
+              setLanguage(index);
+              setProcedureStatementModal(true);
             }}
           />
         </div>
@@ -153,12 +162,12 @@ export default function StatementForm({
             alignItems: 'center',
           }}
         >
-          <div style={{ flexBasis: '100%' }}> Subject :</div>
+          <div style={{ flexBasis: '100%' }}> Document IPFS Hash :</div>
           <TextInput
             style={{ flexBasis: '100%' }}
-            value={subject}
+            value={documentIpfsHash}
             onChange={event => {
-              setSubject(event.target.value);
+              setDocumentIpfsHash(event.target.value);
             }}
           />
         </div>
@@ -177,24 +186,6 @@ export default function StatementForm({
             value={documentHash}
             onChange={event => {
               setDocumentHash(event.target.value);
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Document IPFS Hash:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={documentIpfsHash}
-            onChange={event => {
-              setDocumentIpfsHash(event.target.value);
             }}
           />
         </div>

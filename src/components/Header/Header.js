@@ -1,8 +1,8 @@
-import React from 'react'
-import { ButtonIcon, GU, IconMenu } from '@aragon/ui'
-import ActivityButton from '../Activity/ActivityButton'
-import GlobalPreferencesButton from '../GlobalPreferences/GlobalPreferencesButton'
-import HeaderLogo from './HeaderLogo'
+import React from 'react';
+import { ButtonIcon, GU, IconMenu } from '@aragon/ui';
+import ActivityButton from '../Activity/ActivityButton';
+import GlobalPreferencesButton from '../GlobalPreferences/GlobalPreferencesButton';
+import HeaderLogo from './HeaderLogo';
 
 const Header = React.memo(function Header({
   compactMode,
@@ -32,7 +32,7 @@ const Header = React.memo(function Header({
         `}
       >
         {compactMode ? (
-          <ButtonIcon label="Open menu" onClick={toggleMenuPanel}>
+          <ButtonIcon label='Open menu' onClick={toggleMenuPanel}>
             <IconMenu />
           </ButtonIcon>
         ) : (
@@ -72,7 +72,7 @@ const Header = React.memo(function Header({
         </div>
       </div>
     </header>
-  )
-})
+  );
+});
 
-export default Header
+export default Header;
