@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import {createProcedureStatement} from '../../../lib/contracts/SPC';
+import { createProcedureStatement } from '../../../lib/contracts/SPC';
 import styled from 'styled-components';
 
 // styledcomponent -css
@@ -23,14 +23,11 @@ const ModalWrapper = styled(Modal)`
 
 const networks = require('../../../wallet/network.js');
 
-const NODES = Object.keys(networks).map((node) => {
-    return `${networks[node].host}:${networks[node].port}`;
+const NODES = Object.keys(networks).map(node => {
+  return `${networks[node].host}:${networks[node].port}`;
 });
 
-
-const antIcon = (
-  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
-);
+const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 
 const languages = ['English', 'French', 'Spanish'];
 const arbitrationSeats = ['London', 'lorem', 'lorem'];
@@ -38,7 +35,8 @@ const arbitrationSeats = ['London', 'lorem', 'lorem'];
 export default function ProcedureStatementForm({
   ProcedureStatementModal,
   setProcedureStatementModal,
-  procedureAddress,
+  contractAddress,
+  groupId,
   account,
 }) {
   const theme = useTheme();
@@ -51,9 +49,9 @@ export default function ProcedureStatementForm({
   const [statementSubmit, setStatementSubmit] = useState(false);
 
   const { connected, procedureStatementCreation } = createProcedureStatement(
-      NODES[0],
-      procedureAddress.procedureContractAddress,
-      procedureAddress.groupId
+    NODES[0],
+    contractAddress,
+    groupId
   );
 
   const closeProcedureStatement = () => {
@@ -61,24 +59,21 @@ export default function ProcedureStatementForm({
   };
 
   const handleClick = async () => {
-      setStatementSubmit(true);
-      console.log('Procedure Add:', procedureAddress);
-      const partiesInvolved = [
-          ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
-      ];
-      console.log('Seat:',seat)
-      console.log('Lan:',language)
-      console.log("Hash:",documentIpfsHash)
-      await procedureStatementCreation(
-          partiesInvolved,
-          arbitrationSeats[seat],
-          languages[language],
-          documentIpfsHash,
-          documentHash,
-          account
-      );
-      console.log('submitted');
-      setStatementSubmit(false);
+    setStatementSubmit(true);
+    const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties]];
+    console.log('Seat:', seat);
+    console.log('Lan:', language);
+    console.log('Hash:', documentIpfsHash);
+    await procedureStatementCreation(
+      partiesInvolved,
+      arbitrationSeats[seat],
+      languages[language],
+      documentIpfsHash,
+      documentHash,
+      account
+    );
+    console.log('submitted');
+    setStatementSubmit(false);
   };
 
   const createAgain = () => {
@@ -86,11 +81,7 @@ export default function ProcedureStatementForm({
   };
 
   return (
-    <ModalWrapper
-      width='50rem'
-      visible={ProcedureStatementModal}
-      onClose={closeProcedureStatement}
-    >
+    <ModalWrapper width="50rem" visible={ProcedureStatementModal} onClose={closeProcedureStatement}>
       <Title> Create an Procedure Statement</Title>
 
       <div
@@ -117,7 +108,7 @@ export default function ProcedureStatementForm({
           <TextInput
             style={{ flexBasis: '100%' }}
             value={parties}
-            onChange={(event) => {
+            onChange={event => {
               setParties(event.target.value);
             }}
           />
@@ -175,7 +166,7 @@ export default function ProcedureStatementForm({
           <TextInput
             style={{ flexBasis: '100%' }}
             value={documentIpfsHash}
-            onChange={(event) => {
+            onChange={event => {
               setDocumentIpfsHash(event.target.value);
             }}
           />
@@ -193,14 +184,14 @@ export default function ProcedureStatementForm({
           <TextInput
             style={{ flexBasis: '100%' }}
             value={documentHash}
-            onChange={(event) => {
+            onChange={event => {
               setDocumentHash(event.target.value);
             }}
           />
         </div>
 
         <Button
-          label='SUBMIT'
+          label="SUBMIT"
           style={{
             backgroundColor: theme.selected,
             color: 'white',

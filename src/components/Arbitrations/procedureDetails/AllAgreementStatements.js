@@ -12,7 +12,12 @@ import {
 const languages = ['English', 'French', 'Spanish'];
 const arbitrationSeats = ['London', 'lorem', 'lorem'];
 
-function AllAgreementStatements() {
+function AllAgreementStatements({
+  subject,
+  stakeHolder,
+  statementType,
+  documentIPFS,
+}) {
   const [language, setLanguage] = useState(0);
   const [seat, setSeat] = useState(0);
   const theme = useTheme();
@@ -47,14 +52,14 @@ function AllAgreementStatements() {
                 margin-bottom: ${2 * GU}px;
               `}
             >
-              Initiated By
+              Subject
             </h2>
             <Text
               css={`
                 ${textStyle('body2')};
               `}
             >
-              0x0x0x0x
+              {subject}
             </Text>
           </div>
 
@@ -66,63 +71,53 @@ function AllAgreementStatements() {
                 margin-bottom: ${2 * GU}px;
               `}
             >
-              Initiated Date
+              Stake Holder
             </h2>
             <Text
               css={`
                 ${textStyle('body2')};
               `}
             >
-              Date
+              {stakeHolder}
             </Text>
           </div>
 
           <div>
-            <h1
+            <h2
               css={`
+                ${textStyle('label2')};
                 color: ${theme.surfaceContentSecondary};
+                margin-bottom: ${2 * GU}px;
               `}
             >
-              Selected Language{' '}
-            </h1>
-            <DropDown
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              disabled={true}
-              items={languages}
-              selected={language}
-              wide
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
-            />
+              Statement Type
+            </h2>
+            <Text
+              css={`
+                ${textStyle('body2')};
+              `}
+            >
+              {statementType}
+            </Text>
           </div>
 
           <div>
-            <h1
+            <h2
               css={`
+                ${textStyle('label2')};
                 color: ${theme.surfaceContentSecondary};
+                margin-bottom: ${2 * GU}px;
               `}
             >
-              Selected Arbitration Seat
-            </h1>
-            <DropDown
-              wide
-              disabled={true}
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              items={arbitrationSeats}
-              selected={seat}
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
-            />
+              Document IPFS Hash
+            </h2>
+            <Text
+              css={`
+                ${textStyle('body2')};
+              `}
+            >
+              {documentIPFS}
+            </Text>
           </div>
         </div>
       </section>

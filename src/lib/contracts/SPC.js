@@ -330,7 +330,12 @@ export async function getAllStatements(nodeSelected, contractAddress, privacyGro
   return res;
 }
 
-export async function getProcedureStatements(nodeSelected, contractAddress, privacyGroupId, account) {
+export async function getProcedureStatements(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
@@ -340,7 +345,7 @@ export async function getProcedureStatements(nodeSelected, contractAddress, priv
       console.log(res);
     }
   } catch (err) {
-    console.log("ERR:",err)
+    console.log('ERR:', err);
     return false;
   }
   return res;

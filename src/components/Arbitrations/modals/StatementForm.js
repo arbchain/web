@@ -27,6 +27,8 @@ const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
+const stakeHolders = ['Party', 'Expert', 'court', 'Witness', 'Arbitrator'];
+
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
@@ -34,7 +36,8 @@ const antIcon = (
 export default function StatementForm({
   statementModal,
   setStatementModal,
-  procedureAddress,
+  contractAddress,
+  groupId,
   account,
 }) {
   const theme = useTheme();
@@ -49,8 +52,8 @@ export default function StatementForm({
 
   const { connected, statementCreation } = createStatement(
     NODES[0],
-    procedureAddress.procedureContractAddress,
-    procedureAddress.groupId
+    contractAddress,
+    groupId
   );
 
   // const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
@@ -62,7 +65,6 @@ export default function StatementForm({
 
   const handleClick = async () => {
     setStatementSubmit(true);
-    console.log('Procedure Add:', procedureAddress);
     const partiesInvolved = [
       ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
     ];
@@ -128,7 +130,7 @@ export default function StatementForm({
           <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
           <DropDown
             style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-            items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
+            items={stakeHolders}
             selected={stakeHolder}
             onChange={(index, items) => {
               setStakeHolder(index);

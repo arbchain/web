@@ -24,8 +24,6 @@ import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 import AllProcedureStatements from './procedureDetails/AllProcedureStatements';
 import AllAgreementStatements from './procedureDetails/AllAgreementStatements';
 
-const test = ['a', 'b', 'c'];
-
 const ProcedureDetails = () => {
   let history = useHistory();
   const theme = useTheme();
@@ -235,7 +233,7 @@ const ProcedureDetails = () => {
               <div style={{ marginTop: '14px' }}>
                 <Tabs
                   items={[
-                    'All Agreements',
+                    'All Statements',
                     'All Procedure Statements',
                     'All Proposals',
                   ]}

@@ -9,12 +9,7 @@ import {
   Button,
 } from '@aragon/ui';
 
-const languages = ['English', 'French', 'Spanish'];
-const arbitrationSeats = ['London', 'lorem', 'lorem'];
-
-function AllProcedureStatements() {
-  const [language, setLanguage] = useState(0);
-  const [seat, setSeat] = useState(0);
+function AllProcedureStatements({ documentIpfsHash, language, seat }) {
   const theme = useTheme();
   return (
     <>
@@ -35,48 +30,6 @@ function AllProcedureStatements() {
             width: 100%;
           `}
         >
-          <div
-            css={`
-              margin-bottom: 18px;
-            `}
-          >
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Initiated By
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              0x0x0x0x
-            </Text>
-          </div>
-
-          <div>
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Initiated Date
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              Date
-            </Text>
-          </div>
-
           <div>
             <h1
               css={`
@@ -92,12 +45,10 @@ function AllProcedureStatements() {
                 background: '#fff',
               }}
               disabled={true}
-              items={languages}
               selected={language}
               wide
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
+              items={[language]}
+              placeholder={language}
             />
           </div>
 
@@ -117,12 +68,33 @@ function AllProcedureStatements() {
                 borderColor: '#D9D9D9',
                 background: '#fff',
               }}
-              items={arbitrationSeats}
+              items={[seat]}
               selected={seat}
-              onChange={(index, items) => {
-                setLanguage(index);
-              }}
+              placeholder={seat}
             />
+          </div>
+
+          <div
+            css={`
+              margin: 18px 0 18px 0;
+            `}
+          >
+            <h2
+              css={`
+                ${textStyle('label2')};
+                color: ${theme.surfaceContentSecondary};
+                margin-bottom: ${2 * GU}px;
+              `}
+            >
+              Document IPFS Hash
+            </h2>
+            <Text
+              css={`
+                ${textStyle('body2')};
+              `}
+            >
+              {documentIpfsHash}
+            </Text>
           </div>
         </div>
         <div>
