@@ -9,8 +9,8 @@ import {
   Button,
 } from '@aragon/ui';
 
-const languages = ['English', 'French', 'Spanish'];
-const arbitrationSeats = ['London', 'lorem', 'lorem'];
+const stakeHolders = ['Party', 'Expert', 'Court', 'Witness', 'Arbitrator']
+const statementTypes = ['Normal', 'Claim', 'Written']
 
 function AllAgreementStatements({
   subject,
@@ -18,8 +18,6 @@ function AllAgreementStatements({
   statementType,
   documentIPFS,
 }) {
-  const [language, setLanguage] = useState(0);
-  const [seat, setSeat] = useState(0);
   const theme = useTheme();
   return (
     <>
@@ -78,7 +76,7 @@ function AllAgreementStatements({
                 ${textStyle('body2')};
               `}
             >
-              {stakeHolder}
+              {stakeHolders[stakeHolder]}
             </Text>
           </div>
 
@@ -97,7 +95,7 @@ function AllAgreementStatements({
                 ${textStyle('body2')};
               `}
             >
-              {statementType}
+              {statementTypes[statementType]}
             </Text>
           </div>
 

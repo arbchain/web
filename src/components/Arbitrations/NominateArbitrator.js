@@ -1,9 +1,29 @@
-import React from 'react';
-
+import React, {useState} from 'react';
 import { useTheme, Button, LoadingRing, DropDown } from '@aragon/ui';
+import {nominateArbitrator} from '../../lib/contracts/SPC';
 
-function NominateArbitrator() {
+const networks = require('../../wallet/network.js');
+
+const NODES = Object.keys(networks).map((node) => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
+
+export default function NominateArbitrator({contractAddress, groupId, account, nominatedArbitrator}) {
+
+  console.log("nominatedArbitrator:",nominatedArbitrator)
   const theme = useTheme();
+  const arbitratorList = ['arbitrator1', "arbitrator2", "arbitrator3"]
+
+  const [arbitrator, setArbitrator] = useState(0)
+
+  const { connected, arbitratorNomination } = nominateArbitrator(NODES[0], contractAddress, groupId);
+
+  const handleClick = async () => {
+    console.log("SElected arbitrator:",arbitratorList[arbitrator])
+    await arbitratorNomination('0xf17f52151EbEF6C7334FAD080c5704D77216b732', account)
+    console.log('nominated!!!');
+  };
+
   return (
     <>
       <div
@@ -57,5 +77,3 @@ function NominateArbitrator() {
     </>
   );
 }
-
-export default NominateArbitrator;

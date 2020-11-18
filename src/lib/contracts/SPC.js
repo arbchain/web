@@ -118,12 +118,13 @@ export function createProcedureStatement(nodeSelected, contractAddress, privacyG
 /**
  * Function 4: nominateArbitrator
  */
-export function nominateArbitrator(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function nominateArbitrator(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const arbitratorNomination = useCallback(
     async (arbitratorAddress, account) => {
-      return web3Contract.call('appointArbitrator', [arbitratorAddress], account);
+      const res = await web3Contract.call('nominateArbitrator', [arbitratorAddress], account);
+      console.log("Nominate res:",res)
     },
     [connected]
   );

@@ -73,7 +73,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
   useEffect(() => {
     async function procedureAddressCall() {
-      console.log(procedureAddress.length);
+      //console.log(procedureAddress.length);
       try {
         if (procedureAddress.length) {
           setLoading(true);

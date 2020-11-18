@@ -400,7 +400,12 @@ const ArbitrationDetail = (props) => {
                     })}
 
                   <Box heading='Arbitrator Nomination'>
-                    <NominateArbitrator />
+                    <NominateArbitrator
+                        contractAddress={contractAddress}
+                        groupId={groupId}
+                        account={walletAccount.account}
+                        nominatedArbitrator={details[10]}
+                    />
                   </Box>
                 </Box>
               </React.Fragment>
