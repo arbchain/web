@@ -73,7 +73,7 @@ export class Web3Contract {
         result.output
       );
     } else {
-      return result;
+      return false;
     }
   }
 

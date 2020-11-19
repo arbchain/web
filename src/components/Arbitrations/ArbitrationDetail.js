@@ -52,7 +52,7 @@ const ArbitrationDetail = (props) => {
 
   const [language, setLanguage] = useState(0);
   const [seat, setSeat] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
   const [statement, setStatement] = useState(null);
   const openStatement = () => setStatementModal(true);
@@ -82,7 +82,6 @@ const ArbitrationDetail = (props) => {
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
         });
-        console.log(walletAccount);
       } catch (err) {
         return false;
       }
@@ -93,7 +92,7 @@ const ArbitrationDetail = (props) => {
   useEffect(() => {
     async function getDetails() {
       try {
-        if (walletAccount.account) {
+        if (Object.keys(walletAccount.account).length) {
           setLoading(true);
           const details = await getArbitrationDetails(
             NODES[0],
@@ -101,8 +100,10 @@ const ArbitrationDetail = (props) => {
             groupId,
             walletAccount.account
           );
-          console.log('DET', details);
+          // There is an addition call being made that replaces the details. A quick fix
+          if (details) {
           setDetails(details);
+          }
           setLoading(false);
         }
       } catch (err) {
@@ -312,7 +313,6 @@ const ArbitrationDetail = (props) => {
                         mode='strong'
                         onClick={() => {
                           openStatement();
-                          console.log('WORKSSSS');
                         }}
                         wide
                         css={`
@@ -327,7 +327,6 @@ const ArbitrationDetail = (props) => {
                           mode='strong'
                           onClick={() => {
                             openProcedureStatement();
-                            console.log('WORKSSSS');
                           }}
                           wide
                           css={`
@@ -352,7 +351,7 @@ const ArbitrationDetail = (props) => {
                     />
                   </div>
 
-                  {details[9].length > 0 &&
+                  {!loading &&
                     details[9].map((value, index) => {
                       console.log('DETAILSSSS', value.documentIpfsHash);
                       return (
