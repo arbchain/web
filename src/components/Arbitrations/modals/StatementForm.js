@@ -27,8 +27,6 @@ const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const stakeHolders = ['Party', 'Expert', 'court', 'Witness', 'Arbitrator'];
-
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
@@ -130,7 +128,7 @@ export default function StatementForm({
           <div style={{ flexBasis: '100%' }}> Stake Holders:</div>
           <DropDown
             style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-            items={stakeHolders}
+            items={['Party', 'Expert', 'court', 'Witness', 'Arbitrator']}
             selected={stakeHolder}
             onChange={(index, items) => {
               setStakeHolder(index);
