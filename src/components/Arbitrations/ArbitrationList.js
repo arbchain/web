@@ -38,7 +38,7 @@ const NODES = Object.keys(networks).map((node) => {
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
@@ -73,10 +73,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
   useEffect(() => {
     async function procedureAddressCall() {
-      //console.log(procedureAddress.length);
       try {
-        if (procedureAddress.length) {
-          setLoading(true);
+        if (!proceduresLoading) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
@@ -98,7 +96,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       }
     }
     procedureAddressCall();
-  }, [procedureAddress]);
+  }, [proceduresLoading]);
 
   // try {
   //   console.log('All Arbitration Details', arbitrationDetails);
