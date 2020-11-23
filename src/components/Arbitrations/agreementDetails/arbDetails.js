@@ -38,8 +38,6 @@ const NODES = Object.keys(networks).map((node) => {
 });
 
 function ArbDetails({ groupId, contractAddress }) {
-  console.log('contractAddress', contractAddress);
-  console.log('groupId', groupId);
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
@@ -66,7 +64,6 @@ function ArbDetails({ groupId, contractAddress }) {
       try {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
-        console.log('ACCOUNT', account);
 
         // Update the account context by using a callback function
         walletAccount.changeAccount({
@@ -93,7 +90,6 @@ function ArbDetails({ groupId, contractAddress }) {
             walletAccount.account
           );
 
-          console.log('DETAILS', details[0]);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);

@@ -10,6 +10,7 @@ import {
 } from '@aragon/ui';
 
 function AllProcedureStatements() {
+  const [language, setLanguage] = useState('');
   const theme = useTheme();
   return (
     <>
@@ -45,9 +46,9 @@ function AllProcedureStatements() {
                 background: '#fff',
               }}
               disabled={true}
-              // selected={language}
+              selected={language}
               wide
-              // items={[language]}
+              items={['ENG', 'FRENCH']}
               // placeholder={language}
             />
           </div>
@@ -68,7 +69,7 @@ function AllProcedureStatements() {
                 borderColor: '#D9D9D9',
                 background: '#fff',
               }}
-              // items={[seat]}
+              items={['London', 'Germany']}
               // selected={seat}
               // placeholder={seat}
             />

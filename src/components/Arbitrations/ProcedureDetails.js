@@ -1,3 +1,5 @@
+// -Offline testing page
+
 import React, { useState } from 'react';
 import {
   BackButton,
@@ -21,8 +23,8 @@ import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-import AllProcedureStatements from './procedureDetails/AllProcedureStatements';
-import AllAgreementStatements from './procedureDetails/AllAgreementStatements';
+import AllProcedureStatements from './agreementDetails/allDetailCards/AllProcedureStatements';
+import AllAgreementStatements from './agreementDetails/allDetailCards/AllProcedureStatements';
 import NominateArbitrator from './agreementDetails/NominateArbitrator';
 
 const ProcedureDetails = () => {
