@@ -27,7 +27,7 @@
     "use-wallet": "^0.4.4",
     "wallet-besu": "^1.0.2",
     "web3": "1.2.6",
-    "web3-besu": "^0.9.1"
+    "web3-eea": "^0.10.0" 
   },
   "scripts": {
     "start": "react-app-rewired start",

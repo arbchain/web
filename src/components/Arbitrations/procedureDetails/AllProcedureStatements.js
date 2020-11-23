@@ -9,7 +9,7 @@ import {
   Button,
 } from '@aragon/ui';
 
-function AllProcedureStatements({ documentIpfsHash, language, seat }) {
+function AllProcedureStatements() {
   const theme = useTheme();
   return (
     <>
@@ -45,10 +45,10 @@ function AllProcedureStatements({ documentIpfsHash, language, seat }) {
                 background: '#fff',
               }}
               disabled={true}
-              selected={language}
+              // selected={language}
               wide
-              items={[language]}
-              placeholder={language}
+              // items={[language]}
+              // placeholder={language}
             />
           </div>
 
@@ -68,9 +68,9 @@ function AllProcedureStatements({ documentIpfsHash, language, seat }) {
                 borderColor: '#D9D9D9',
                 background: '#fff',
               }}
-              items={[seat]}
-              selected={seat}
-              placeholder={seat}
+              // items={[seat]}
+              // selected={seat}
+              // placeholder={seat}
             />
           </div>
 
@@ -93,7 +93,7 @@ function AllProcedureStatements({ documentIpfsHash, language, seat }) {
                 ${textStyle('body2')};
               `}
             >
-              {documentIpfsHash}
+              x0x0x0x0x0x0xx0
             </Text>
           </div>
         </div>

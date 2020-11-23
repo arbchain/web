@@ -23,6 +23,7 @@ import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
 import AllProcedureStatements from './procedureDetails/AllProcedureStatements';
 import AllAgreementStatements from './procedureDetails/AllAgreementStatements';
+import NominateArbitrator from './agreementDetails/NominateArbitrator';
 
 const ProcedureDetails = () => {
   let history = useHistory();
@@ -262,7 +263,7 @@ const ProcedureDetails = () => {
 
               <Box heading='Arbitrator Nomination'>
                 <>
-                  <div
+                  {/* <div
                     className='nomination__container'
                     css={`
                       display: grid;
@@ -306,7 +307,8 @@ const ProcedureDetails = () => {
                         Nominate
                       </Button>
                     </div>
-                  </div>
+                  </div> */}
+                  <NominateArbitrator />
                 </>
               </Box>
             </Box>
