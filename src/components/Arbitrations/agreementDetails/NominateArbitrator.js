@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useTheme, Button, LoadingRing, DropDown, Box } from '@aragon/ui';
 import { Table, Radio, Divider } from 'antd';
 import { nominateArbitrator } from '../../../lib/contracts/SPC';
@@ -8,62 +8,30 @@ const NominateWrapper = styled.div`
   margin: 24px 0 18px 0;
 `;
 
-const networks = require('../../../wallet/network.js');
-
-const NODES = Object.keys(networks).map((node) => {
-  return `${networks[node].host}:${networks[node].port}`;
-});
-
-function NominateArbitrator({
-  contractAddress,
-  groupId,
-  account,
-  nominatedArbitrator,
-}) {
+function NominateArbitrator({contractAddress, groupId, node, account, nominatedArbitrator}) {
   console.log('nominatedArbitrator:', nominatedArbitrator);
   const theme = useTheme();
   const arbitratorList = ['arbitrator1', 'arbitrator2', 'arbitrator3'];
 
   const [arbitrator, setArbitrator] = useState(0);
 
-  const { connected, arbitratorNomination } = nominateArbitrator(
-    NODES[0],
-    contractAddress,
-    groupId
-  );
+  const { connected, arbitratorNomination } = nominateArbitrator(node, contractAddress, groupId);
 
   const columns = [
     {
-      title: 'Arbitrators',
-      dataIndex: 'arbitrators',
+      title: 'Arbitrator',
+      dataIndex: 'arbitrator',
     },
 
     {
       title: 'Nominated By',
-      dataIndex: 'nominatedBy',
-    },
-  ];
-  const data = [
-    {
-      key: '1',
-      arbitrators: 'John Brown',
-
-      nominatedBy: '0x0x0x0x0x',
-    },
-    {
-      key: '2',
-      arbitrators: 'Jim Green',
-
-      nominatedBy: '0x0x0x0x0x',
+      dataIndex: 'party',
     },
   ];
 
   const handleClick = async () => {
     console.log('SElected arbitrator:', arbitratorList[arbitrator]);
-    await arbitratorNomination(
-      '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
-      account
-    );
+    await arbitratorNomination('0xf17f52151EbEF6C7334FAD080c5704D77216b732', account);
     console.log('nominated!!!');
   };
 
@@ -95,6 +63,8 @@ function NominateArbitrator({
               }}
               disabled={false}
               items={arbitratorList}
+              onChange={(index)=> setArbitrator(index)}
+              selected={arbitrator}
               wide
             />
           </div>
@@ -117,19 +87,24 @@ function NominateArbitrator({
           </div>
         </div>
 
-        <NominateWrapper>
-          <div>
-            <h1
-              css={`
+        {
+          nominatedArbitrator.length>=1 ? (
+            <NominateWrapper>
+              <div>
+                <h1
+                  css={`
                 color: ${theme.surfaceContentSecondary};
               `}
-            >
-              Nominated Arbitrators
-            </h1>
+                >
+                  Nominated Arbitrators
+                </h1>
 
-            <Table columns={columns} dataSource={data} pagination={false} />
-          </div>
-        </NominateWrapper>
+                <Table columns={columns} dataSource={nominatedArbitrator} pagination={false} />
+              </div>
+            </NominateWrapper>
+          ) : null
+        }
+
       </Box>
     </>
   );

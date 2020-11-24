@@ -1,46 +1,87 @@
 import React, { useEffect, useState } from 'react';
 // import { AgreementContext } from './Contexts';
-import {
-  BackButton,
-  Bar,
-  Box,
-  Split,
-  GU,
-  Text,
-  textStyle,
-  IdentityBadge,
-  useTheme,
-  Button,
-  LoadingRing,
-  EmptyStateCard,
-  Accordion,
-  DropDown,
-  Tabs,
-  Tag,
-} from '@aragon/ui';
+
+import {useTheme, Accordion, LoadingRing} from '@aragon/ui';
 
 import AllAgreementStatements from './allDetailCards/AllAgreementStatements';
 
-import {
-  getAllStatements,
-  getArbitrationDetails,
-  nominateArbitrator,
-} from '../../../lib/contracts/SPC';
-import { useAccount } from '../../../wallet/Account';
-import wallet from 'wallet-besu';
-const networks = require('../../../wallet/network');
+import {getAllStatements} from '../../../lib/contracts/SPC';
+import AllProcedureStatements from "./allDetailCards/AllProcedureStatements";
 
-const NODES = Object.keys(networks).map((node) => {
-  return `${networks[node].host}:${networks[node].port}`;
-});
+function AllStatements({groupId, contractAddress, NODE, account}) {
 
-function AllStatements() {
+  const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState(null);
+
+  useEffect(() => {
+    async function getDetails() {
+      try {
+        if (Object.keys(account).length) {
+          setLoading(true);
+          const details = await getAllStatements(
+              NODE,
+              contractAddress,
+              groupId,
+              account
+          );
+          console.log("Statement DETAILS:",details)
+          // There is an addition call being made that replaces the details. A quick fix
+          if (details) {
+            setDetails(details);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getDetails();
+  }, [account]);
+
+
   return (
     <>
-      <Accordion
-        accordion
-        items={[['All Statements', [<AllAgreementStatements />]]]}
-      />
+      {
+        loading ? (
+            <div
+                style={{
+                  justifyContent: 'center',
+                  display: 'flex',
+                  height: '300px',
+                  alignItems: 'center',
+                }}
+            >
+              <span> Fetching statements </span> <br />
+              <LoadingRing mode='half-circle' />
+            </div>
+            ) : details && details[0].length >= 1 ? (details[0].map((value)=>
+                <Accordion
+                    accordion
+                    items={[['Procedure Statements', [
+                      <AllProcedureStatements
+                          seat={value.seat}
+                          language={value.language}
+                          ipfsHash={value.documentIpfsHash}
+                      />]]]}
+                />)
+        ):null
+      }
+      {
+        details && details[1].length >= 1 ? (details[1].map((value)=> {
+          const heading  = value.subject
+          return (
+              <Accordion
+                  accordion
+                  items={[[heading, [
+                    <AllAgreementStatements
+                        subject={value.subject}
+                        stakeHolder={value.stakeholder}
+                        statementType={value.statementType}
+                        ipfsHash={value.documentIpfsHash}
+                    />]]]}
+              />)})
+        ):null
+      }
     </>
   );
 }

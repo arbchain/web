@@ -9,8 +9,7 @@ import {
   Button,
 } from '@aragon/ui';
 
-function AllProcedureStatements() {
-  const [language, setLanguage] = useState('');
+function AllProcedureStatements({seat, language, ipfsHash}) {
   const theme = useTheme();
   return (
     <>
@@ -46,10 +45,9 @@ function AllProcedureStatements() {
                 background: '#fff',
               }}
               disabled={true}
-              selected={language}
               wide
-              items={['ENG', 'FRENCH']}
-              // placeholder={language}
+              items={[]}
+              placeholder={language}
             />
           </div>
 
@@ -69,9 +67,8 @@ function AllProcedureStatements() {
                 borderColor: '#D9D9D9',
                 background: '#fff',
               }}
-              items={['London', 'Germany']}
-              // selected={seat}
-              // placeholder={seat}
+              items={[]}
+              placeholder={seat}
             />
           </div>
 
@@ -94,7 +91,7 @@ function AllProcedureStatements() {
                 ${textStyle('body2')};
               `}
             >
-              x0x0x0x0x0x0xx0
+              {ipfsHash}
             </Text>
           </div>
         </div>

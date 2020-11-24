@@ -1,23 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// import { AgreementContext } from './Contexts';
-import {
-  BackButton,
-  Bar,
-  Box,
-  Split,
-  GU,
-  Text,
-  textStyle,
-  IdentityBadge,
-  useTheme,
-  Button,
-  LoadingRing,
-  EmptyStateCard,
-  Accordion,
-  DropDown,
-  Tabs,
-  Tag,
-} from '@aragon/ui';
+import {BackButton, Bar, Box, Split, useTheme, Tabs,} from '@aragon/ui';
 
 import { useHistory } from 'react-router-dom';
 
@@ -28,7 +10,7 @@ import AllStatements from './agreementDetails/allStatements';
 import AllProcedure from './agreementDetails/allProcedures';
 import NominationPage from './agreementDetails/NominationPage';
 import { useAccount } from '../../wallet/Account';
-
+import wallet from 'wallet-besu';
 const networks = require('../../wallet/network');
 
 const NODES = Object.keys(networks).map((node) => {
@@ -37,22 +19,12 @@ const NODES = Object.keys(networks).map((node) => {
 
 const ArbitrationDetail = (props) => {
   const history = useHistory();
-  const theme = useTheme();
   const [statementModal, setStatementModal] = useState(true);
-
-  const [language, setLanguage] = useState(0);
-  const [seat, setSeat] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [details, setDetails] = useState(null);
-  const [statement, setStatement] = useState(null);
   const openStatement = () => setStatementModal(true);
 
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
-  const status = ['Open', 'Close'];
   const walletAccount = useAccount();
-  const [procedureStatement, setProcedureStatement] = useState([]);
-
   // Procedure statement modal
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
 
@@ -65,7 +37,23 @@ const ArbitrationDetail = (props) => {
     setSelectTabs(tabs);
   };
 
-  console.log('TABSSS', tabs);
+  useEffect(() => {
+    async function load() {
+      try {
+        // Fetching the password locally. Need a secure way to do this for prod
+        const account = await wallet.login(localStorage.getItem('wpassword'));
+        // Update the account context by using a callback function
+        walletAccount.changeAccount({
+          privateKey: account[0],
+          orionPublicKey: localStorage.getItem('orionKey'),
+        });
+      } catch (err) {
+        console.log('ERROR', err);
+        return false;
+      }
+    }
+    load();
+  }, []);
 
   return (
     <div>
@@ -91,25 +79,37 @@ const ArbitrationDetail = (props) => {
                 />
               </div>
 
-              {tabs == 0 ? (
+              {tabs === 0 ? (
                 <>
                   <ArbDetails
                     contractAddress={contractAddress}
                     groupId={groupId}
+                    NODE={NODES[0]}
+                    account={walletAccount.account}
                   />
                 </>
               ) : null}
 
-              {tabs == 1 ? (
+              {tabs === 1 ? (
                 <>
-                  <AllStatements />
-                  <AllProcedure />
+                  <AllStatements
+                      contractAddress={contractAddress}
+                      groupId={groupId}
+                      NODE={NODES[0]}
+                      account={walletAccount.account}
+                  />
+                  {/*<AllProcedure />*/}
                 </>
               ) : null}
 
-              {tabs == 2 ? (
+              {tabs === 2 ? (
                 <>
-                  <NominationPage />
+                  <NominationPage
+                      contractAddress={contractAddress}
+                      groupId={groupId}
+                      NODE={NODES[0]}
+                      account={walletAccount.account}
+                  />
                 </>
               ) : null}
             </React.Fragment>

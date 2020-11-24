@@ -12,7 +12,7 @@ import {
 const stakeHolders = ['Party', 'Expert', 'Court', 'Witness', 'Arbitrator'];
 const statementTypes = ['Normal', 'Claim', 'Written'];
 
-function AllAgreementStatements({}) {
+function AllAgreementStatements({subject, stakeHolder, statementType, ipfsHash}) {
   const theme = useTheme();
   return (
     <>
@@ -52,7 +52,7 @@ function AllAgreementStatements({}) {
                 ${textStyle('body2')};
               `}
             >
-              test
+              {subject}
             </Text>
           </div>
 
@@ -71,7 +71,7 @@ function AllAgreementStatements({}) {
                 ${textStyle('body2')};
               `}
             >
-              test
+              {stakeHolders[stakeHolder]}
             </Text>
           </div>
 
@@ -90,7 +90,7 @@ function AllAgreementStatements({}) {
                 ${textStyle('body2')};
               `}
             >
-              test
+              {statementTypes[statementType]}
             </Text>
           </div>
 
@@ -109,7 +109,7 @@ function AllAgreementStatements({}) {
                 ${textStyle('body2')};
               `}
             >
-              test
+              {ipfsHash}
             </Text>
           </div>
         </div>

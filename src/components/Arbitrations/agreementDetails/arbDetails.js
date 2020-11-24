@@ -1,95 +1,39 @@
 import React, { useEffect, useState } from 'react';
-// import { AgreementContext } from './Contexts';
-import {
-  BackButton,
-  Bar,
-  Box,
-  Split,
-  GU,
-  Text,
-  textStyle,
-  IdentityBadge,
-  useTheme,
-  Button,
-  LoadingRing,
-  EmptyStateCard,
-  Accordion,
-  DropDown,
-  Tabs,
-  Tag,
-} from '@aragon/ui';
-
+import {Box, GU, Text, textStyle, useTheme, Button, LoadingRing, EmptyStateCard} from '@aragon/ui';
 import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from '.././modals/ProcedureStatement';
-
 import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
-import {
-  getAllStatements,
-  getArbitrationDetails,
-  nominateArbitrator,
-} from '../../../lib/contracts/SPC';
-import { useAccount } from '../../../wallet/Account';
-import wallet from 'wallet-besu';
-const networks = require('../../../wallet/network');
+import {getArbitrationDetails} from '../../../lib/contracts/SPC';
 
-const NODES = Object.keys(networks).map((node) => {
-  return `${networks[node].host}:${networks[node].port}`;
-});
 
-function ArbDetails({ groupId, contractAddress }) {
+function ArbDetails({ groupId, contractAddress, NODE, account }) {
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
 
-  const [language, setLanguage] = useState(0);
-  const [seat, setSeat] = useState(0);
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
-  const [statement, setStatement] = useState(null);
   const openStatement = () => setStatementModal(true);
 
   const status = ['Open', 'Close'];
-  const walletAccount = useAccount();
-  const [procedureStatement, setProcedureStatement] = useState([]);
-
   // Procedure statement modal
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
-
   // Procedure Statement form
   const openProcedureStatement = () => setProcedureStatementModal(true);
 
   useEffect(() => {
-    async function load() {
-      try {
-        // Fetching the password locally. Need a secure way to do this for prod
-        const account = await wallet.login(localStorage.getItem('wpassword'));
-
-        // Update the account context by using a callback function
-        walletAccount.changeAccount({
-          privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey'),
-        });
-      } catch (err) {
-        console.log('ERROR', err);
-        return false;
-      }
-    }
-    load();
-  }, []);
-
-  useEffect(() => {
     async function getDetails() {
       try {
-        if (Object.keys(walletAccount.account).length) {
+        if (Object.keys(account).length) {
           setLoading(true);
           const details = await getArbitrationDetails(
-            NODES[0],
+            NODE,
             contractAddress,
             groupId,
-            walletAccount.account
+            account
           );
-
+          console.log("DETAILS:",details)
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -101,7 +45,7 @@ function ArbDetails({ groupId, contractAddress }) {
       }
     }
     getDetails();
-  }, [walletAccount.account]);
+  }, [account]);
 
   return (
     <>
@@ -117,7 +61,7 @@ function ArbDetails({ groupId, contractAddress }) {
           setStatementModal={setStatementModal}
           contractAddress={contractAddress}
           groupId={groupId}
-          account={walletAccount.account}
+          account={account}
         />
       </div>
 
@@ -133,7 +77,7 @@ function ArbDetails({ groupId, contractAddress }) {
           setProcedureStatementModal={setProcedureStatementModal}
           contractAddress={contractAddress}
           groupId={groupId}
-          account={walletAccount.account}
+          account={account}
         />
       </div>
 

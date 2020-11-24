@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme, Button, LoadingRing, DropDown, Box } from '@aragon/ui';
 import { Table, Radio, Divider } from 'antd';
-import { nominateArbitrator } from '../../../lib/contracts/SPC';
+import { nominateWitness} from '../../../lib/contracts/SPC';
 import styled from 'styled-components';
 
 const NominateWrapper = styled.div`
@@ -14,42 +14,27 @@ const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-function NominateWitness({}) {
+function NominateWitness({contractAddress, account, groupId, NODE, nominatedWitness}) {
+  console.log('nominatedWitness:', nominatedWitness);
   const theme = useTheme();
-  const witnessist = ['wit1', 'wit2', 'wit3'];
+  const witnessList = ['wit1', 'wit2', 'wit3'];
 
-  const [witness, setwitness] = useState(0);
+  const [witness, setWitness] = useState(0);
 
+  const { connected, witnessNomination } = nominateWitness(NODE, contractAddress, groupId);
   //   table data
 
   const columns = [
     {
-      title: 'Arbitrators',
-      dataIndex: 'arbitrators',
-    },
-
-    {
-      title: 'Nominated By',
-      dataIndex: 'nominatedBy',
-    },
-  ];
-  const data = [
-    {
-      key: '1',
-      arbitrators: 'John Brown',
-
-      nominatedBy: '0x0x0x0x0x',
-    },
-    {
-      key: '2',
-      arbitrators: 'Jim Green',
-
-      nominatedBy: '0x0x0x0x0x',
-    },
+      title: 'Witness Name',
+      dataIndex: 'witnessAddress',
+    }
   ];
 
   const handleClick = async () => {
-    console.log('Clicked');
+    console.log('Nominated witness:', nominatedWitness[witness]);
+    await witnessNomination('0xf17f52151EbEF6C7334FAD080c5704D77216b732', account);
+    console.log('nominated!!!');
   };
 
   return (
@@ -70,7 +55,7 @@ function NominateWitness({}) {
                 color: ${theme.surfaceContentSecondary};
               `}
             >
-              Select Arbitrator
+              Select Witness
             </h1>
             <DropDown
               placeholder='Select an Witness'
@@ -79,7 +64,9 @@ function NominateWitness({}) {
                 borderColor: '#D9D9D9',
               }}
               disabled={false}
-              items={witnessist}
+              items={witnessList}
+              onChange={(index)=> setWitness(index)}
+              selected={witness}
               wide
             />
           </div>
@@ -102,19 +89,24 @@ function NominateWitness({}) {
           </div>
         </div>
 
-        <NominateWrapper>
-          <div>
-            <h1
-              css={`
+        {
+          nominatedWitness.length>=1 ?(
+            <NominateWrapper>
+              <div>
+                <h1
+                  css={`
                 color: ${theme.surfaceContentSecondary};
               `}
-            >
-              Nominated Witnesses
-            </h1>
+                >
+                  Nominated Witnesses
+                </h1>
 
-            <Table columns={columns} dataSource={data} pagination={false} />
-          </div>
-        </NominateWrapper>
+                <Table columns={columns} dataSource={nominatedWitness} pagination={false} />
+              </div>
+            </NominateWrapper>
+          ):null
+        }
+
       </Box>
     </>
   );
