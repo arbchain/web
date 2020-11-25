@@ -101,7 +101,7 @@ function NominateWitness({contractAddress, account, groupId, NODE, nominatedWitn
                   Nominated Witnesses
                 </h1>
 
-                <Table columns={columns} dataSource={nominatedWitness} pagination={false} />
+                <Table columns={columns} dataSource={nominatedWitness} pagination={false} style={{overflow:'hidden'}}/>
               </div>
             </NominateWrapper>
           ):null

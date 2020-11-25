@@ -140,7 +140,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           />
         </div>
 
-        <div style={{ display: 'flex', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', marginBottom: '12px' }}>
           <div style={{ marginLeft: '0.5rem' }}>
             <Button
               label='+NEW PROCEDURE'
