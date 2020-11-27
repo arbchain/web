@@ -97,16 +97,17 @@ export function createClaim(nodeSelected) {
 /**
  * Function 3: createProcedureStatement
  */
-export function createProcedureStatement(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function createProcedureStatement(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const procedureStatementCreation = useCallback(
     async (parties, seat, language, documentIpfsHash, documentHash, account) => {
-      return web3Contract.call(
+      const res = await web3Contract.call(
         'createProcedureStatement',
         [parties, seat, language, documentIpfsHash, documentHash],
         account
       );
+      console.log('RES:', res);
     },
     [connected]
   );
@@ -117,12 +118,13 @@ export function createProcedureStatement(nodeSelected) {
 /**
  * Function 4: nominateArbitrator
  */
-export function nominateArbitrator(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function nominateArbitrator(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const arbitratorNomination = useCallback(
     async (arbitratorAddress, account) => {
-      return web3Contract.call('appointArbitrator', [arbitratorAddress], account);
+      const res = await web3Contract.call('nominateArbitrator', [arbitratorAddress], account);
+      console.log("Nominate res:",res)
     },
     [connected]
   );
@@ -177,8 +179,8 @@ export function revokeArbitrator(nodeSelected) {
 /**
  * Function 8: createStatement
  */
-export function createStatement(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function createStatement(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const statementCreation = useCallback(
     async (
@@ -190,11 +192,13 @@ export function createStatement(nodeSelected) {
       documentIpfsHash,
       account
     ) => {
-      return web3Contract.call(
+      // const docHash = Web3.utils.fromAscii(documentHash)
+      const res = await web3Contract.call(
         'createStatement',
         [parties, stakeholder, statementType, subject, documentHash, documentIpfsHash],
         account
       );
+      console.log('RES:', res);
     },
     [connected]
   );
@@ -312,12 +316,54 @@ export function setLanguage(nodeSelected) {
   return { connected, languageSelection };
 }
 
-export async function getArbitrationDetails(
-  nodeSelected,
-  contractAddress,
-  privacyGroupId,
-  account
-) {
+/**
+ * Function 16: nominateWitness
+ */
+export function nominateWitness(nodeSelected, contractAddress, privacyGroupId) {
+  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+
+  const witnessNomination = useCallback(
+    async (arbitratorAddress, account) => {
+      const res = await web3Contract.call('submitWitness', [arbitratorAddress], account);
+      console.log("Nominate res:",res)
+    },
+    [connected]
+  );
+  return { connected, witnessNomination };
+}
+
+export async function getAllStatements(nodeSelected, contractAddress, privacyGroupId, account) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getAllStatements', [], account);
+      console.log(res);
+    }
+  } catch (err) {
+    return false;
+  }
+  return res;
+}
+
+export async function getAllProposals(nodeSelected, contractAddress, privacyGroupId, account) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getAllProposals', [], account);
+      console.log(res);
+    }
+  } catch (err) {
+    console.log('ERR:', err);
+    return false;
+  }
+  return res;
+}
+
+export async function getArbitrationDetails(nodeSelected, contractAddress, privacyGroupId, account) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
