@@ -1,23 +1,27 @@
 import React from 'react';
-import {
-  Box,
-  Main,
-  Split,
-  Card,
-  Button,
-  useTheme,
-  Text,
-  GU,
-  textStyle,
-} from '@aragon/ui';
+import { Main, Split, useTheme, GU, textStyle } from '@aragon/ui';
+import { Button } from 'antd';
 import Avatar from '../assets/Avatar.png';
 
 import styled from 'styled-components';
-import { Descriptions } from 'antd';
 
 const OutterContainer = styled.div`
   border: 1px solid #dde4e9;
-  padding: 1rem;
+  padding: 1.5rem;
+  box-shadow: rgba(51, 77, 117, 0.2) 0px 1px 3px;
+  border-radius: 4px;
+  h3 {
+    color: #637381;
+    ${textStyle('label2')};
+    display: block;
+    margin-bottom: 2px;
+  }
+  h2 {
+    display: block;
+    ${textStyle('body2')};
+    font-weight: 500;
+    color: #212b36;
+  }
 `;
 
 const FlexContainer = styled.div`
@@ -37,31 +41,6 @@ const FlexContainer = styled.div`
   .texts {
     margin-left: 1rem;
     justify-content: center;
-    h3 {
-      color: #637381;
-      ${textStyle('label2')};
-      display: block;
-      margin-bottom: 2px;
-    }
-    h2 {
-      display: block;
-      ${textStyle('body2')};
-      font-weight: 500;
-      color: #212b36;
-    }
-  }
-  .date {
-    h2 {
-      font-weight: 500;
-      font-size: 16px;
-      color: #212b36;
-    }
-    h3 {
-      color: #637381;
-      ${textStyle('label2')};
-      display: block;
-      margin-bottom: 2px;
-    }
   }
 `;
 
@@ -70,24 +49,30 @@ const Description = styled.div`
 
   .title {
     color: hsl(202, 57%, 15%);
-    font-weight: 700;
+    font-weight: 500;
     font-size: 24px;
   }
 
   .description {
     font-weight: 400;
     color: hsl(203, 15%, 47%);
+
+    .primary {
+      background: #4d4cbb;
+      color: #fff;
+    }
   }
 `;
 
-const Container = styled.div.attrs(() => ({
-  className: 'test',
-}))`
-  cursor: pointer;
-  color: white;
+const RespondantContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr minmax(250px, auto);
+  grid-gap: ${5 * GU}px;
+  margin-bottom: ${2 * GU}px;
+  margin-top: 28px;
 `;
 
-function NewCard() {
+function NewProcedureCard() {
   const theme = useTheme();
   return (
     <Main>
@@ -102,7 +87,7 @@ function NewCard() {
                       <img src={Avatar} alt='' srcset='' />
                     </div>
                     <div className='texts'>
-                      <h3>Name</h3>
+                      <h3>Created By</h3>
                       <h2>John Doe</h2>
                     </div>
                   </div>
@@ -120,18 +105,24 @@ function NewCard() {
                     voluptas ex voluptatum illum!
                   </p>
                   <Button
-                    mode='strong'
-                    css={`
-                      background: ${theme.selected};
-                    `}
+                    style={{ background: '#4d4cbb', color: 'white' }}
+                    className='primary'
                   >
                     Read More
                   </Button>
                 </Description>
-                <Container>
-                  <h2 className='test'>Respondant Name</h2>
-                  <h2>Court Address</h2>
-                </Container>
+                <RespondantContainer>
+                  <div>
+                    <h3>Respondant Name</h3>
+                    <h2>Jane Doe</h2>
+                  </div>
+
+                  <div>
+                    <h3>Court Address</h3>
+
+                    <h2>x0x0x0x0x0x0x0x0x0x0x0x0x0x0x0x</h2>
+                  </div>
+                </RespondantContainer>
               </OutterContainer>
             </section>
           </>
@@ -141,4 +132,4 @@ function NewCard() {
   );
 }
 
-export default NewCard;
+export default NewProcedureCard;
