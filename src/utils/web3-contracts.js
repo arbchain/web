@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 const Web3 = require('web3');
-const EEAClient = require('web3-besu');
+const EEAClient = require('web3-eea');
 
 export class Web3Contract {
   async connect(url) {
@@ -14,10 +14,11 @@ export class Web3Contract {
     }
   }
 
-  async fromPrivateKeyToPublic(account){
-
-    const publicKey = await this.web3.eth.accounts.privateKeyToAccount(`0x{account}`);
-    return publicKey
+  async fromPrivateKeyToPublic(account) {
+    const publicKey = await this.web3.eth.accounts.privateKeyToAccount(
+      `0x{account}`
+    );
+    return publicKey;
   }
 
   async createPrivacyGroup(participants, account) {
@@ -73,7 +74,7 @@ export class Web3Contract {
         result.output
       );
     } else {
-      return result;
+      return false;
     }
   }
 

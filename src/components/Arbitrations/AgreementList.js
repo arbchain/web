@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@aragon/ui';
+import { useTheme, EmptyStateCard, LoadingRing } from '@aragon/ui';
 
 import { fetchAgreement } from '../../lib/contracts/Agreement';
 import { useAccount } from '../../wallet/Account.js';
@@ -22,13 +22,15 @@ function AgreementList({ disputes, selectDispute, walletAccount }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const [agreementDetails, setAgreementDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const { agreementAddress } = getAgreementAddress(NODES[0], walletAccount.account);
+  const [ agreementsLoading, agreementAddress ] = getAgreementAddress(NODES[0], walletAccount.account);
 
   useEffect(() => {
     async function agreementAddressCall() {
       try {
         if (agreementAddress.length) {
+          setLoading(true);
           console.log('Agreement adrees length', agreementAddress.length);
           let index = 0;
           const allDetails = [];
@@ -44,10 +46,12 @@ function AgreementList({ disputes, selectDispute, walletAccount }) {
           }
           console.log(allDetails);
           setAgreementDetails(allDetails);
+          setLoading(false);
         }
       } catch (err) {
         return false;
       }
+      
     }
     agreementAddressCall();
   }, [agreementAddress]);
@@ -56,11 +60,18 @@ function AgreementList({ disputes, selectDispute, walletAccount }) {
 
   return (
     <>
-      {agreementDetails.map(agreement => {
+      {
+      loading || agreementsLoading ?
+      <div style={{justifyContent: "center", display: "flex", height: "300px", alignItems: "center"}}>
+      <span> Fetching agreements </span> <br/>
+      <LoadingRing mode="half-circle"/> 
+      </div> :
+      agreementAddress.length ?
+      agreementDetails.map(agreement => {
         return (
           <AgreementCard key={agreement[0]} agreement={agreement} selectDispute={selectDispute} />
         );
-      })}
+      }) : <EmptyStateCard text="No agreements found." />}
     </>
   );
 }

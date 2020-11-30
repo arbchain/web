@@ -1,237 +1,129 @@
-import React, { useState } from 'react';
-// import { AgreementContext } from './Contexts';
-import {
-  BackButton,
-  Bar,
-  Box,
-  Split,
-  GU,
-  Text,
-  textStyle,
-  IdentityBadge,
-  useTheme,
-  Button,
-} from '@aragon/ui';
+import React, { useEffect, useState } from 'react';
+import {BackButton, Bar, Box, Split, useTheme, Tabs,} from '@aragon/ui';
+
 import { useHistory } from 'react-router-dom';
 
-import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
-import StatementForm from './modals/StatementForm';
-import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-const ArbitrationDetail = props => {
-  const [statementModal, setStatementModal] = useState(false);
-  const openStatement = () => setStatementModal(true);
+import ArbDetails from './agreementDetails/arbDetails';
+import AllStatements from './agreementDetails/allStatements';
+import AllProcedure from './agreementDetails/allProcedures';
+import NominationPage from './agreementDetails/NominationPage';
+import { useAccount } from '../../wallet/Account';
+import wallet from 'wallet-besu';
+const networks = require('../../wallet/network');
+
+const NODES = Object.keys(networks).map((node) => {
+  return `${networks[node].host}:${networks[node].port}`;
+});
+
+const ArbitrationDetail = (props) => {
   const history = useHistory();
-  const theme = useTheme();
+  const [statementModal, setStatementModal] = useState(true);
+  const openStatement = () => setStatementModal(true);
 
-  const status = ['Open', 'Close'];
+  const contractAddress = props.match.params.address;
+  const groupId = decodeURIComponent(props.match.params.groupId);
+  const walletAccount = useAccount();
+  // Procedure statement modal
+  const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
 
-  const { arbitration } = props.location;
-  console.log();
+  // Procedure Statement form
+  const openProcedureStatement = () => setProcedureStatementModal(true);
+
+  const [tabs, setSelectTabs] = useState(0);
+
+  const handleTabChange = (tabs) => {
+    setSelectTabs(tabs);
+  };
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // Fetching the password locally. Need a secure way to do this for prod
+        const account = await wallet.login(localStorage.getItem('wpassword'));
+        // Update the account context by using a callback function
+        walletAccount.changeAccount({
+          privateKey: account[0],
+          orionPublicKey: localStorage.getItem('orionKey'),
+        });
+      } catch (err) {
+        console.log('ERROR', err);
+        return false;
+      }
+    }
+    load();
+  }, []);
 
   return (
-    <React.Fragment>
+    <div>
       {/* statement  modal */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <StatementForm
-          statementModal={statementModal}
-          setStatementModal={setStatementModal}
-          // account={walletAccount.account}
-          // node={NODES[0]}
-        />
-      </div>
+
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
 
-      <Split
-        primary={
-          <React.Fragment>
-            <Box heading="Agreement Details">
-              <Box>
-                <section
-                  css={`
-                    display: grid;
-                    grid-template-columns: auto;
-                    grid-gap: ${2.5 * GU}px;
-                    align-items: center;
-                  `}
-                >
-                  <div
-                    css={`
-                      display: flex;
-                      margin-bottom: ${3 * GU}px;
-                      justify-content: space-between;
-                    `}
-                  >
-                    <div
-                      css={`
-                        display: flex;
-                        align-items: center;
-                      `}
-                    >
-                      <div>
-                        <img
-                          css={`
-                            width: ${5 * GU}px;
-                          `}
-                          src={ArbitrationCardDispute}
-                        />
-                      </div>
-                      <div
-                        css={`
-                          margin-left: ${3 * GU}px;
-                        `}
-                      >
-                        <Text
-                          css={`
-                            display: block;
-                            margin-bottom: ${GU}px;
-                            ${textStyle('title3')};
-                          `}
-                        >
-                          {arbitration[0]}
-                        </Text>
-                      </div>
-                    </div>
-                    <div>
-                      {/* <DisputeStatus dispute={dispute} /> */}
-                      <h1>{status[arbitration[3]]}</h1>
-                    </div>
-                  </div>
+      <>
+        <Split
+          primary={
+            <React.Fragment>
+              <div style={{ marginTop: '14px' }}>
+                <Tabs
+                  items={[
+                    'Agreement Details',
+                    'All Statements',
+                    'All Proposals',
+                  ]}
+                  selected={tabs}
+                  onChange={handleTabChange}
+                />
+              </div>
 
-                  <div
-                    css={`
-                      display: grid;
-                      grid-template-columns: 1fr minmax(250px, auto);
-                      grid-gap: ${5 * GU}px;
-                      margin-bottom: ${2 * GU}px;
-                    `}
-                  >
-                    <div>
-                      <h2
-                        css={`
-                          ${textStyle('label2')};
-                          color: ${theme.surfaceContentSecondary};
-                          margin-bottom: ${2 * GU}px;
-                        `}
-                      >
-                        Description
-                      </h2>
-                      <Text
-                        css={`
-                          ${textStyle('body2')};
-                        `}
-                      >
-                        {arbitration[1]}
-                      </Text>
-                    </div>
-                    <div>
-                      <h2
-                        css={`
-                          ${textStyle('label2')};
-                          color: ${theme.surfaceContentSecondary};
-                          margin-bottom: ${2 * GU}px;
-                        `}
-                      >
-                        Claimant
-                      </h2>
-                      <div
-                        css={`
-                          display: flex;
-                          align-items: flex-start;
-                        `}
-                      >
-                        {arbitration[6]}
-                        <IdentityBadge
-                        // connectedAccount={addressesEqual(creator, connectedAccount)}
-                        //   entity={claimant}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    css={`
-                      display: grid;
-                      grid-template-columns: 1fr minmax(250px, auto);
-                      margin-bottom: ${5 * GU}px;
-                    `}
-                  >
-                    <div>
-                      <span
-                        css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
-                      >
-                        ARBITRATION AGREEMENT
-                      </span>
-                      <Text
-                        css={`
-                          display: inline-block;
-                          ${textStyle('body2')};
-                        `}
-                      >
-                        {arbitration[2]}
-                      </Text>
-                    </div>
+              {tabs === 0 ? (
+                <>
+                  <ArbDetails
+                    contractAddress={contractAddress}
+                    groupId={groupId}
+                    NODE={NODES[0]}
+                    account={walletAccount.account}
+                  />
+                </>
+              ) : null}
 
-                    <div>
-                      <span
-                        css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
-                      >
-                        Respondent
-                      </span>
-                      {arbitration[7]}
-                      {/* <IdentityBadge
-                      // connectedAccount={addressesEqual(creator, connectedAccount)}
-                      // entity={respondent}
-                      /> */}
-                    </div>
-                  </div>
-                  <Button
-                    mode="strong"
-                    onClick={() => {
-                      openStatement();
-                      console.log('WORKSSSS');
-                    }}
-                    wide
-                    css={`
-                      background: ${theme.selected};
-                    `}
-                  >
-                    + NEW STATEMENT
-                  </Button>
-                </section>
+              {tabs === 1 ? (
+                <>
+                  <AllStatements
+                      contractAddress={contractAddress}
+                      groupId={groupId}
+                      NODE={NODES[0]}
+                      account={walletAccount.account}
+                  />
+                  {/*<AllProcedure />*/}
+                </>
+              ) : null}
+
+              {tabs === 2 ? (
+                <>
+                  <NominationPage
+                      contractAddress={contractAddress}
+                      groupId={groupId}
+                      NODE={NODES[0]}
+                      account={walletAccount.account}
+                  />
+                </>
+              ) : null}
+            </React.Fragment>
+          }
+          secondary={
+            <React.Fragment>
+              <Box heading='Dispute timeline' padding={0}>
+                <DisputeTimeline />
               </Box>
-            </Box>
-          </React.Fragment>
-        }
-        secondary={
-          <React.Fragment>
-            <Box heading="Dispute timeline" padding={0}>
-              <DisputeTimeline />
-            </Box>
-          </React.Fragment>
-        }
-      />
-    </React.Fragment>
+            </React.Fragment>
+          }
+        />
+      </>
+    </div>
   );
 };
 

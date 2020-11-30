@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
   Bar,
   Button,
-  CardLayout,
+  EmptyStateCard,
+  LoadingRing,
   DateRangePicker,
   DropDown,
   IconRefresh,
@@ -29,13 +31,14 @@ const Web3 = require('web3');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [selected, setSelected] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
@@ -63,12 +66,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     load();
   }, []);
 
-  const { procedureAddress } = getProcedureAddress(NODES[0], walletAccount.account);
+  const [proceduresLoading, procedureAddress] = getProcedureAddress(
+    NODES[0],
+    walletAccount.account
+  );
 
   useEffect(() => {
     async function procedureAddressCall() {
       try {
-        if (procedureAddress.length) {
+        if (!proceduresLoading) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
@@ -83,13 +89,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           }
           console.log(allDetails);
           setArbitrationDetails(allDetails);
+          setLoading(false);
         }
       } catch (err) {
         return false;
       }
     }
     procedureAddressCall();
-  }, [procedureAddress]);
+  }, [proceduresLoading]);
 
   // try {
   //   console.log('All Arbitration Details', arbitrationDetails);
@@ -133,10 +140,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           />
         </div>
 
-        <div style={{ display: 'flex', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', marginBottom: '12px' }}>
           <div style={{ marginLeft: '0.5rem' }}>
             <Button
-              label="+NEW PROCEDURE"
+              label='+NEW PROCEDURE'
               onClick={() => {
                 openProcedure();
               }}
@@ -145,7 +152,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
             <Button
-              label="+NEW AGREEMENT"
+              label='+NEW AGREEMENT'
               onClick={() => {
                 openAgreement();
               }}
@@ -155,7 +162,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </div>
 
       <Tabs
-        items={['All requests', 'Agreement Details']}
+        items={['All Procedures', 'All Agreements']}
         selected={selected}
         onChange={setSelected}
       />
@@ -172,8 +179,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           `}
         >
           <DropDown
-            header="Status"
-            placeholder="Status"
+            header='Status'
+            placeholder='Status'
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -190,13 +197,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
                     ${textStyle('label3')};
                   `}
                 >
-                  <Tag limitDigits={4} label={disputes.length} size="small" />
+                  <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width="128px"
+            width='128px'
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -209,7 +216,19 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {selected ? (
         <AgreementList walletAccount={walletAccount} />
-      ) : (
+      ) : loading || proceduresLoading ? (
+        <div
+          style={{
+            justifyContent: 'center',
+            display: 'flex',
+            height: '300px',
+            alignItems: 'center',
+          }}
+        >
+          <span> Fetching arbitrations </span> <br />
+          <LoadingRing mode='half-circle' />
+        </div>
+      ) : procedureAddress.length ? (
         arbitrationDetails.map((arbitration, index) => {
           return (
             <ArbitrationCard
@@ -220,6 +239,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             />
           );
         })
+      ) : (
+        <EmptyStateCard text='No arbitrations found.' />
       )}
     </div>
   );

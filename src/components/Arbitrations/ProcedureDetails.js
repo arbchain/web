@@ -1,6 +1,9 @@
-import React from 'react';
+// -Offline testing page
+
+import React, { useState } from 'react';
 import {
   BackButton,
+  DropDown,
   Bar,
   Box,
   Split,
@@ -10,22 +13,49 @@ import {
   IdentityBadge,
   useTheme,
   Button,
+  Accordion,
+  Tabs,
 } from '@aragon/ui';
-import { useHistory } from 'react-router-dom';
 
+import { useHistory } from 'react-router-dom';
+//import ProcedureStatementForm from './modals/ProcedureStatement';
 import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
+import AllProcedureStatements from './agreementDetails/allDetailCards/AllProcedureStatements';
+import AllAgreementStatements from './agreementDetails/allDetailCards/AllProcedureStatements';
+import NominateArbitrator from './agreementDetails/NominateArbitrator';
+
 const ProcedureDetails = () => {
   let history = useHistory();
   const theme = useTheme();
+
+  const [dropdown, setDropdown] = useState(0);
+
+  const [tabs, selectTabs] = useState(0);
+
+  const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
+  const openProcedureStatement = () => setProcedureStatementModal(true);
 
   return (
     <React.Fragment>
       <Bar style={{ marginTop: '12px' }}>
         <BackButton onClick={() => history.goBack()} />
       </Bar>
+
+      {/* <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <ProcedureStatementForm
+          ProcedureStatementModal={ProcedureStatementModal}
+          setProcedureStatementModal={setProcedureStatementModal}
+        />
+      </div> */}
 
       <Split
         primary={
@@ -133,56 +163,47 @@ const ProcedureDetails = () => {
                         // connectedAccount={addressesEqual(creator, connectedAccount)}
                         //   entity={claimant}
                         />
+                        Lorem ipsum dolor sit amet.
                       </div>
                     </div>
                   </div>
-                  <div
-                    css={`
-                      display: grid;
-                      grid-template-columns: 1fr minmax(250px, auto);
-                      margin-bottom: ${5 * GU}px;
-                    `}
-                  >
-                    <div>
-                      <span
-                        css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
-                      >
-                        ARBITRATION AGREEMENT
-                      </span>
-                      <Text
-                        css={`
-                          display: inline-block;
-                          ${textStyle('body2')};
-                        `}
-                      >
-                        {`Apple Inc - Consenso Corp agreement`}
-                      </Text>
-                    </div>
 
-                    <div>
-                      <span
-                        css={`
-                ${textStyle('label2')}
-                color: ${theme.contentSecondary};
-                font-weight: 200;
-                display: block;
-                margin-bottom: ${1.5 * GU}px;
-              `}
-                      >
-                        Respondent
-                      </span>
-                      <IdentityBadge
-                      // connectedAccount={addressesEqual(creator, connectedAccount)}
-                      //entity={respondent}
-                      />
-                    </div>
+                  <div>
+                    <h2
+                      css={`
+                        ${textStyle('label2')};
+                        color: ${theme.surfaceContentSecondary};
+                        margin-bottom: ${2 * GU}px;
+                      `}
+                    >
+                      ARBITRATION AGREEMENT
+                    </h2>
+                    <Text
+                      css={`
+                        display: inline-block;
+                        ${textStyle('body2')};
+                      `}
+                    >
+                      {`Apple Inc - Consenso Corp `}
+                    </Text>
                   </div>
+
+                  <div>
+                    <h2
+                      css={`
+                        ${textStyle('label2')};
+                        color: ${theme.surfaceContentSecondary};
+                        margin-bottom: ${2 * GU}px;
+                      `}
+                    >
+                      Respondent
+                    </h2>
+                    <IdentityBadge
+                    // connectedAccount={addressesEqual(creator, connectedAccount)}
+                    //entity={respondent}
+                    />
+                  </div>
+
                   <Button
                     mode='strong'
                     onClick={() => {}}
@@ -193,7 +214,104 @@ const ProcedureDetails = () => {
                   >
                     PERFORM ACTION
                   </Button>
+
+                  <div>
+                    <Button
+                      mode='strong'
+                      onClick={() => {
+                        openProcedureStatement();
+                        console.log('WORKSSSS');
+                      }}
+                      wide
+                      css={`
+                        background: ${theme.selected};
+                      `}
+                    >
+                      + New Procedure Statement
+                    </Button>
+                  </div>
                 </section>
+              </Box>
+
+              <div style={{ marginTop: '14px' }}>
+                <Tabs
+                  items={[
+                    'All Statements',
+                    'All Procedure Statements',
+                    'All Proposals',
+                  ]}
+                  selected={tabs}
+                  onChange={selectTabs}
+                />
+              </div>
+
+              {tabs ? (
+                <Accordion
+                  style={{}}
+                  accordion
+                  items={[
+                    ['Procedure Statements', [<AllProcedureStatements />]],
+                  ]}
+                />
+              ) : (
+                <Accordion
+                  style={{}}
+                  accordion
+                  items={[
+                    ['Agreement Statements', [<AllAgreementStatements />]],
+                  ]}
+                />
+              )}
+
+              <Box heading='Arbitrator Nomination'>
+                <>
+                  {/* <div
+                    className='nomination__container'
+                    css={`
+                      display: grid;
+                      grid-template-columns: repeat(2, 1fr);
+                      grid-column-gap: 8px;
+                      margin-bottom: 18px;
+                    `}
+                  >
+                    <div>
+                      <h1
+                        css={`
+                          color: ${theme.surfaceContentSecondary};
+                        `}
+                      >
+                        Select Arbitrator
+                      </h1>
+                      <DropDown
+                        placeholder='Select an Arbitrator'
+                        style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
+                        disabled={false}
+                        items={['lorem', 'lorem']}
+                        wide
+                      />
+                    </div>
+
+                    <div
+                      css={`
+                        align-self: end;
+                      `}
+                    >
+                      <Button
+                        mode='strong'
+                        onClick={() => {
+                          console.log('WORKSSSS');
+                        }}
+                        wide
+                        css={`
+                          background: ${theme.selected};
+                        `}
+                      >
+                        Nominate
+                      </Button>
+                    </div>
+                  </div> */}
+                  <NominateArbitrator />
+                </>
               </Box>
             </Box>
           </React.Fragment>
