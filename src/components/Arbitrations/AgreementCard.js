@@ -57,7 +57,7 @@ function AgreementCard({ agreement, selectDispute }) {
                   }}
                 >
                   <p>{ArbitrationCardDisputeStyle}</p>
-                  <p>Law: {agreement[3]}</p>
+                  <p>Law: {agreement.law}</p>
                 </div>
                 <div
                   style={{
@@ -80,8 +80,8 @@ function AgreementCard({ agreement, selectDispute }) {
                     gridTemplateColumns: '2fr 7fr',
                   }}
                 >
-                  <p>{ArbitratorsStyle}</p>
-                  <CardSubText>{agreement[0]} arbitrators</CardSubText>
+                  <p>{ArbitrationCompanyNameStyle}</p>
+                  <CardSubText>Language - {agreement.language}</CardSubText>
                 </div>
                 <div
                   style={{
@@ -90,7 +90,7 @@ function AgreementCard({ agreement, selectDispute }) {
                   }}
                 >
                   <p>{ArbitrationCompanyNameStyle}</p>
-                  <CardSubText>Seat - {agreement[1]}</CardSubText>
+                  <CardSubText>Seat - {agreement.seat}</CardSubText>
                 </div>
                 <div
                   style={{
@@ -100,7 +100,7 @@ function AgreementCard({ agreement, selectDispute }) {
                 >
                   <p>{ArbitrationArgumentStyle}</p>
                   <CardSubText>
-                    Dispute Type: {disputeType[parseInt(agreement[4])]}
+                    Dispute Type: {disputeType[parseInt(agreement.disputeType)]}
                   </CardSubText>
                 </div>
               </div>

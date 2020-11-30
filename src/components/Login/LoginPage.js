@@ -19,6 +19,7 @@ import LoginPageBanner from '../../assets/login-page-banner.png';
 import { Link } from 'react-router-dom';
 import { Input, Result, Spin, Form, Select, Modal } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import {authorizeUser, getLoginUser} from "../../database/threadDB-utils";
 import 'antd/dist/antd.css';
 
 const { Option, OptGroup } = Select;
@@ -52,17 +53,24 @@ function LoginPage() {
   const openWallet = async () => {
     const account = await wallet.login(password);
     console.log('ACCOUNT: ', account);
-
-    //Storing the password locally. Need a secure way to do this for prod
-    localStorage.setItem('wpassword', password);
-
-    // Update the account context by using a callback function
-    walletAccount.changeAccount({privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
-
-    //Todo :- validation
-    if (account == null) {
-      console.log('Account not found');
-      return;
+    if (account!==null){
+      const dbClient = await authorizeUser(password)
+      if (dbClient !== null) {
+        let userInfo = await getLoginUser(account[0], dbClient)
+        if (userInfo !== null) {
+          //localStorage.setItem("USER", JSON.stringify(userInfo))
+          //Storing the password locally. Need a secure way to do this for prod
+          localStorage.setItem("wpassword", password);
+          // Update the account context by using a callback function
+          walletAccount.changeAccount({privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
+        }
+      } else {
+        console.log("Some error!!!")
+        return
+      }
+    }else{
+      console.log("Wrong password!!")
+      return
     }
 
     setAccount(account);

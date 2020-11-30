@@ -9,6 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Form, Input, Spin } from 'antd';
 import { useAccount } from '../../wallet/Account.js';
 import wallet from 'wallet-besu';
+import {authorizeUser, getLoginUser} from "../../database/threadDB-utils";
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 
@@ -25,25 +26,38 @@ const NODES = Object.keys(networks).map((node) => {
 
 export default function ProfileHeader({ active }) {
   const [selected, setSelected] = useState(0);
-  let address = null;
+  const [userData, setUserData] = useState(null);
+  const [address, setAddress] = useState(null);
+  const userRole = {0:'Party', 1:'Arbitrator', 2:'Arbitral Court'}
+  //let address = null;
   const walletAccount = useAccount();
 
-  if(walletAccount.account.privateKey !== undefined){
+  /*if(walletAccount.account.privateKey !== undefined){
     address = web3.eth.accounts.privateKeyToAccount(`0x${walletAccount.account.privateKey}`);
     console.log(address)
-  }
+  }*/
 
   useEffect(() => {
     async function load() {
       try {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
-
-        // Update the account context by using a callback function
+        const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
+        if (dbClient !== null) {
+          let userInfo = await getLoginUser(account[0], dbClient)
+          if (userInfo !== null) {
+            console.log("User Data:",userInfo)
+            setAddress(userInfo.address)
+            setUserData(userInfo)
+          }
+        } else {
+          console.log("Some error!!!")
+        }
+        /*// Update the account context by using a callback function
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
-        });
+        });*/
       } catch (err) {
         return false;
       }
@@ -52,15 +66,15 @@ export default function ProfileHeader({ active }) {
   }, []);
 
 
-  const { userData } = userMap(
+  /*const { userData } = userMap(
     NODES[selected],
     walletAccount.account
   );
-  console.log('USER DATA:', userData);
+  console.log('USER DATA:', userData);*/
 
   let card;
   if (userData != null) {
-    const { name, contactNumber, zipCode, role, userAddress } = userData;
+    const { name, number, zipCode, role } = userData;
 
     card = (
       <>
@@ -70,13 +84,13 @@ export default function ProfileHeader({ active }) {
           </Form.Item>
 
           <Form.Item label='Contact Number'>
-            <Input value={contactNumber} readOnly style={{ width: '30%' }} />
+            <Input value={number} readOnly style={{ width: '30%' }} />
           </Form.Item>
           <Form.Item label='Zip Code'>
             <Input value={zipCode} readOnly style={{ width: '30%' }} />
           </Form.Item>
           <Form.Item label='Role'>
-            <Input value={role} readOnly style={{ width: '30%' }} />
+            <Input value={userRole[role]} readOnly style={{ width: '30%' }} />
           </Form.Item>
         </Form>
       </>
@@ -134,7 +148,7 @@ export default function ProfileHeader({ active }) {
                     margin-right: ${2 * GU}px;
                   `}
                 >
-                  {address ? address.address : <Spin indicator={antIcon} />}
+                  {address ? address : <Spin indicator={antIcon} />}
                 </span>
                 {active && (
                   <div

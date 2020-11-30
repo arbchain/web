@@ -9,6 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
 import { addAgreementContract } from '../../../lib/contracts/MasterContract';
 import styled from 'styled-components';
+import {authorizeUser} from "../../../database/threadDB-utils";
 
 // styledcomponent -css
 
@@ -30,10 +31,10 @@ const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
 
-const counterParties = [
+/*const counterParties = [
   '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
   '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
-];
+];*/
 const languages = ['English', 'French', 'Spanish'];
 
 export default function AgreementForm({
@@ -41,6 +42,8 @@ export default function AgreementForm({
   setAgreementModal,
   account,
   node,
+  counterParties,
+  caller
 }) {
   const theme = useTheme();
 
@@ -71,19 +74,20 @@ export default function AgreementForm({
     setResult(false);
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setAgreementSubmit(true);
+    const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
     create(account, [
       2,
       seat,
       languages[language],
       'LCIA',
       'Consenso Labs',
-      counterParties[counterParty],
+      counterParties[counterParty].address,
       'Apple Inc',
       disputeType + 1,
       docHash,
-    ]);
+    ], dbClient, caller, counterParties[counterParty]);
     if (result !== false && resultProcedureContract) {
       agreementAddition(result.contractAddress, result.privacyGroupId, account);
     }
@@ -206,7 +210,8 @@ export default function AgreementForm({
               <DropDown
                 style={{ borderColor: '#D9D9D9' }}
                 items={counterParties.map((party) => {
-                  return party.slice(0, 20) + '...';
+                  //return party.address.slice(0, 15) + '...';
+                  return party.name
                 })}
                 selected={counterParty}
                 onChange={(index, items) => {

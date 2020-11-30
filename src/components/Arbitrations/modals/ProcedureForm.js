@@ -6,6 +6,7 @@ import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
+import { authorizeUser} from "../../../database/threadDB-utils";
 
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
@@ -26,14 +27,16 @@ export default function ProcedureForm({
   setProcedureModal,
   account,
   node,
+  counterParties,
+  caller
 }) {
   const theme = useTheme();
-
+  console.log("Caller:",caller)
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [agreementAddress, setAgreementAddress] = useState(0);
   const [claimantAddress, setClaimantAddress] = useState('');
-  const [respondentAddress, setRespondentAddress] = useState('');
+  const [respondentAddress, setRespondentAddress] = useState(0);
   const [courtAddress, setCourtAddress] = useState(0);
   const [procedureSubmit, setProcedureSubmit] = useState(false);
 
@@ -51,16 +54,17 @@ export default function ProcedureForm({
   console.log('Procedure Addition Staus', procedureAdditionStatus);
   console.log('Procedure Contract', resultProcedureContract);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     setProcedureSubmit(true);
-    createProcedureContract(account, [
+    const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
+    await createProcedureContract(account, [
       name,
       description,
       ageementAddr[agreementAddress],
-      claimantAddress, // Add user public key not private key!//
-      respondentAddress,
+      caller.address, // Add user public key not private key!//
+      counterParties[respondentAddress].address,
       courtAddr[courtAddress],
-    ]);
+    ], dbClient, caller, counterParties[respondentAddress]);
   };
 
   const createAgain = () => {
@@ -173,7 +177,7 @@ export default function ProcedureForm({
             />
           </div>
 
-          <div
+          {/*<div
             style={{
               display: 'flex',
               flexDirection: 'row',
@@ -190,7 +194,7 @@ export default function ProcedureForm({
                 setClaimantAddress(event.target.value);
               }}
             />
-          </div>
+          </div>*/}
           <div
             style={{
               display: 'flex',
@@ -200,13 +204,27 @@ export default function ProcedureForm({
             }}
           >
             <div style={{ flexBasis: '100%' }}> Respondent Address:</div>
-            <TextInput
+            {/*<TextInput
               style={{ flexBasis: '100%' }}
               value={respondentAddress}
               onChange={(event) => {
                 setRespondentAddress(event.target.value);
               }}
-            />
+            />*/}
+            <div style={{ flexBasis: '100%' }}>
+              <DropDown
+                style={{ borderColor: '#D9D9D9' }}
+                items={counterParties.map((party) => {
+                  //return party.address.slice(0, 15) + '...';
+                  return party.name
+                })}
+                selected={respondentAddress}
+                onChange={(index, items) => {
+                  setRespondentAddress(index);
+                  setProcedureModal(true);
+                }}
+              />
+            </div>
           </div>
           <div
             style={{

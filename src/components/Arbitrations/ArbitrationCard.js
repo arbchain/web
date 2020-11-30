@@ -22,7 +22,7 @@ function ArbitrationCard({ arbitration, selectDispute, procedureAddress }) {
   // const status = [DISPUTE_STATUS_OPEN,
   //   DISPUTE_STATUS_APPEAL,
   //   DISPUTE_STATUS_CLOSED,]
-  console.log('Address', procedureAddress);
+  //console.log('Address', procedureAddress);
   // const uriComponents = [procedureAddress.procedureContractAddress, procedureAddress.groupId]
   const groupId = encodeURIComponent(procedureAddress.groupId);
   console.log('Card logging', arbitration);
@@ -31,7 +31,7 @@ function ArbitrationCard({ arbitration, selectDispute, procedureAddress }) {
       <section>
         <Link
           to={{
-            pathname: `/arbitrations/${procedureAddress.procedureContractAddress}/${groupId}`,
+            pathname: `/arbitrations/${procedureAddress.contractAddress}/${groupId}`,
           }}
           style={{ color: '#000000d9' }}
         >
@@ -57,13 +57,13 @@ function ArbitrationCard({ arbitration, selectDispute, procedureAddress }) {
                   style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}
                 >
                   <p>{ArbitrationCardDisputeStyle}</p>
-                  <p>{arbitration[0]}</p>
+                  <p>{arbitration.name}</p>
                 </div>
                 <div
                   style={{ display: 'grid', gridTemplateColumns: '1fr 7fr' }}
                 >
                   <p>{ArbitrationCardNameStyle}</p>
-                  <CardSubText>{arbitration[5]}</CardSubText>
+                  <CardSubText>{arbitration.description}</CardSubText>
                 </div>
               </div>
               <div
@@ -74,20 +74,20 @@ function ArbitrationCard({ arbitration, selectDispute, procedureAddress }) {
                 <div
                   style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}
                 >
-                  <p>{ArbitratorsStyle}</p>
-                  <CardSubText>{arbitration[4]} arbitrators</CardSubText>
+                  <p>{ArbitrationCompanyNameStyle}</p>
+                  <CardSubText>Created By: {arbitration.claimantName}</CardSubText>
                 </div>
                 <div
                   style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}
                 >
                   <p>{ArbitrationCompanyNameStyle}</p>
-                  <CardSubText>{arbitration[6]}</CardSubText>
+                  <CardSubText>Respondent: {arbitration.respondentName}</CardSubText>
                 </div>
                 <div
                   style={{ display: 'grid', gridTemplateColumns: '2fr 7fr' }}
                 >
                   <p>{ArbitrationArgumentStyle}</p>
-                  <CardSubText>3</CardSubText>
+                  <CardSubText>Date: {arbitration.createdAt}</CardSubText>
                 </div>
               </div>
               {/* <div>

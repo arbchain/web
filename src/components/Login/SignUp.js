@@ -7,9 +7,12 @@ import { Main } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
+import {authorizeUser, registerNewUser} from "../../database/threadDB-utils";
 
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
+const Web3 = require('web3');
+const web3 = new Web3();
 
 const accounts = require('../../wallet/keys.js');
 const networks = require('../../wallet/network.js');
@@ -132,7 +135,15 @@ const Signup = () => {
       if (res) {
         const account = await wallet.login(password);
         console.log(`0x${account[0]}`)
-        await newUserCreation(name, zip, phone, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, { privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
+        await newUserCreation(name, zip, phone, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
+          role, { privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
+        const dbClient = await authorizeUser(password)
+        const user = web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
+        console.log("address:",user)
+        console.log("ROLE:",role, typeof role)
+        const registerStatus = await registerNewUser(name, zip, phone, user.address,
+          'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, account[0], dbClient)
+        console.log("STATUS:",registerStatus)
         openSuccessNotification('success');
         setTimeout(() => {
           history.push('/login');
