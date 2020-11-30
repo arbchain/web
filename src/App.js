@@ -13,6 +13,7 @@ import LoginPage from './components/Login/LoginPage';
 import SignUp from './components/Login/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
+import NewCard from './components/NewCard';
 import Arbitrations from './components/Arbitrations/Arbitrations';
 import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
 import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
@@ -33,6 +34,7 @@ function App() {
                 <Route exact path='/dashboard' component={Dashboard} />
                 <Route exact path='/arbitrations' component={Arbitrations} />
                 <Route path='/profile' component={Profile} />
+                <Route path='/newcard' component={NewCard} />
                 <Route
                   path='/arbitrations/:address/:groupId'
                   component={ArbitrationDetail}
