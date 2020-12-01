@@ -10,8 +10,9 @@ import { Form, Input, Spin } from 'antd';
 import { useAccount } from '../../wallet/Account.js';
 import wallet from 'wallet-besu';
 
-const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
-
+const antIcon = (
+  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
+);
 
 const Web3 = require('web3');
 const web3 = new Web3();
@@ -28,9 +29,11 @@ export default function ProfileHeader({ active }) {
   let address = null;
   const walletAccount = useAccount();
 
-  if(walletAccount.account.privateKey !== undefined){
-    address = web3.eth.accounts.privateKeyToAccount(`0x${walletAccount.account.privateKey}`);
-    console.log(address)
+  if (walletAccount.account.privateKey !== undefined) {
+    address = web3.eth.accounts.privateKeyToAccount(
+      `0x${walletAccount.account.privateKey}`
+    );
+    console.log(address);
   }
 
   useEffect(() => {
@@ -51,11 +54,7 @@ export default function ProfileHeader({ active }) {
     load();
   }, []);
 
-
-  const { userData } = userMap(
-    NODES[selected],
-    walletAccount.account
-  );
+  const { userData } = userMap(NODES[selected], walletAccount.account);
   console.log('USER DATA:', userData);
 
   let card;

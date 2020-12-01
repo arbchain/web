@@ -1,13 +1,7 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  useHistory,
-} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import Card from '@aragon/ui/dist/Card';
 import active from '../../assets/active.svg';
 import inactive from '../../assets/inactive.svg';
@@ -43,11 +37,15 @@ function Dashboard() {
 
         console.log('TESTTTT ACC', account);
 
-        walletAccount.changeAccount({
-          privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey'),
-        });
-        if (account == null || account == undefined) {
+        const OrianKey = await localStorage.getItem('orionKey');
+        console.log('OIARKEY', OrianKey);
+
+        if (
+          account === null ||
+          account === undefined ||
+          OrianKey === null ||
+          OrianKey === undefined
+        ) {
           setIsAuth(false);
           history.push('/login');
         }

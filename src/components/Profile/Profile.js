@@ -1,19 +1,50 @@
-import React from 'react'
-import ProfileHeader from './ProfileHeader'
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import ProfileHeader from './ProfileHeader';
+import wallet from 'wallet-besu';
 
-import { Header } from '@aragon/ui'
+import { Header } from '@aragon/ui';
 
 function Profile() {
-  // TODO - only for testing we need to use the  connected account
-  // const connectedAccount = useConnectedAccount()
-  // const connectedAccount = '0x593e1F9809658d0c92e9f092cF01Aad7D0d734f3'
+  const history = useHistory();
+
+  const [isAuth, setIsAuth] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // Fetching the password locally.
+        const account = await wallet.login(localStorage.getItem('wpassword'));
+
+        console.log('TESTTTT ACC', account);
+
+        const OrianKey = await localStorage.getItem('orionKey');
+        console.log('OIARKEY', OrianKey);
+
+        if (
+          account === null ||
+          account === undefined ||
+          OrianKey === null ||
+          OrianKey === undefined
+        ) {
+          setIsAuth(false);
+          history.push('/login');
+        }
+        console.log('ACCOUNT from Dashboard', account);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    load();
+  }, [isAuth]);
+  console.log('ISAUTH', isAuth);
 
   return (
     <React.Fragment>
-      <Header primary="Profile" />
+      <Header primary='Profile' />
       <ProfileHeader active />
     </React.Fragment>
-  )
+  );
 }
 
-export default Profile
+export default Profile;

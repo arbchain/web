@@ -68,7 +68,12 @@ export default function ProcedureForm({
   };
 
   return (
-    <Modal width='50rem' visible={procedureModal} onClose={closeProcedure}>
+    <Modal
+      style={{ zIndex: '50' }}
+      width='50rem'
+      visible={procedureModal}
+      onClose={closeProcedure}
+    >
       <div
         style={{
           fontSize: '1.5rem',

@@ -1,11 +1,11 @@
-import React from 'react'
-import { useHistory, useRouteMatch } from 'react-router-dom'
-import { ButtonBase, GU, useTheme, textStyle } from '@aragon/ui'
+import React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { ButtonBase, GU, useTheme, textStyle } from '@aragon/ui';
 
-import menuIcon from './assets/menu.svg'
+import menuIcon from './assets/menu.svg';
 
 function NavBar() {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
     <nav
       css={`
@@ -34,13 +34,13 @@ function NavBar() {
       <NavItem to='/leaderboard' icon={menuIcon} label='Leader board' />
       <NavItem to='/sample' icon={menuIcon} label='Sample Contract' />
     </nav>
-  )
+  );
 }
 
 function NavItem({ to, icon, label }) {
-  const history = useHistory()
-  const theme = useTheme()
-  const active = useRouteMatch(to) !== null
+  const history = useHistory();
+  const theme = useTheme();
+  const active = useRouteMatch(to) !== null;
 
   return (
     <ButtonBase
@@ -88,7 +88,7 @@ function NavItem({ to, icon, label }) {
         {label}
       </span>
     </ButtonBase>
-  )
+  );
 }
 
-export default NavBar
+export default NavBar;
