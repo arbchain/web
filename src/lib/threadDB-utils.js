@@ -6,8 +6,9 @@ const keyInfo = {
   secret:'bcm7zjaxlipajgsm6qd6big7lv52cihf2whbbaji'
 }
 
-const threadDbId = [1, 85, 178, 134, 229, 216, 172, 158, 129, 192, 30, 63, 241, 126, 22, 16, 18, 35, 192, 227,
-  74, 39, 48, 198, 35, 147, 150, 35, 18, 213, 218, 34, 64, 236]
+const threadDbId = [1, 85, 23, 59, 109, 154, 94, 201, 242, 16, 58, 157, 82, 120, 68, 106, 120, 114, 122, 43,
+  81, 18, 68, 182, 41, 146, 180, 89, 224, 123, 216, 197, 35, 156]
+
 const threadId = ThreadID.fromBytes(threadDbId)
 
 export const authorizeUser = async (password)=>{
