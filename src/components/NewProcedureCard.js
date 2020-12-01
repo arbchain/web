@@ -1,7 +1,6 @@
 import React from 'react';
 import { Main, Split, useTheme, GU, textStyle } from '@aragon/ui';
-import { Button } from 'antd';
-import Avatar from '../assets/Avatar.png';
+import Avatar from '../assets/arbchainLogo.png';
 
 import styled from 'styled-components';
 
@@ -30,16 +29,15 @@ const FlexContainer = styled.div`
   align-items: center;
   .image-block {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     img {
-      border-radius: 50%;
-      width: 50px;
+      width: 70px;
       height: auto;
     }
   }
   .texts {
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     justify-content: center;
   }
 `;
@@ -104,12 +102,6 @@ function NewProcedureCard() {
                     Vero culpa expedita minima dolorum, maxime obcaecati ratione
                     voluptas ex voluptatum illum!
                   </p>
-                  <Button
-                    style={{ background: '#4d4cbb', color: 'white' }}
-                    className='primary'
-                  >
-                    Read More
-                  </Button>
                 </Description>
                 <RespondantContainer>
                   <div>

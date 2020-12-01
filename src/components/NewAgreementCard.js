@@ -8,8 +8,8 @@ import {
   DropDown,
   Text,
 } from '@aragon/ui';
-import { Button } from 'antd';
-import Avatar from '../assets/Avatar.png';
+
+import Avatar from '../assets/arbchainLogo.png';
 
 import styled from 'styled-components';
 
@@ -41,7 +41,6 @@ const FlexContainer = styled.div`
     justify-content: center;
     align-items: center;
     img {
-      border-radius: 50%;
       width: 50px;
       height: auto;
     }
@@ -55,19 +54,17 @@ const FlexContainer = styled.div`
 const RespondantContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr minmax(250px, auto);
-  grid-gap: ${5 * GU}px;
+  grid-gap: 22px;
   margin-bottom: ${2 * GU}px;
-  margin-top: 50px;
+  margin-top: 30px;
   .dropdown {
     width: 300px;
     overflow: hidden;
   }
 `;
 
-const Title = styled.h1`
-  ${textStyle('label2')};
-  color: ${(theme) => theme.surfaceContentSecondary};
-  margin-bottom: ${2 * GU}px;
+const DispuitContainer = styled.div`
+  margin-top: 28px;
 `;
 
 function NewAgreementCard() {
@@ -94,13 +91,11 @@ function NewAgreementCard() {
                     <h2>30-11-2020</h2>
                   </div>
                 </FlexContainer>
-
+                <DispuitContainer>
+                  <h3>Dispuit Type </h3>
+                  <h2>Network Cash Agreement</h2>
+                </DispuitContainer>
                 <RespondantContainer>
-                  <div>
-                    <h3>Dispuit Type </h3>
-                    <h2>Network Cash Agreement</h2>
-                  </div>
-
                   <div>
                     <h3>Law</h3>
 
@@ -119,33 +114,14 @@ function NewAgreementCard() {
                   </div>
 
                   <div>
-                    <Title>Selected Language </Title>
-                    <DropDown
-                      className='dropdown'
-                      style={{
-                        flexBasis: '100%',
-                        borderColor: '#D9D9D9',
-                        background: '#fff',
-                      }}
-                      disabled={false}
-                      items={[]}
-                      placeholder='Langauge'
-                    />
+                    <h3>Selected Language</h3>
+
+                    <h2>English</h2>
                   </div>
 
                   <div>
-                    <Title>Selected Arbitration Seat</Title>
-                    <DropDown
-                      className='dropdown'
-                      disabled={false}
-                      style={{
-                        flexBasis: '100%',
-                        borderColor: '#D9D9D9',
-                        background: '#fff',
-                      }}
-                      items={[]}
-                      placeholder='Seat'
-                    />
+                    <h3>Selected Arbitration Seat</h3>
+                    <h2>Seat</h2>
                   </div>
                 </RespondantContainer>
               </OutterContainer>
