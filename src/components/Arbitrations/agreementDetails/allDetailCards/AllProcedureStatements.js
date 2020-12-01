@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
-import {
-  DropDown,
-  GU,
-  Text,
-  textStyle,
-  IdentityBadge,
-  useTheme,
-  Button,
-} from '@aragon/ui';
+import { DropDown, GU, Text, textStyle, useTheme, Button } from '@aragon/ui';
+import styled from 'styled-components';
 
-function AllProcedureStatements({seat, language, ipfsHash}) {
+// styles
+
+const ProcedureWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 8px;
+  margin-bottom: 18px;
+  width: 100%;
+`;
+
+const Title = styled.h1`
+  ${textStyle('label2')};
+  color: ${(theme) => theme.surfaceContentSecondary};
+  margin-bottom: ${2 * GU}px;
+`;
+
+function AllProcedureStatements({ seat, language, ipfsHash, createdBy }) {
   const theme = useTheme();
   return (
     <>
@@ -21,23 +30,38 @@ function AllProcedureStatements({seat, language, ipfsHash}) {
           width: 100%;
         `}
       >
-        <div
-          css={`
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-column-gap: 8px;
-            margin-bottom: 18px;
-            width: 100%;
-          `}
-        >
-          <div>
-            <h1
+        <ProcedureWrapper>
+          <div
+            css={`
+              margin: 18px 0 18px 0;
+            `}
+          >
+            <Title>Created By</Title>
+            <Text
               css={`
-                color: ${theme.surfaceContentSecondary};
+                ${textStyle('body2')};
               `}
             >
-              Selected Language{' '}
-            </h1>
+              {createdBy}
+            </Text>
+          </div>
+
+          <div
+            css={`
+              margin: 18px 0 18px 0;
+            `}
+          >
+            <Title>Document IPFS Hash</Title>
+            <Text
+              css={`
+                ${textStyle('body2')};
+              `}
+            >
+              {ipfsHash}
+            </Text>
+          </div>
+          <div>
+            <Title>Selected Language </Title>
             <DropDown
               style={{
                 flexBasis: '100%',
@@ -52,13 +76,7 @@ function AllProcedureStatements({seat, language, ipfsHash}) {
           </div>
 
           <div>
-            <h1
-              css={`
-                color: ${theme.surfaceContentSecondary};
-              `}
-            >
-              Selected Arbitration Seat
-            </h1>
+            <Title>Selected Arbitration Seat</Title>
             <DropDown
               wide
               disabled={true}
@@ -71,44 +89,34 @@ function AllProcedureStatements({seat, language, ipfsHash}) {
               placeholder={seat}
             />
           </div>
+        </ProcedureWrapper>
 
-          <div
-            css={`
-              margin: 18px 0 18px 0;
-            `}
-          >
-            <h2
-              css={`
-                ${textStyle('label2')};
-                color: ${theme.surfaceContentSecondary};
-                margin-bottom: ${2 * GU}px;
-              `}
-            >
-              Document IPFS Hash
-            </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              {ipfsHash}
-            </Text>
-          </div>
-        </div>
-        <div>
+        <ProcedureWrapper>
           <Button
             mode='strong'
             onClick={() => {
               console.log('WORKSSSS');
             }}
-            wide
             css={`
               background: ${theme.selected};
             `}
           >
             Agree and Continue
           </Button>
-        </div>
+
+          <Button
+            mode='strong'
+            onClick={() => {
+              console.log('WORKSSSS');
+            }}
+            css={`
+              background: white;
+              color: #637381;
+            `}
+          >
+            Agree and Reject
+          </Button>
+        </ProcedureWrapper>
       </section>
     </>
   );

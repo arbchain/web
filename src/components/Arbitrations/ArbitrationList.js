@@ -24,7 +24,6 @@ import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 
 const Web3 = require('web3');
-// const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
@@ -144,7 +143,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           />
         </div>
 
-        <div style={{ display: 'flex', marginTop: '1rem' }}>
+        <div style={{ display: 'flex', marginBottom: '12px' }}>
           <div style={{ marginLeft: '0.5rem' }}>
             <Button
               label='+NEW PROCEDURE'

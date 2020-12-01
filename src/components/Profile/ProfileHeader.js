@@ -1,18 +1,16 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { addressesEqual, Box, GU, textStyle } from '@aragon/ui';
-import { userMap } from '../../lib/contracts/MasterContract';
 import ProfileIcon from '../../assets/profile.png';
 import ANJBadgeIcon from '../../assets/anjBadge.svg';
 import IconCheck from '../../assets/IconCheck.svg';
 import { LoadingOutlined } from '@ant-design/icons';
 import { Form, Input, Spin } from 'antd';
-import { useAccount } from '../../wallet/Account.js';
 import wallet from 'wallet-besu';
 import {authorizeUser, getLoginUser} from "../../lib/db/threadDB";
+import { Link } from 'react-router-dom';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
-
 
 const Web3 = require('web3');
 const web3 = new Web3();
@@ -29,13 +27,6 @@ export default function ProfileHeader({ active }) {
   const [userData, setUserData] = useState(null);
   const [address, setAddress] = useState(null);
   const userRole = {0:'Party', 1:'Arbitrator', 2:'Arbitral Court'}
-  //let address = null;
-  const walletAccount = useAccount();
-
-  /*if(walletAccount.account.privateKey !== undefined){
-    address = web3.eth.accounts.privateKeyToAccount(`0x${walletAccount.account.privateKey}`);
-    console.log(address)
-  }*/
 
   useEffect(() => {
     async function load() {
@@ -53,24 +44,12 @@ export default function ProfileHeader({ active }) {
         } else {
           console.log("Some error!!!")
         }
-        /*// Update the account context by using a callback function
-        walletAccount.changeAccount({
-          privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey'),
-        });*/
       } catch (err) {
         return false;
       }
     }
     load();
   }, []);
-
-
-  /*const { userData } = userMap(
-    NODES[selected],
-    walletAccount.account
-  );
-  console.log('USER DATA:', userData);*/
 
   let card;
   if (userData != null) {

@@ -99,7 +99,7 @@ function NominateArbitrator({contractAddress, groupId, node, account, nominatedA
                   Nominated Arbitrators
                 </h1>
 
-                <Table columns={columns} dataSource={nominatedArbitrator} pagination={false} />
+                <Table columns={columns} dataSource={nominatedArbitrator} pagination={false} style={{overflow:'hidden'}} />
               </div>
             </NominateWrapper>
           ) : null

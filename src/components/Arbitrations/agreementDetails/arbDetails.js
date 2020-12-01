@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import {Box, GU, Text, textStyle, useTheme, Button, LoadingRing, EmptyStateCard} from '@aragon/ui';
+import {
+  Box,
+  GU,
+  Text,
+  textStyle,
+  useTheme,
+  Button,
+  LoadingRing,
+  EmptyStateCard,
+} from '@aragon/ui';
+import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from '.././modals/ProcedureStatement';
 import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
-import {getArbitrationDetails} from '../../../lib/contracts/SPC';
-
+import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 
 function ArbDetails({ groupId, contractAddress, NODE, account }) {
   const history = useHistory();
@@ -33,7 +42,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account }) {
             groupId,
             account
           );
-          console.log("DETAILS:",details)
+          console.log('DETAILS:', details);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -82,17 +91,11 @@ function ArbDetails({ groupId, contractAddress, NODE, account }) {
       </div>
 
       {loading ? (
-        <div
-          style={{
-            justifyContent: 'center',
-            display: 'flex',
-            height: '300px',
-            alignItems: 'center',
-          }}
-        >
-          <span> Fetching arbitrations </span> <br />
-          <LoadingRing mode='half-circle' />
-        </div>
+        <>
+          <Skeleton active />
+          <Skeleton active />
+          <Skeleton active />
+        </>
       ) : details ? (
         <>
           <Box heading='Agreement Details'>

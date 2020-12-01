@@ -4,6 +4,8 @@ import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createProcedureStatement } from '../../../lib/contracts/SPC';
+import { Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 // styledcomponent -css
@@ -23,14 +25,34 @@ const ModalWrapper = styled(Modal)`
 
 const networks = require('../../../wallet/network.js');
 
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
+const antIcon = (
+  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
+);
 
 const languages = ['English', 'French', 'Spanish'];
 const arbitrationSeats = ['London', 'lorem', 'lorem'];
+
+const props = {
+  name: 'file',
+  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  headers: {
+    authorization: 'authorization-text',
+  },
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
 export default function ProcedureStatementForm({
   ProcedureStatementModal,
@@ -60,7 +82,9 @@ export default function ProcedureStatementForm({
 
   const handleClick = async () => {
     setStatementSubmit(true);
-    const partiesInvolved = [['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties]];
+    const partiesInvolved = [
+      ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
+    ];
     console.log('Seat:', seat);
     console.log('Lan:', language);
     console.log('Hash:', documentIpfsHash);
@@ -81,7 +105,11 @@ export default function ProcedureStatementForm({
   };
 
   return (
-    <ModalWrapper width="50rem" visible={ProcedureStatementModal} onClose={closeProcedureStatement}>
+    <ModalWrapper
+      width='50rem'
+      visible={ProcedureStatementModal}
+      onClose={closeProcedureStatement}
+    >
       <Title> Create an Procedure Statement</Title>
 
       <div
@@ -108,7 +136,7 @@ export default function ProcedureStatementForm({
           <TextInput
             style={{ flexBasis: '100%' }}
             value={parties}
-            onChange={event => {
+            onChange={(event) => {
               setParties(event.target.value);
             }}
           />
@@ -166,7 +194,7 @@ export default function ProcedureStatementForm({
           <TextInput
             style={{ flexBasis: '100%' }}
             value={documentIpfsHash}
-            onChange={event => {
+            onChange={(event) => {
               setDocumentIpfsHash(event.target.value);
             }}
           />
@@ -184,14 +212,28 @@ export default function ProcedureStatementForm({
           <TextInput
             style={{ flexBasis: '100%' }}
             value={documentHash}
-            onChange={event => {
+            onChange={(event) => {
               setDocumentHash(event.target.value);
             }}
           />
         </div>
 
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Document Hash:</div>
+          <Upload {...props}>
+            <button icon={<UploadOutlined />}>Click to Upload</button>
+          </Upload>
+        </div>
+
         <Button
-          label="SUBMIT"
+          label='SUBMIT'
           style={{
             backgroundColor: theme.selected,
             color: 'white',
