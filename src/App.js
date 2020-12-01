@@ -18,7 +18,7 @@ import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
 import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
 import { AccountProvider } from './wallet/Account.js';
-import Database from "./database/Database";
+import Database from "./components/Database";
 
 function App() {
   return (

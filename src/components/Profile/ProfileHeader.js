@@ -9,7 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Form, Input, Spin } from 'antd';
 import { useAccount } from '../../wallet/Account.js';
 import wallet from 'wallet-besu';
-import {authorizeUser, getLoginUser} from "../../database/threadDB-utils";
+import {authorizeUser, getLoginUser} from "../../lib/db/threadDB";
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 

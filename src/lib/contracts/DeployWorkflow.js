@@ -5,7 +5,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Web3Contract } from '../../utils/web3-contracts';
 import { addProcedureContract, addAgreementContract } from './MasterContract';
-import {updateAgreementContracts, updateProcedureContracts} from '../../database/threadDB-utils'
+import {updateAgreementContracts, updateProcedureContracts} from '../db/threadDB'
 
 const Agreement_ContractAbi = require('../../build/ArbitrationAgreement_abi.json');
 const SPC_ContractAbi = require('../../build/SPC_abi.json');

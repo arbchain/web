@@ -18,11 +18,8 @@ import {
 import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
-import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
-import { getProcedureAddress } from '../../lib/contracts/MasterContract';
-// import DisputeCard from './DisputeCard';
-import {authorizeUser, getAllUsers, getProcedureContractAddress, getProcedureMetaData} from "../../database/threadDB-utils";
+import {authorizeUser, getAllUsers, getProcedureContractAddress, getProcedureMetaData} from "../../lib/db/threadDB";
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 

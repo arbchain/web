@@ -3,7 +3,7 @@ import { useTheme, EmptyStateCard, LoadingRing } from '@aragon/ui';
 import { fetchAgreement } from '../../lib/contracts/Agreement';
 import AgreementCard from './AgreementCard';
 import wallet from 'wallet-besu';
-import {getAgreementContractAddress, getAgreementMetaData} from "../../database/threadDB-utils";
+import {getAgreementContractAddress, getAgreementMetaData} from "../../lib/db/threadDB";
 const networks = require('../../wallet/network');
 
 const NODES = Object.keys(networks).map(node => {

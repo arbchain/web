@@ -19,7 +19,7 @@ import LoginPageBanner from '../../assets/login-page-banner.png';
 import { Link } from 'react-router-dom';
 import { Input, Result, Spin, Form, Select, Modal } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import {authorizeUser, getLoginUser} from "../../database/threadDB-utils";
+import {authorizeUser, getLoginUser} from "../../lib/db/threadDB";
 import 'antd/dist/antd.css';
 
 const { Option, OptGroup } = Select;

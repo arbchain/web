@@ -81,7 +81,7 @@ export const generateCipherKey = function(password){
 }
 
 
-export const encryptFile = function(file,cipherKey){
+export const encryptData = function(file,cipherKey){
     return new Promise((resolve)=>{
         let iv = crypto.randomBytes(16);
         const cipher = crypto.createCipheriv('aes256', cipherKey, iv);
@@ -99,11 +99,7 @@ export const calculateHash = function(file){
     return crypto.createHash('sha256').update(file.toString()).digest()
 }
 
-export const convertPass = function(pass){
-    return crypto.createHash('sha256').update(pass.toString()).digest()
-}
-
-export const decryptFile = async function(encryptedData,cipherKey){
+export const decryptData = async function(encryptedData,cipherKey){
     const iv = encryptedData.slice(0,16)
     encryptedData = encryptedData.slice(16)
     return new Promise((resolve)=>{

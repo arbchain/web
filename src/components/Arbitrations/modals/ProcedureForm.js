@@ -6,7 +6,7 @@ import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
-import { authorizeUser} from "../../../database/threadDB-utils";
+import { authorizeUser} from "../../../lib/db/threadDB";
 
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />

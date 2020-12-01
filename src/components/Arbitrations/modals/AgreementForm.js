@@ -9,7 +9,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
 import { addAgreementContract } from '../../../lib/contracts/MasterContract';
 import styled from 'styled-components';
-import {authorizeUser} from "../../../database/threadDB-utils";
+import {authorizeUser} from "../../../lib/db/threadDB";
 
 // styledcomponent -css
 

@@ -1,37 +1,20 @@
 
-const {PrivateKey, createUserAuth, Client, Where, ThreadID} = require('@textile/hub')
-const e2e = require('./e2e-encrypt')
-const keyInfo = {
-  key:'be645tj5wtjuginby3fwnqhe57y',
-  secret:'bcm7zjaxlipajgsm6qd6big7lv52cihf2whbbaji'
-}
+const e2e = require('../../utils/e2e-encrypt')
+const db = require('../threadDB-utils')
+const {Where} = require('@textile/hub')
 
-const threadDbId = [1, 85, 92, 242, 175, 51, 201, 224, 71, 75, 33, 208, 3, 51, 126, 58, 31, 171, 172, 185, 55,
-  114, 41, 84, 57, 10, 139, 156, 191, 203, 211, 120, 176, 79]
-
+// Schema name
+const registerSchema = 'RegisterUser'
+const agreementMetaDataSchema ='AgreementMetaData'
+const procedureMetaDataSchema = 'ProcedureMetaData'
 
 export const authorizeUser = async (password)=>{
-  try {
-    const userAuth = await createUserAuth(keyInfo.key, keyInfo.secret)
-    const seed = e2e.convertPass(password)
-    const seedPhase = new Uint8Array(Buffer.from(seed))
-    const identity = PrivateKey.fromRawEd25519Seed(seedPhase)
-    const privateKey = await PrivateKey.fromString(identity.toString())
-    const dbClient = await Client.withUserAuth(userAuth)
-    const token = await dbClient.getToken(privateKey)
-    console.log("User authorized!!!")
-    return dbClient
-  }catch (err){
-    console.log('ERROR:',err)
-    return null
-  }
+  return db.authorizeUser(password)
 }
 
-export const registerNewUser = async function(name, zipCode, number, address, orionPublicKey,
-                                              role, privateKey, client){
+export const registerNewUser = async(name, zipCode, number, address, orionPublicKey, role, privateKey, client)=>{
   try {
     let publicKey = e2e.getPublicKey(privateKey)
-    const threadId = ThreadID.fromBytes(threadDbId)
     const data = {
       address: address,
       name: name,
@@ -44,23 +27,18 @@ export const registerNewUser = async function(name, zipCode, number, address, or
       agreementContracts:[{id:"-1"}],
       procedureContract:[{id:"-1"}]
     }
-    const status = await client.create(threadId, 'RegisterUser', [data])
-    console.log("User registration status:",status)
-    return true
+    return await db.insertDataToDB(client, registerSchema, data)
   }catch(err){
     throw err
   }
 }
 
-export const getLoginUser = async function(privateKey, dbClient){
+export const getLoginUser = async(privateKey, dbClient)=>{
   try {
     let publicKey = e2e.getPublicKey(privateKey)
     const query = new Where('publicKey').eq(publicKey.toString("hex"))
-    const threadId = ThreadID.fromBytes(threadDbId)
-    const result = await dbClient.find(threadId, 'RegisterUser', query)
-    console.log("LOGIN USER:",result)
-    if (result.length<1){
-      console.log("Please register user!")
+    const result = await db.findFromDB(dbClient, registerSchema, query)
+    if (result.length < 1){
       return null
     }
     return result[0]
@@ -69,11 +47,9 @@ export const getLoginUser = async function(privateKey, dbClient){
   }
 }
 
-export const getAllUsers = async function(dbClient,loggedUser){
+export const getAllUsers = async(dbClient,loggedUser)=>{
   let userKey = e2e.getPublicKey(loggedUser)
-  const threadId = ThreadID.fromBytes(threadDbId)
-  const registeredUsers = await dbClient.find(threadId, 'RegisterUser', {})
-  console.log("UserDetails:",registeredUsers)
+  const registeredUsers = await db.findFromDB(dbClient, registerSchema, {})
   const userType = {party:0, arbitrator:1, arbitralCourt:2}
 
   let caller
@@ -109,9 +85,7 @@ export const getAllUsers = async function(dbClient,loggedUser){
   }
 }
 
-export const updateAgreementContracts = async function (dbClient, groupId, contractAddress, args, caller,
-                                                        counterParty){
-  const threadId = ThreadID.fromBytes(threadDbId)
+export const updateAgreementContracts = async(dbClient, groupId, contractAddress, args, caller, counterParty)=>{
   let partyAddress = [caller.address, args[5]]
   const date = new Date()
   const metaData = {
@@ -124,34 +98,31 @@ export const updateAgreementContracts = async function (dbClient, groupId, contr
     documentName: 'DEMO DOC',
     createdAt: date.toDateString()
   }
-  const metaDataStatus = await dbClient.create(threadId, 'AgreementMetaData', [metaData])
-
+  const metaDataStatus = await db.insertDataToDB(dbClient, agreementMetaDataSchema, metaData)
+  
   for (let i=0; i<partyAddress.length;i++){
     const query = new Where('address').eq(partyAddress[i])
-    const user = await dbClient.find(threadId, 'RegisterUser', query)
-    console.log("USER222:",user)
+    const user = await db.findFromDB(dbClient, registerSchema, query)
+    console.log("USER:",user)
     if (user[0].agreementContracts.length===1 && user[0].agreementContracts[0].id==="-1"){
-      console.log("IFFFFF")
       user[0].agreementContracts = [{
         contractAddress:contractAddress,
         groupId:groupId,
         metaData: metaDataStatus[0]
       }]
     }else {
-      console.log("ELSEE")
       user[0].agreementContracts.push({
         contractAddress:contractAddress,
         groupId:groupId,
         metaData: metaDataStatus[0]
       })
     }
-    await dbClient.save(threadId,'RegisterUser',[user[0]])
+    await db.updateData(dbClient,registerSchema,user[0])
     console.log("Updated!!:")
   }
 }
 
-export const updateProcedureContracts = async function (dbClient, groupId, contractAddress, args, caller,
-                                                        counterParty){
+export const updateProcedureContracts = async(dbClient, groupId, contractAddress, args, caller, counterParty)=>{
   console.log("contractAddress:",contractAddress)
   let partyAddress = [args[3], args[4]]
   const date = new Date()
@@ -164,39 +135,35 @@ export const updateProcedureContracts = async function (dbClient, groupId, contr
     courtAddress: args[5],
     createdAt: date.toDateString()
   }
-  const threadId = ThreadID.fromBytes(threadDbId)
-  const metaDataStatus = await dbClient.create(threadId, 'ProcedureMetaData', [metaData])
+  const metaDataStatus = await db.insertDataToDB(dbClient, procedureMetaDataSchema, metaData)
 
   for (let i=0; i<partyAddress.length;i++){
     const query = new Where('address').eq(partyAddress[i])
-    const user = await dbClient.find(threadId, 'RegisterUser', query)
-    console.log("USER222:",user)
+    const user = await db.findFromDB(dbClient, registerSchema, query)
+    console.log("USER:",user)
     if (user[0].procedureContract.length===1 && user[0].procedureContract[0].id==="-1"){
-      console.log("IFFFFF")
       user[0].procedureContract = [{
         contractAddress:contractAddress,
         groupId:groupId,
         metaData: metaDataStatus[0]
       }]
     }else {
-      console.log("ELSEE")
       user[0].procedureContract.push({
         contractAddress:contractAddress,
         groupId:groupId,
         metaData: metaDataStatus[0]
       })
     }
-    await dbClient.save(threadId,'RegisterUser',[user[0]])
+    await db.updateData(dbClient,registerSchema,user[0])
     console.log("Updated!!:")
   }
 }
 
-export const getAgreementContractAddress = async function(dbClient,privateKey){
+export const getAgreementContractAddress = async(dbClient,privateKey)=>{
   try {
     let publicKey = e2e.getPublicKey(privateKey)
     const query = new Where('publicKey').eq(publicKey.toString("hex"))
-    const threadId = ThreadID.fromBytes(threadDbId)
-    const result = await dbClient.find(threadId, 'RegisterUser', query)
+    const result = await db.findFromDB(dbClient, registerSchema, query)
     console.log("LOGIN USER:",result)
     if (result.length === 1 && result[0].agreementContracts[0].id==='-1') {
       return []
@@ -207,12 +174,11 @@ export const getAgreementContractAddress = async function(dbClient,privateKey){
   }
 }
 
-export const getProcedureContractAddress = async function(dbClient,privateKey) {
+export const getProcedureContractAddress = async(dbClient,privateKey)=>{
   try {
     let publicKey = e2e.getPublicKey(privateKey)
     const query = new Where('publicKey').eq(publicKey.toString("hex"))
-    const threadId = ThreadID.fromBytes(threadDbId)
-    const result = await dbClient.find(threadId, 'RegisterUser', query)
+    const result = await db.findFromDB(dbClient, registerSchema, query)
     console.log("LOGIN USER:", result)
     if (result.length === 1 && result[0].procedureContract[0].id==='-1') {
       return []
@@ -223,10 +189,9 @@ export const getProcedureContractAddress = async function(dbClient,privateKey) {
   }
 }
 
-export const getProcedureMetaData = async function(dbClient, id){
+export const getProcedureMetaData = async(dbClient, id)=>{
   try {
-    const threadId = ThreadID.fromBytes(threadDbId)
-    const result = await dbClient.findByID(threadId, 'ProcedureMetaData', id)
+    const result = await db.findById(dbClient, procedureMetaDataSchema, id)
     console.log("ProcedureMetaData:", result)
     return result
   } catch (err) {
@@ -234,10 +199,9 @@ export const getProcedureMetaData = async function(dbClient, id){
   }
 }
 
-export const getAgreementMetaData = async function(dbClient, id){
+export const getAgreementMetaData = async(dbClient, id)=>{
   try {
-    const threadId = ThreadID.fromBytes(threadDbId)
-    const result = await dbClient.findByID(threadId, 'AgreementMetaData', id)
+    const result = await db.findById(dbClient, agreementMetaDataSchema, id)
     console.log("AgreementMetaData:", result)
     return result
   } catch (err) {
