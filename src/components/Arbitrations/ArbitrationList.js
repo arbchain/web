@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Bar,
   Button,
@@ -42,11 +43,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
+  const [isAuth, setIsAuth] = useState(true);
 
   const openAgreement = () => setAgreementModal(true);
 
   const openProcedure = () => setProcedureModal(true);
+
   const walletAccount = useAccount();
+  const history = useHistory();
 
   useEffect(() => {
     async function load() {
@@ -107,6 +111,32 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   if (arbitrationDetails.length !== 0) {
     console.log('All Arbitration Details', arbitrationDetails);
   }
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // Fetching the password locally.
+        const account = await wallet.login(localStorage.getItem('wpassword'));
+        const OrianKey = await localStorage.getItem('orionKey');
+        console.log('OIARKEY', OrianKey);
+
+        if (
+          account === null ||
+          account === undefined ||
+          OrianKey === null ||
+          OrianKey === undefined
+        ) {
+          setIsAuth(false);
+          history.push('/login');
+        }
+        console.log('ACCOUNT from Dashboard', account);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    load();
+  }, [isAuth]);
+  console.log('ISAUTH', isAuth);
 
   return (
     <div>

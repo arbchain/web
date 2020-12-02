@@ -41,7 +41,6 @@ function LoginPage() {
       history.push('/dashboard');
     }
   };
-  console.log('ACCOUNT', account[0]);
 
   const history = useHistory();
   return (
