@@ -3,7 +3,7 @@ import { Main, Split, useTheme, GU, textStyle } from '@aragon/ui';
 import Avatar from '../../assets/avatar.png';
 
 import styled from 'styled-components';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const OutterContainer = styled.div`
   border: 1px solid #dde4e9;
@@ -84,45 +84,39 @@ function ArbitrationCard({ arbitration, procedureAddress }) {
         }}
         style={{ color: '#000000d9' }}
       >
-        <>
-          <section>
-            <OutterContainer>
-              <FlexContainer>
-                <div className='image-block'>
-                  <div className='image'>
-                    <img src={Avatar} alt='' srcset='' />
-                  </div>
-                  <div className='texts'>
-                    <h3>Created By</h3>
-                    <h2>{arbitration.claimantName}</h2>
-                  </div>
-                </div>
-                <div className='date'>
-                  <h3>Created On</h3>
-                  <h2>{arbitration.createdAt}</h2>
-                </div>
-              </FlexContainer>
+        <OutterContainer>
+          <FlexContainer>
+            <div className='image-block'>
+              <div className='image'>
+                <img src={Avatar} alt='' srcset='' />
+              </div>
+              <div className='texts'>
+                <h3>Created By</h3>
+                <h2>{arbitration.claimantName}</h2>
+              </div>
+            </div>
+            <div className='date'>
+              <h3>Created On</h3>
+              <h2>{arbitration.createdAt}</h2>
+            </div>
+          </FlexContainer>
 
-              <Description>
-                <h1 className='title'>{arbitration.name}</h1>
-                <p className='description'>
-                  {arbitration.description}
-                </p>
-              </Description>
-              <RespondantContainer>
-                <div>
-                  <h3>Respondant Name</h3>
-                  <h2>{arbitration.respondentName}</h2>
-                </div>
+          <Description>
+            <h1 className='title'>{arbitration.name}</h1>
+            <p className='description'>{arbitration.description}</p>
+          </Description>
+          <RespondantContainer>
+            <div>
+              <h3>Respondant Name</h3>
+              <h2>{arbitration.respondentName}</h2>
+            </div>
 
-                <div>
-                  <h3>Court Address</h3>
-                  <h2>{arbitration.courtAddress}</h2>
-                </div>
-              </RespondantContainer>
-            </OutterContainer>
-          </section>
-        </>
+            <div>
+              <h3>Court Address</h3>
+              <h2>{arbitration.courtAddress}</h2>
+            </div>
+          </RespondantContainer>
+        </OutterContainer>
       </Link>
     </Main>
   );

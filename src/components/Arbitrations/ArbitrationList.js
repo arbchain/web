@@ -19,7 +19,12 @@ import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
-import {authorizeUser, getAllUsers, getProcedureContractAddress, getProcedureMetaData} from "../../lib/db/threadDB";
+import {
+  authorizeUser,
+  getAllUsers,
+  getProcedureContractAddress,
+  getProcedureMetaData,
+} from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 
@@ -42,9 +47,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [parties, setParties] = useState([]);
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
-  const [dbClient, setClient] = useState(null)
-  const [procedureAddress, setProcedureAddress] = useState(null)
-  const [proceduresLoading, setProceduresLoading] = useState(true)
+  const [dbClient, setClient] = useState(null);
+  const [procedureAddress, setProcedureAddress] = useState(null);
+  const [proceduresLoading, setProceduresLoading] = useState(true);
 
   const openAgreement = () => setAgreementModal(true);
 
@@ -59,16 +64,16 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         // Update the account context by using a callback function
         walletAccount.changeAccount({
           privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey')
+          orionPublicKey: localStorage.getItem('orionKey'),
         });
 
-        const client = await authorizeUser(localStorage.getItem('wpassword'))
-        setClient(client)
-        const users = await getAllUsers(client,account[0])
-        const address = await getProcedureContractAddress(client, account[0])
-        setProcedureAddress(address)
-        setProceduresLoading(false)
-        console.log("ADRess:",address)
+        const client = await authorizeUser(localStorage.getItem('wpassword'));
+        setClient(client);
+        const users = await getAllUsers(client, account[0]);
+        const address = await getProcedureContractAddress(client, account[0]);
+        setProcedureAddress(address);
+        setProceduresLoading(false);
+        console.log('ADRess:', address);
 
         setParties(users.party);
         setCaller(users.caller);
@@ -88,7 +93,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            const details = await getProcedureMetaData(dbClient,procedureAddress[index].metaData)
+            const details = await getProcedureMetaData(
+              dbClient,
+              procedureAddress[index].metaData
+            );
             allDetails.push(details);
             index++;
           }
@@ -108,7 +116,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   }
 
   return (
-    <div>
+    <>
       <div
         style={{
           display: 'flex',
@@ -218,10 +226,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </Bar>
 
       {selected ? (
-        <AgreementList
-          walletAccount={walletAccount}
-          client={dbClient}
-        />
+        <AgreementList walletAccount={walletAccount} client={dbClient} />
       ) : loading || proceduresLoading ? (
         <div
           style={{
@@ -248,7 +253,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       ) : (
         <EmptyStateCard text='No arbitrations found.' />
       )}
-    </div>
+    </>
   );
 }
 
