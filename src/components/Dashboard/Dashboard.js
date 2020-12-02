@@ -12,14 +12,14 @@ import agreement2 from '../../assets/agreement 2.svg';
 import notasksfound from '../../assets/notasksfound.svg';
 import { AccountProvider, useAccount } from '../../wallet/Account';
 import { Header, Split, Box, DropDown } from '@aragon/ui';
-import useAuthendication from '../../utils/auth';
+import useAuthentication from '../../utils/auth';
 
 var green = '#219653';
 var orange = '#FF7A3C';
 var primary = '#52006F';
 
 function Dashboard() {
-  useAuthendication();
+  useAuthentication();
 
   return (
     <React.Fragment>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import wallet from 'wallet-besu';
 
-const useAuthendication = () => {
+const useAuthentication = () => {
   const [isAuth, setIsAuth] = useState(true);
 
   const history = useHistory();
@@ -32,4 +32,4 @@ const useAuthendication = () => {
   return isAuth;
 };
 
-export default useAuthendication;
+export default useAuthentication;

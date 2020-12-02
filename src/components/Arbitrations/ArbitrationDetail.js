@@ -5,7 +5,7 @@ import DisputeTimeline from './DisputeTimeline';
 import ArbDetails from './agreementDetails/arbDetails';
 import AllStatements from './agreementDetails/allStatements';
 import NominationPage from './agreementDetails/NominationPage';
-import useAuthendication from '../../utils/auth';
+import useAuthentication from '../../utils/auth';
 import { useAccount } from '../../wallet/Account';
 
 const networks = require('../../wallet/network');
@@ -27,8 +27,7 @@ const ArbitrationDetail = (props) => {
     setSelectTabs(tabs);
   };
 
-  useAuthendication();
-
+  useAuthentication();
   return (
     <div>
       {/* statement  modal */}
