@@ -70,3 +70,11 @@
 body {
   overflow: hidden; /* Hide scrollbars */
 }
+
+/* .hZYLiF {
+  height: auto;
+} */
+
+.Main___StyledScrollView-sc-1n64cjc-0 .hZYLiF {
+  height: auto;
+}

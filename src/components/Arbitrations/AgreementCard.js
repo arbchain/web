@@ -1,124 +1,138 @@
-/*eslint-disable */
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { textStyle } from '@aragon/ui';
-import ArbitrationCardName from '../../assets/ArbitrationCardName.svg';
-import ArbitrationArgument from '../../assets/ArbitrationArgument.svg';
-import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
-import ArbitrationCompanyName from '../../assets/ArbitrationCompanyName.svg';
-import Arbitrators from '../../assets/Arbitrators.svg';
-import DisputeStatus from './DisputeStatus';
+import {
+  Main,
+  Split,
+  useTheme,
+  GU,
+  textStyle,
+  DropDown,
+  Text,
+} from '@aragon/ui';
+
+import Avatar from '../../assets/avatar.png';
 
 import styled from 'styled-components';
+import {Link} from "react-router-dom";
 
-const ArbitrationCardNameStyle = <img src={ArbitrationCardName} />;
-const ArbitrationCardDisputeStyle = <img src={ArbitrationCardDispute} />;
-const ArbitratorsStyle = <img src={Arbitrators} />;
-const ArbitrationArgumentStyle = <img src={ArbitrationArgument} />;
-const ArbitrationCompanyNameStyle = <img src={ArbitrationCompanyName} />;
+const OuterContainer = styled.div`
+  border: 1px solid #dde4e9;
+  padding: 1.5rem;
+  box-shadow: rgba(51, 77, 117, 0.2) 0px 1px 3px;
+  border-radius: 4px;
+  h3 {
+    color: #637381;
+    ${textStyle('label2')};
+    display: block;
+    margin-bottom: 2px;
+  }
+  h2 {
+    display: block;
+    ${textStyle('body2')};
+    font-weight: 500;
+    color: #212b36;
+  }
+`;
 
-function AgreementCard({ agreement, selectDispute }) {
-  //note: If undefined error try doing conditional rendering here.
+const FlexContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .image-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 50px;
+      height: auto;
+    }
+  }
+  .texts {
+    margin-left: 1rem;
+    justify-content: center;
+  }
+`;
 
-  // const status = [DISPUTE_STATUS_OPEN,
-  //   DISPUTE_STATUS_APPEAL,
-  //   DISPUTE_STATUS_CLOSED,]
+const RespondentContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-gap: 22px;
+  margin-bottom: ${2 * GU}px;
+  margin-top: 30px;
+  .dropdown {
+    width: 300px;
+    overflow: hidden;
+  }
+`;
 
+const DisputeContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  grid-gap: 22px;
+  margin-top: 28px;
+`;
+
+function AgreementCard({ agreement }) {
+  const theme = useTheme();
   const disputeType = ['Future', 'Existing'];
   console.log('Card logging', agreement);
   return (
-    <>
-      <section>
-        <Link to='/arbitrations/:address' style={{ color: '#000000d9' }}>
-          <div
-            style={{
-              padding: '2rem',
-              marginTop: '1.5rem',
-              borderRadius: '0.7rem',
-              boxShadow: '0px 1px 3px rgba(51, 77, 117, 0.2)',
-              cursor: 'pointer',
-            }}
-          >
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '5fr 2fr 1fr',
-              }}
-            >
-              <div
-                css={`
-                  ${textStyle('title4')}
-                `}
-              >
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 7fr',
-                  }}
-                >
-                  <p>{ArbitrationCardDisputeStyle}</p>
-                  <p>Law: {agreement[3]}</p>
+    <Main>
+      <Link to='/arbitrations/:address' style={{ color: '#000000d9' }}>
+        <>
+          <section>
+            <OuterContainer>
+              <FlexContainer>
+                <div className='image-block'>
+                  <div className='image'>
+                    <img src={Avatar} alt='' srcset='' />
+                  </div>
+                  <div className='texts'>
+                    <h3>Claimant Name</h3>
+                    <h2>{agreement.claimantName}</h2>
+                  </div>
                 </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 7fr',
-                  }}
-                >
-                  <p>{ArbitrationCardNameStyle}</p>
-                  <CardSubText>Agreement : {agreement[5]}</CardSubText>
+                <div className='date'>
+                  <h3>Created At</h3>
+                  <h2>{agreement.createdAt}</h2>
                 </div>
-              </div>
-              <div
-                css={`
-                  ${textStyle('body1')}
-                `}
-              >
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 7fr',
-                  }}
-                >
-                  <p>{ArbitratorsStyle}</p>
-                  <CardSubText>{agreement[0]} arbitrators</CardSubText>
+              </FlexContainer>
+              <DisputeContainer>
+                <div>
+                  <h3>Dispute Type </h3>
+                  <h2>{disputeType[parseInt(agreement.disputeType)]}</h2>
                 </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 7fr',
-                  }}
-                >
-                  <p>{ArbitrationCompanyNameStyle}</p>
-                  <CardSubText>Seat - {agreement[1]}</CardSubText>
+                <div>
+                  <h3>Law</h3>
+                  <h2>{agreement.law}</h2>
                 </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '2fr 7fr',
-                  }}
-                >
-                  <p>{ArbitrationArgumentStyle}</p>
-                  <CardSubText>
-                    Dispute Type: {disputeType[parseInt(agreement[4])]}
-                  </CardSubText>
+                <div>
+                  <h3>Respondent Name</h3>
+                  <h2>{agreement.respondentName}</h2>
                 </div>
-              </div>
-              {/* <div>
-              <DisputeStatus dispute={DISPUTE_STATUS_OPEN} />
-            </div> */}
-            </div>
-          </div>
-        </Link>
-      </section>
-    </>
+              </DisputeContainer>
+
+              <RespondentContainer>
+                <div>
+                  <h3>Document Name</h3>
+                  <h2>{agreement.documentName}</h2>
+                </div>
+
+                <div>
+                  <h3>Language</h3>
+                  <h2>{agreement.language}</h2>
+                </div>
+
+                <div>
+                  <h3>Seat</h3>
+                  <h2>{agreement.seat}</h2>
+                </div>
+              </RespondentContainer>
+            </OuterContainer>
+          </section>
+        </>
+      </Link>
+    </Main>
   );
 }
-
-const CardSubText = styled.span`
-  ${textStyle('label2')}
-  font-weight: 300;
-  color: ${({ labelColor }) => labelColor};
-`;
 
 export default AgreementCard;

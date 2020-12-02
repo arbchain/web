@@ -16,8 +16,6 @@ const NODES = Object.keys(networks).map((node) => {
 
 const ArbitrationDetail = (props) => {
   const [tabs, setSelectTabs] = useState(0);
-
-  useAuthendication();
   const history = useHistory();
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);

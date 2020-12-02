@@ -19,16 +19,17 @@ import {
 import AgreementList from './AgreementList';
 import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
-import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { useAccount } from '../../wallet/Account.js';
-import { getProcedureAddress } from '../../lib/contracts/MasterContract';
-// import DisputeCard from './DisputeCard';
-
+import {
+  authorizeUser,
+  getAllUsers,
+  getProcedureContractAddress,
+  getProcedureMetaData,
+} from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 
 const Web3 = require('web3');
-// const accounts = require('../../wallet/keys');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
@@ -43,7 +44,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
+  const [caller, setCaller] = useState(null);
+  const [parties, setParties] = useState([]);
+  const [arbitrator, setArbitrator] = useState([]);
+  const [court, setCourt] = useState([]);
+  const [dbClient, setClient] = useState(null);
+  const [procedureAddress, setProcedureAddress] = useState(null);
+  const [proceduresLoading, setProceduresLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(true);
+
 
   const openAgreement = () => setAgreementModal(true);
 
@@ -57,23 +66,30 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       try {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
-
         // Update the account context by using a callback function
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
         });
+
+        const client = await authorizeUser(localStorage.getItem('wpassword'));
+        setClient(client);
+        const users = await getAllUsers(client, account[0]);
+        const address = await getProcedureContractAddress(client, account[0]);
+        setProcedureAddress(address);
+        setProceduresLoading(false);
+        console.log('ADRess:', address);
+
+        setParties(users.party);
+        setCaller(users.caller);
+        setArbitrator(users.arbitrator);
+        setCourt(users.court);
       } catch (err) {
         return false;
       }
     }
     load();
   }, []);
-
-  const [proceduresLoading, procedureAddress] = getProcedureAddress(
-    NODES[0],
-    walletAccount.account
-  );
 
   useEffect(() => {
     async function procedureAddressCall() {
@@ -82,11 +98,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            const details = await getArbitrationDetails(
-              NODES[0],
-              procedureAddress[index].procedureContractAddress,
-              procedureAddress[index].groupId,
-              walletAccount.account
+            const details = await getProcedureMetaData(
+              dbClient,
+              procedureAddress[index].metaData
             );
             allDetails.push(details);
             index++;
@@ -101,12 +115,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     }
     procedureAddressCall();
   }, [proceduresLoading]);
-
-  // try {
-  //   console.log('All Arbitration Details', arbitrationDetails);
-  // } catch (err) {
-  //   // pass
-  // }
 
   if (arbitrationDetails.length !== 0) {
     console.log('All Arbitration Details', arbitrationDetails);
@@ -139,7 +147,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   console.log('ISAUTH', isAuth);
 
   return (
-    <div>
+    <>
       <div
         style={{
           display: 'flex',
@@ -152,6 +160,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           setAgreementModal={setAgreementModal}
           account={walletAccount.account}
           node={NODES[0]}
+          counterParties={parties}
+          caller={caller}
         />
         <div />
         {/* procedure modal */}
@@ -167,6 +177,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             setProcedureModal={setProcedureModal}
             account={walletAccount.account}
             node={NODES[0]}
+            counterParties={parties}
+            caller={caller}
           />
         </div>
 
@@ -245,7 +257,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </Bar>
 
       {selected ? (
-        <AgreementList walletAccount={walletAccount} />
+        <AgreementList walletAccount={walletAccount} client={dbClient} />
       ) : loading || proceduresLoading ? (
         <div
           style={{
@@ -262,7 +274,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         arbitrationDetails.map((arbitration, index) => {
           return (
             <ArbitrationCard
-              key={arbitration[0]}
+              key={index}
               arbitration={arbitration}
               selectDispute={selectDispute}
               procedureAddress={procedureAddress[index]}
@@ -272,7 +284,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       ) : (
         <EmptyStateCard text='No arbitrations found.' />
       )}
-    </div>
+    </>
   );
 }
 

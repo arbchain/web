@@ -18,6 +18,7 @@ import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
 import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
 import { AccountProvider } from './wallet/Account.js';
+import Database from "./components/Database";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Switch>
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/dashboard' component={Dashboard} />
+                <Route exact path='/db' component={Database}/>
                 <Route exact path='/arbitrations' component={Arbitrations} />
                 <Route path='/profile' component={Profile} />
                 <Route

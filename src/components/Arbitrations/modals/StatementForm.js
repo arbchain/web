@@ -4,6 +4,8 @@ import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createStatement } from '../../../lib/contracts/SPC';
+import { Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 // styledcomponent -css
@@ -30,6 +32,25 @@ const NODES = Object.keys(networks).map((node) => {
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
+
+// file upload
+const props = {
+  name: 'file',
+  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  headers: {
+    authorization: 'authorization-text',
+  },
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
+    }
+  },
+};
 
 export default function StatementForm({
   statementModal,
@@ -209,6 +230,20 @@ export default function StatementForm({
               setDocumentIpfsHash(event.target.value);
             }}
           />
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            margin: '20px',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ flexBasis: '100%' }}> Upload Document:</div>
+          <Upload {...props}>
+            <button icon={<UploadOutlined />}>Click to Upload</button>
+          </Upload>
         </div>
 
         <Button
