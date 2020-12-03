@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {BackButton, Bar, Box, Split, useTheme, Tabs,} from '@aragon/ui';
-
+import {BackButton, Bar, Box, Split, useTheme, Tabs} from '@aragon/ui';
 import { useHistory } from 'react-router-dom';
-
 import DisputeTimeline from './DisputeTimeline';
-
 import ArbDetails from './agreementDetails/arbDetails';
 import AllStatements from './agreementDetails/allStatements';
-import AllProcedure from './agreementDetails/allProcedures';
 import NominationPage from './agreementDetails/NominationPage';
+import useAuthentication from '../../utils/auth';
 import { useAccount } from '../../wallet/Account';
 import wallet from 'wallet-besu';
 import {authorizeUser, getAllUsers} from "../../lib/db/threadDB";
@@ -20,9 +17,6 @@ const NODES = Object.keys(networks).map((node) => {
 
 const ArbitrationDetail = (props) => {
   const history = useHistory();
-  const [statementModal, setStatementModal] = useState(true);
-  const openStatement = () => setStatementModal(true);
-
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
   const walletAccount = useAccount();
@@ -48,11 +42,6 @@ const ArbitrationDetail = (props) => {
       try {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
-        // Update the account context by using a callback function
-        walletAccount.changeAccount({
-          privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey'),
-        });
         const client = await authorizeUser(localStorage.getItem('wpassword'))
         const users = await getAllUsers(client,account[0])
         setClient(client)
@@ -67,6 +56,8 @@ const ArbitrationDetail = (props) => {
     }
     load();
   }, []);
+
+  useAuthentication();
 
   return (
     <div>
@@ -108,10 +99,10 @@ const ArbitrationDetail = (props) => {
               {tabs === 1 ? (
                 <>
                   <AllStatements
-                      contractAddress={contractAddress}
-                      groupId={groupId}
-                      NODE={NODES[0]}
-                      account={walletAccount.account}
+                    contractAddress={contractAddress}
+                    groupId={groupId}
+                    NODE={NODES[0]}
+                    account={walletAccount.account}
                   />
                   {/*<AllProcedure />*/}
                 </>
@@ -120,10 +111,10 @@ const ArbitrationDetail = (props) => {
               {tabs === 2 ? (
                 <>
                   <NominationPage
-                      contractAddress={contractAddress}
-                      groupId={groupId}
-                      NODE={NODES[0]}
-                      account={walletAccount.account}
+                    contractAddress={contractAddress}
+                    groupId={groupId}
+                    NODE={NODES[0]}
+                    account={walletAccount.account}
                   />
                 </>
               ) : null}

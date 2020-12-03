@@ -1,6 +1,7 @@
 /* eslint-disable */
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import Card from '@aragon/ui/dist/Card';
 import active from '../../assets/active.svg';
 import inactive from '../../assets/inactive.svg';
@@ -9,18 +10,16 @@ import ChartComponent from './ChartComponent';
 import agreement1 from '../../assets/agreement 1.svg';
 import agreement2 from '../../assets/agreement 2.svg';
 import notasksfound from '../../assets/notasksfound.svg';
-// import TaskTable from './TaskTable'
-// import { tasks } from '../../mock-data'
+import { AccountProvider, useAccount } from '../../wallet/Account';
 import { Header, Split, Box, DropDown } from '@aragon/ui';
+import useAuthentication from '../../utils/auth';
 
 var green = '#219653';
 var orange = '#FF7A3C';
 var primary = '#52006F';
 
 function Dashboard() {
-  // TODO - only for testing we need to use the  connected account
-  // const connectedAccount = useConnectedAccount()
-  // const connectedAccount = '0x593e1F9809658d0c92e9f092cF01Aad7D0d734f3'
+  useAuthentication();
 
   return (
     <React.Fragment>

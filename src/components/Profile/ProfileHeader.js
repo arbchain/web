@@ -8,9 +8,12 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { Form, Input, Spin } from 'antd';
 import wallet from 'wallet-besu';
 import {authorizeUser, getLoginUser} from "../../lib/db/threadDB";
+import { useAccount } from '../../wallet/Account.js';
 import { Link } from 'react-router-dom';
 
-const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
+const antIcon = (
+  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
+);
 
 const Web3 = require('web3');
 const web3 = new Web3();
@@ -27,6 +30,8 @@ export default function ProfileHeader({ active }) {
   const [userData, setUserData] = useState(null);
   const [address, setAddress] = useState(null);
   const userRole = {0:'Party', 1:'Arbitrator', 2:'Arbitral Court'}
+
+  const walletAccount = useAccount();
 
   useEffect(() => {
     async function load() {
