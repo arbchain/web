@@ -72,6 +72,13 @@ function MenuPanel({ showHeaderLogo, onOpenPage }) {
           onActivate={onOpenPage}
         />
         <MenuItem
+          to="/agreements"
+          icon={arbitrationsIcon}
+          darkIcon={arbitrationsIconDark}
+          label="Agreements"
+          onActivate={onOpenPage}
+        />
+        <MenuItem
           to="/profile"
           icon={profileIcon}
           darkIcon={profileIconDark}

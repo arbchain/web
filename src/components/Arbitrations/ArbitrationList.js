@@ -10,14 +10,11 @@ import {
   DropDown,
   IconRefresh,
   GU,
-  Tabs,
   Tag,
   textStyle,
   useTheme,
 } from '@aragon/ui';
 
-import AgreementList from './AgreementList';
-import AgreementForm from './modals/AgreementForm';
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
 import {
@@ -39,7 +36,6 @@ const NODES = Object.keys(networks).map((node) => {
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
-  const [selected, setSelected] = useState(0);
   const [loading, setLoading] = useState(true);
   const [agreementModal, setAgreementModal] = useState(false);
   const [procedureModal, setProcedureModal] = useState(false);
@@ -53,8 +49,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [proceduresLoading, setProceduresLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(true);
 
-
-  const openAgreement = () => setAgreementModal(true);
 
   const openProcedure = () => setProcedureModal(true);
 
@@ -78,7 +72,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const address = await getProcedureContractAddress(client, account[0]);
         setProcedureAddress(address);
         setProceduresLoading(false);
-        console.log('ADRess:', address);
 
         setParties(users.party);
         setCaller(users.caller);
@@ -155,14 +148,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           width: '100%',
         }}
       >
-        <AgreementForm
-          agreementModal={agreementModal}
-          setAgreementModal={setAgreementModal}
-          account={walletAccount.account}
-          node={NODES[0]}
-          counterParties={parties}
-          caller={caller}
-        />
         <div />
         {/* procedure modal */}
         <div
@@ -191,23 +176,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               }}
             />
           </div>
-
-          <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
-            <Button
-              label='+NEW AGREEMENT'
-              onClick={() => {
-                openAgreement();
-              }}
-            />
-          </div>
         </div>
       </div>
-
-      <Tabs
-        items={['All Procedures', 'All Agreements']}
-        selected={selected}
-        onChange={setSelected}
-      />
 
       <Bar>
         <div
@@ -256,9 +226,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         </div>
       </Bar>
 
-      {selected ? (
-        <AgreementList walletAccount={walletAccount} client={dbClient} />
-      ) : loading || proceduresLoading ? (
+      {loading || proceduresLoading ? (
         <div
           style={{
             justifyContent: 'center',
