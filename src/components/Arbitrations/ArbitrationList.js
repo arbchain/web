@@ -68,8 +68,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const address = await getProcedureContractAddress(client, account[0])
         setProcedureAddress(address)
         setProceduresLoading(false)
-        console.log("ADRess:",address)
-
         setParties(users.party);
         setCaller(users.caller);
         setArbitrator(users.arbitrator);
@@ -92,7 +90,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             allDetails.push(details);
             index++;
           }
-          console.log(allDetails);
           setArbitrationDetails(allDetails);
           setLoading(false);
         }

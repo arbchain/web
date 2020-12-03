@@ -11,6 +11,7 @@ import AllProcedure from './agreementDetails/allProcedures';
 import NominationPage from './agreementDetails/NominationPage';
 import { useAccount } from '../../wallet/Account';
 import wallet from 'wallet-besu';
+import {authorizeUser, getAllUsers} from "../../lib/db/threadDB";
 const networks = require('../../wallet/network');
 
 const NODES = Object.keys(networks).map((node) => {
@@ -32,6 +33,11 @@ const ArbitrationDetail = (props) => {
   const openProcedureStatement = () => setProcedureStatementModal(true);
 
   const [tabs, setSelectTabs] = useState(0);
+  const [dbClient, setClient] = useState(null)
+  const [caller, setCaller] = useState(null);
+  const [parties, setParties] = useState([]);
+  const [arbitrator, setArbitrator] = useState([]);
+  const [court, setCourt] = useState([]);
 
   const handleTabChange = (tabs) => {
     setSelectTabs(tabs);
@@ -47,8 +53,15 @@ const ArbitrationDetail = (props) => {
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
         });
+        const client = await authorizeUser(localStorage.getItem('wpassword'))
+        const users = await getAllUsers(client,account[0])
+        setClient(client)
+        setParties(users.party)
+        setCaller(users.caller)
+        setArbitrator(users.arbitrator)
+        setCourt(users.court)
       } catch (err) {
-        console.log('ERROR', err);
+        console.log('ERROR', err)
         return false;
       }
     }
@@ -86,6 +99,8 @@ const ArbitrationDetail = (props) => {
                     groupId={groupId}
                     NODE={NODES[0]}
                     account={walletAccount.account}
+                    caller={caller}
+                    parties={parties}
                   />
                 </>
               ) : null}

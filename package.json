@@ -29,7 +29,10 @@
     "web3": "1.2.6",
     "web3-eea": "^0.10.0",
     "@textile/hub": "^1.2.1",
-    "eccrypto": "^1.1.5"
+    "eccrypto": "^1.1.5",
+    "aws-sdk": "^2.750.0",
+    "@fleekhq/fleek-storage-js": "^1.0.2",
+    "js-file-download": "^0.4.12"
   },
   "scripts": {
     "start": "react-app-rewired start",

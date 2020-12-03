@@ -7,6 +7,7 @@ import { createStatement } from '../../../lib/contracts/SPC';
 import { Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import {uploadDoc} from "../../../lib/file-storage";
 
 // styledcomponent -css
 
@@ -33,49 +34,47 @@ const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
 
-// file upload
-const props = {
-  name: 'file',
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
 export default function StatementForm({
   statementModal,
   setStatementModal,
   contractAddress,
   groupId,
   account,
+  caller,
+  parties
 }) {
   const theme = useTheme();
   const [network, setNetwork] = useState(0);
-  const [parties, setParties] = useState('');
+  const [party, setParty] = useState(0);
   const [stakeHolder, setStakeHolder] = useState(0);
   const [statementType, setStatementType] = useState(0);
   const [subject, setSubject] = useState('');
   const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   const [statementSubmit, setStatementSubmit] = useState(false);
+  const [document, setDocument] = useState(null)
+
+  // file upload
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    customRequest: data => {
+      setDocument(data.file);
+    },
+    onChange(status) {
+      if (status) {
+        message.success(` file uploaded successfully.`);
+      } else {
+        message.error(`file upload failed.`);
+      }
+    },
+  };
 
   const { connected, statementCreation } = createStatement(
     NODES[0],
     contractAddress,
     groupId
   );
-
-  // const [ proceduresLoading, procedureAddress ] = getProcedureAddress(NODES[0], walletAccount.account);
 
   const closeStatement = () => {
     setStatementModal(false);
@@ -84,16 +83,26 @@ export default function StatementForm({
 
   const handleClick = async () => {
     setStatementSubmit(true);
+    const uploadStatus = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
+    console.log("UploadStatus:",uploadStatus)
     const partiesInvolved = [
-      ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
+      {
+        partyAddress: caller.address,
+        name: caller.name
+      },{
+        partyAddress: parties[party].address,
+        name: parties[party].name
+      }
     ];
     await statementCreation(
       partiesInvolved,
       stakeHolder,
       statementType,
       subject,
-      documentHash,
-      documentIpfsHash,
+      uploadStatus.fileHash,
+      uploadStatus.cipherKey,
+      uploadStatus.fileLocation,
+      uploadStatus.fileName,
       account
     );
     console.log('submitted');
@@ -128,14 +137,20 @@ export default function StatementForm({
             alignItems: 'center',
           }}
         >
-          <div style={{ flexBasis: '100%' }}> Parties:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={parties}
-            onChange={(event) => {
-              setParties(event.target.value);
-            }}
-          />
+          <div style={{ flexBasis: '100%' }}>Select Party:</div>
+          <div style={{ flexBasis: '100%' }}>
+            <DropDown
+              style={{ borderColor: '#D9D9D9', width:'100%' }}
+              items={parties.map((value) => {
+                return value.name
+              })}
+              selected={party}
+              onChange={(index, items) => {
+                setParty(index);
+                setStatementModal(true);
+              }}
+            />
+          </div>
         </div>
 
         <div
@@ -196,7 +211,7 @@ export default function StatementForm({
           />
         </div>
 
-        <div
+        {/*<div
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -230,7 +245,7 @@ export default function StatementForm({
               setDocumentIpfsHash(event.target.value);
             }}
           />
-        </div>
+        </div>*/}
 
         <div
           style={{
