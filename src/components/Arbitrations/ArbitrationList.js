@@ -25,6 +25,8 @@ import {
 } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
+import styled from 'styled-components';
+import useAuthentication from '../../utils/auth';
 
 const Web3 = require('web3');
 const networks = require('../../wallet/network');
@@ -34,10 +36,58 @@ const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
+// Styled Components
+
+const Loader = styled.div`
+  justify-content: center;
+  display: flex;
+  height: 300px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dde4e9;
+`;
+
+const BarContainer = styled.div`
+  height: ${8 * GU}px;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  grid-gap: ${1 * GU}px;
+  align-items: center;
+  padding: 0 ${3 * GU}px;
+
+  .span {
+    margin-left: ${1.5 * GU}px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: ${useTheme.info};
+    ${textStyle('label3')};
+  }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .ProcedureModal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  button {
+    display: flex;
+    margin-bottom: 12px;
+    margin-left: 0.5rem;
+    background-color: #4d4cbb;
+    color: #fff;
+  }
+`;
+
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
-  const theme = useTheme();
   const [loading, setLoading] = useState(true);
-  const [agreementModal, setAgreementModal] = useState(false);
+
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
   const [caller, setCaller] = useState(null);
@@ -47,13 +97,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [dbClient, setClient] = useState(null);
   const [procedureAddress, setProcedureAddress] = useState(null);
   const [proceduresLoading, setProceduresLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(true);
-
 
   const openProcedure = () => setProcedureModal(true);
 
   const walletAccount = useAccount();
-  const history = useHistory();
+
+  useAuthentication();
 
   useEffect(() => {
     async function load() {
@@ -113,50 +162,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     console.log('All Arbitration Details', arbitrationDetails);
   }
 
-  useEffect(() => {
-    async function load() {
-      try {
-        // Fetching the password locally.
-        const account = await wallet.login(localStorage.getItem('wpassword'));
-        const OrianKey = await localStorage.getItem('orionKey');
-        console.log('OIARKEY', OrianKey);
-
-        if (
-          account === null ||
-          account === undefined ||
-          OrianKey === null ||
-          OrianKey === undefined
-        ) {
-          setIsAuth(false);
-          history.push('/login');
-        }
-        console.log('ACCOUNT from Dashboard', account);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    load();
-  }, [isAuth]);
-  console.log('ISAUTH', isAuth);
-
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <div />
-        {/* procedure modal */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
-        >
+      <ButtonContainer>
+        <div className='ProcedureModal'>
           <ProcedureForm
             procedureModal={procedureModal}
             setProcedureModal={setProcedureModal}
@@ -167,29 +176,16 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           />
         </div>
 
-        <div style={{ display: 'flex', marginBottom: '12px' }}>
-          <div style={{ marginLeft: '0.5rem' }}>
-            <Button
-              label='+NEW PROCEDURE'
-              onClick={() => {
-                openProcedure();
-              }}
-            />
-          </div>
-        </div>
-      </div>
+        <Button
+          label='+NEW PROCEDURE'
+          onClick={() => {
+            openProcedure();
+          }}
+        />
+      </ButtonContainer>
 
       <Bar>
-        <div
-          css={`
-            height: ${8 * GU}px;
-            display: grid;
-            grid-template-columns: auto auto 1fr auto;
-            grid-gap: ${1 * GU}px;
-            align-items: center;
-            padding: 0 ${3 * GU}px;
-          `}
-        >
+        <BarContainer>
           <DropDown
             header='Status'
             placeholder='Status'
@@ -199,16 +195,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               // eslint-disable-next-line
               <div>
                 All
-                <span
-                  css={`
-                    margin-left: ${1.5 * GU}px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: ${theme.info};
-                    ${textStyle('label3')};
-                  `}
-                >
+                <span className='span'>
                   <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
@@ -223,21 +210,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           // onChange={handleDisputeDateRangeFilterChange}
           />
           {/* <Button>My disputes</Button> */}
-        </div>
+        </BarContainer>
       </Bar>
 
       {loading || proceduresLoading ? (
-        <div
-          style={{
-            justifyContent: 'center',
-            display: 'flex',
-            height: '300px',
-            alignItems: 'center',
-          }}
-        >
-          <span> Fetching arbitrations </span> <br />
+        <Loader>
           <LoadingRing mode='half-circle' />
-        </div>
+          <br />
+          <span> Fetching arbitrations </span>
+        </Loader>
       ) : procedureAddress.length ? (
         arbitrationDetails.map((arbitration, index) => {
           return (
