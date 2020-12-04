@@ -53,7 +53,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [proceduresLoading, setProceduresLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(true);
 
-
   const openAgreement = () => setAgreementModal(true);
 
   const openProcedure = () => setProcedureModal(true);
@@ -69,17 +68,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         // Update the account context by using a callback function
         walletAccount.changeAccount({
           privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey'),
+          orionPublicKey: localStorage.getItem('orionKey')
         });
 
-        const client = await authorizeUser(localStorage.getItem('wpassword'));
-        setClient(client);
-        const users = await getAllUsers(client, account[0]);
-        const address = await getProcedureContractAddress(client, account[0]);
-        setProcedureAddress(address);
-        setProceduresLoading(false);
-        console.log('ADRess:', address);
-
+        const client = await authorizeUser(localStorage.getItem('wpassword'))
+        setClient(client)
+        const users = await getAllUsers(client,account[0])
+        const address = await getProcedureContractAddress(client, account[0])
+        setProcedureAddress(address)
+        setProceduresLoading(false)
         setParties(users.party);
         setCaller(users.caller);
         setArbitrator(users.arbitrator);
@@ -105,7 +102,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             allDetails.push(details);
             index++;
           }
-          console.log(allDetails);
           setArbitrationDetails(allDetails);
           setLoading(false);
         }

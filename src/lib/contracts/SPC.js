@@ -101,10 +101,19 @@ export function createProcedureStatement(nodeSelected, contractAddress, privacyG
   const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const procedureStatementCreation = useCallback(
-    async (parties, seat, language, documentIpfsHash, documentHash, account) => {
+    async (
+      parties,
+      seat,
+      language,
+      documentLocation,
+      documentName,
+      documentHash,
+      cipherKey,
+      account
+    ) => {
       const res = await web3Contract.call(
         'createProcedureStatement',
-        [parties, seat, language, documentIpfsHash, documentHash],
+        [parties, seat, language, documentLocation, documentName,documentHash, cipherKey],
         account
       );
       console.log('RES:', res);
@@ -189,13 +198,15 @@ export function createStatement(nodeSelected, contractAddress, privacyGroupId) {
       statementType,
       subject,
       documentHash,
-      documentIpfsHash,
+      cipherKey,
+      documentLocation,
+      documentName,
       account
     ) => {
       // const docHash = Web3.utils.fromAscii(documentHash)
       const res = await web3Contract.call(
         'createStatement',
-        [parties, stakeholder, statementType, subject, documentHash, documentIpfsHash],
+        [parties, stakeholder, statementType, subject, documentHash, cipherKey, documentLocation, documentName],
         account
       );
       console.log('RES:', res);
