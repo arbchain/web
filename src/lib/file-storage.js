@@ -5,8 +5,8 @@ const fileDownload = require('js-file-download')
 
 AWS.config.update({
   region: 'ap-south-1',
-  accessKeyId: '*****',
-  secretAccessKey:  '*****'
+  accessKeyId: '***',
+  secretAccessKey:  '***'
 })
 let s3 = new AWS.S3();
 
@@ -72,7 +72,7 @@ export const uploadDoc = async (file, password, storageType)=>{
   return new Promise((resolve, reject) => {
     reader.onload = async (val) => {
       const fileInput = new Uint8Array(val.target.result)
-      const cipherKey = await e2e.generateCipherKey(password)
+      const cipherKey = await e2e.generateCipherKey(Math.random(1000))
       const encryptedFile = await e2e.encryptData(Buffer.from(fileInput), cipherKey)
 
       const fileHash = e2e.calculateHash(fileInput)

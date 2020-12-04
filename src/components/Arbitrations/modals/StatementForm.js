@@ -1,6 +1,6 @@
 import { Result, Spin } from 'antd';
 import React, { useState } from 'react';
-import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
+import { Button, DropDown, IconUpload, LoadingRing, Modal, TextInput, useTheme } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createStatement } from '../../../lib/contracts/SPC';
@@ -51,7 +51,7 @@ export default function StatementForm({
   const [subject, setSubject] = useState('');
   const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
-  const [statementSubmit, setStatementSubmit] = useState(false);
+  const [statementSubmitting, setStatementSubmitting] = useState(false);
   const [document, setDocument] = useState(null)
 
   // file upload
@@ -82,7 +82,7 @@ export default function StatementForm({
   };
 
   const handleClick = async () => {
-    setStatementSubmit(true);
+    setStatementSubmitting(true);
     const uploadStatus = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
     console.log("UploadStatus:",uploadStatus)
     const partiesInvolved = [
@@ -106,7 +106,7 @@ export default function StatementForm({
       account
     );
     console.log('submitted');
-    setStatementSubmit(false);
+    setStatementSubmitting(false);
   };
 
   return (
@@ -256,13 +256,17 @@ export default function StatementForm({
           }}
         >
           <div style={{ flexBasis: '100%' }}> Upload Document:</div>
-          <Upload {...props}>
-            <button icon={<UploadOutlined />}>Click to Upload</button>
+          <div style={{ flexBasis: '100%' }}> 
+          <Upload style={{ flexBasis: '100%' }} {...props}>
+              <Button icon={<IconUpload/>} label="Click to Upload" />
           </Upload>
+          </div>
         </div>
 
         <Button
           label='SUBMIT'
+          disabled={statementSubmitting}
+          children= {statementSubmitting ? <LoadingRing /> : null}
           style={{
             backgroundColor: theme.selected,
             color: 'white',

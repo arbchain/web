@@ -74,7 +74,7 @@ const ArbitrationDetail = (props) => {
               <div style={{ marginTop: '14px' }}>
                 <Tabs
                   items={[
-                    'Agreement Details',
+                    'Arbitration Details',
                     'All Statements',
                     'All Proposals',
                   ]}

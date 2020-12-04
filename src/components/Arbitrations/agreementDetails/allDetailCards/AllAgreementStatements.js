@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import {
-  DropDown,
   GU,
   Text,
   textStyle,
-  IdentityBadge,
+  Link,
   useTheme,
-  Button,
 } from '@aragon/ui';
 import {downloadFile} from "../../../../lib/file-storage";
 
@@ -119,16 +117,7 @@ function AllAgreementStatements({subject, stakeHolder, statementType, documentLo
             >
               Document
             </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-                cursor: pointer;
-              `}
-              onClick = {handleClick}
-            >
-              {documentName}
-              <h2>Download btn</h2>
-            </Text>
+              <Link external onClick = {handleClick}> {documentName} </Link>
           </div>
         </div>
       </section>
