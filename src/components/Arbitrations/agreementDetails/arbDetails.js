@@ -16,7 +16,7 @@ import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 
-function ArbDetails({ groupId, contractAddress, NODE, account }) {
+function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
@@ -71,6 +71,8 @@ function ArbDetails({ groupId, contractAddress, NODE, account }) {
           contractAddress={contractAddress}
           groupId={groupId}
           account={account}
+          caller={caller}
+          parties={parties}
         />
       </div>
 
@@ -87,6 +89,8 @@ function ArbDetails({ groupId, contractAddress, NODE, account }) {
           contractAddress={contractAddress}
           groupId={groupId}
           account={account}
+          caller={caller}
+          parties={parties}
         />
       </div>
 

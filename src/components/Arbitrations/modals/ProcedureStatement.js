@@ -7,6 +7,7 @@ import { createProcedureStatement } from '../../../lib/contracts/SPC';
 import { Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import {uploadDoc} from "../../../lib/file-storage";
 
 // styledcomponent -css
 
@@ -36,37 +37,22 @@ const antIcon = (
 const languages = ['English', 'French', 'Spanish'];
 const arbitrationSeats = ['London', 'lorem', 'lorem'];
 
-const props = {
-  name: 'file',
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
 export default function ProcedureStatementForm({
   ProcedureStatementModal,
   setProcedureStatementModal,
   contractAddress,
   groupId,
   account,
+  caller,
+  parties
 }) {
   const theme = useTheme();
-  const [parties, setParties] = useState([]);
+  const [party, setParty] = useState(0);
   const [seat, setSeat] = useState(0);
   const [language, setLanguage] = useState(0);
   const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
+  const [document, setDocument] = useState(null)
   //   loader
   const [statementSubmit, setStatementSubmit] = useState(false);
 
@@ -80,20 +66,42 @@ export default function ProcedureStatementForm({
     setProcedureStatementModal(false);
   };
 
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    customRequest: data => {
+      setDocument(data.file);
+    },
+    onChange(status) {
+      if (status) {
+        message.success(` file uploaded successfully.`);
+      } else {
+        message.error(`file upload failed.`);
+      }
+    },
+  };
+
   const handleClick = async () => {
     setStatementSubmit(true);
+    const uploadStatus = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
+    console.log("UploadStatus:",uploadStatus)
     const partiesInvolved = [
-      ['0xf17f52151EbEF6C7334FAD080c5704D77216b732', parties],
+      {
+        partyAddress: caller.address,
+        name: caller.name
+      },{
+        partyAddress: parties[party].address,
+        name: parties[party].name
+      }
     ];
-    console.log('Seat:', seat);
-    console.log('Lan:', language);
-    console.log('Hash:', documentIpfsHash);
     await procedureStatementCreation(
       partiesInvolved,
       arbitrationSeats[seat],
       languages[language],
-      documentIpfsHash,
-      documentHash,
+      uploadStatus.fileLocation,
+      uploadStatus.fileName,
+      uploadStatus.fileHash,
+      uploadStatus.cipherKey,
       account
     );
     console.log('submitted');
@@ -132,14 +140,28 @@ export default function ProcedureStatementForm({
             alignItems: 'center',
           }}
         >
-          <div style={{ flexBasis: '100%' }}> Parties:</div>
+         {/* <div style={{ flexBasis: '100%' }}> Parties:</div>
           <TextInput
             style={{ flexBasis: '100%' }}
             value={parties}
             onChange={(event) => {
               setParties(event.target.value);
             }}
-          />
+          />*/}
+          <div style={{ flexBasis: '100%' }}>Select Party:</div>
+          <div style={{ flexBasis: '100%' }}>
+            <DropDown
+              style={{ borderColor: '#D9D9D9', width:'100%' }}
+              items={parties.map((value) => {
+                return value.name
+              })}
+              selected={party}
+              onChange={(index, items) => {
+                setParty(index);
+                setProcedureStatementModal(true);
+              }}
+            />
+          </div>
         </div>
 
         <div
@@ -182,7 +204,7 @@ export default function ProcedureStatementForm({
           />
         </div>
 
-        <div
+        {/*<div
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -216,7 +238,7 @@ export default function ProcedureStatementForm({
               setDocumentHash(event.target.value);
             }}
           />
-        </div>
+        </div>*/}
 
         <div
           style={{
