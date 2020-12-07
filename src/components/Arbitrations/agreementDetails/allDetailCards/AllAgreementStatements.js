@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import {
-  DropDown,
   GU,
   Text,
   textStyle,
-  IdentityBadge,
+  Link,
   useTheme,
-  Button,
 } from '@aragon/ui';
+import {downloadFile} from "../../../../lib/file-storage";
 
 const stakeHolders = ['Party', 'Expert', 'Court', 'Witness', 'Arbitrator'];
 const statementTypes = ['Normal', 'Claim', 'Written'];
 
-function AllAgreementStatements({subject, stakeHolder, statementType, ipfsHash}) {
+function AllAgreementStatements({subject, stakeHolder, statementType, documentLocation, documentName, cipherKey}) {
   const theme = useTheme();
+
+  const handleClick = async ()=>{
+    const res = await downloadFile(documentName, documentLocation, cipherKey)
+  }
+
   return (
     <>
       <section
@@ -27,7 +31,7 @@ function AllAgreementStatements({subject, stakeHolder, statementType, ipfsHash})
         <div
           css={`
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(1, 1fr);
             grid-column-gap: 8px;
             margin-bottom: 18px;
             width: 100%;
@@ -55,7 +59,16 @@ function AllAgreementStatements({subject, stakeHolder, statementType, ipfsHash})
               {subject}
             </Text>
           </div>
-
+        </div>
+        <div
+          css={`
+            display: grid;
+            grid-template-columns: repeat(3, 2fr);
+            grid-column-gap: 8px;
+            margin-bottom: 18px;
+            width: 100%;
+          `}
+        >
           <div>
             <h2
               css={`
@@ -102,15 +115,9 @@ function AllAgreementStatements({subject, stakeHolder, statementType, ipfsHash})
                 margin-bottom: ${2 * GU}px;
               `}
             >
-              Document IPFS Hash
+              Document
             </h2>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              {ipfsHash}
-            </Text>
+              <Link external onClick = {handleClick}> {documentName} </Link>
           </div>
         </div>
       </section>

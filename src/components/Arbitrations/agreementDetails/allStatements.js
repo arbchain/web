@@ -56,8 +56,10 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
                   <AllProcedureStatements
                     seat={value.seat}
                     language={value.language}
-                    ipfsHash={value.documentIpfsHash}
-                    createdBy={value.createdBy}
+                    createdBy={value.parties[0].name}
+                    documentLocation={value.documentLocation}
+                    documentName={value.documentName}
+                    cipherKey={value.cipherKey}
                   />,
                 ],
               ],
@@ -79,7 +81,9 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
                         subject={value.subject}
                         stakeHolder={value.stakeholder}
                         statementType={value.statementType}
-                        ipfsHash={value.documentIpfsHash}
+                        documentLocation={value.documentLocation}
+                        documentName={value.documentName}
+                        cipherKey={value.cipherKey}
                       />,
                     ],
                   ],

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DropDown, GU, Text, textStyle, useTheme, Button } from '@aragon/ui';
 import styled from 'styled-components';
+import {downloadFile} from "../../../../lib/file-storage";
 
 // styles
 
@@ -12,21 +13,25 @@ const ProcedureWrapper = styled.div`
   width: 100%;
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
   ${textStyle('label2')};
   color: ${(theme) => theme.surfaceContentSecondary};
   margin-bottom: ${2 * GU}px;
 `;
 
-function AllProcedureStatements({ seat, language, ipfsHash, createdBy }) {
+function AllProcedureStatements({ seat, language, createdBy, documentLocation, documentName, cipherKey }) {
   const theme = useTheme();
+
+  const handleClick = async ()=>{
+    const res = await downloadFile(documentName, documentLocation, cipherKey)
+  }
+
   return (
     <>
       <section
         css={`
           align-items: center;
           margin: 18px 0 18px 0;
-
           width: 100%;
         `}
       >
@@ -51,13 +56,16 @@ function AllProcedureStatements({ seat, language, ipfsHash, createdBy }) {
               margin: 18px 0 18px 0;
             `}
           >
-            <Title>Document IPFS Hash</Title>
+            <Title>Document </Title>
             <Text
               css={`
                 ${textStyle('body2')};
+                cursor: pointer;
               `}
+              onClick = {handleClick}
             >
-              {ipfsHash}
+              {documentName}
+              <h2>Download btn</h2>
             </Text>
           </div>
           <div>
