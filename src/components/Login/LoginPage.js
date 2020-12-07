@@ -6,6 +6,7 @@ import { Main, Layout, Header } from '@aragon/ui';
 
 import { useAccount } from '../../wallet/Account.js';
 import wallet from 'wallet-besu';
+import {authorizeUser, getLoginUser} from "../../lib/db/threadDB";
 
 import { Link } from 'react-router-dom';
 import { Form, Button, Input, notification } from 'antd';
@@ -27,14 +28,25 @@ function LoginPage() {
     const account = await wallet.login(password);
     console.log('ACCOUNT: ', account);
 
-    //Storing the password locally. Need a secure way to do this for prod
-    localStorage.setItem('wpassword', password);
-
-    // Update the account context by using a callback function
-    walletAccount.changeAccount({
-      privateKey: account[0],
-      orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
-    });
+    if (account!==null){
+      const dbClient = await authorizeUser(password)
+      if (dbClient !== null) {
+        let userInfo = await getLoginUser(account[0], dbClient)
+        if (userInfo !== null) {
+          //localStorage.setItem("USER", JSON.stringify(userInfo))
+          //Storing the password locally. Need a secure way to do this for prod
+          localStorage.setItem("wpassword", password);
+          // Update the account context by using a callback function
+          walletAccount.changeAccount({privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
+        }
+      } else {
+        console.log("Some error!!!")
+        return
+      }
+    }else{
+      console.log("Wrong password!!")
+      return
+    }
 
     setAccount(account);
     if (account) {
