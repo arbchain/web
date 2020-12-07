@@ -1,25 +1,33 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useHistory, useRouteMatch } from 'react-router-dom'
-import { ButtonBase, GU, springs, textStyle, useTheme } from '@aragon/ui'
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { ButtonBase, GU, springs, textStyle, useTheme } from '@aragon/ui';
 
-import { Spring, animated } from 'react-spring/renderprops'
-import HeaderLogo from './Header/HeaderLogo'
+import { Spring, animated } from 'react-spring/renderprops';
+import HeaderLogo from './Header/HeaderLogo';
 
-import dashboardMenuIcon from '../assets/DashboardIcon.svg'
-import dashboardIconDark from '../assets/dashboardIconDark.svg'
-import profileIcon from '../assets/ProfileIcon.svg'
-import profileIconDark from '../assets/profileIconDark.svg'
-import arbitrationsIcon from '../assets/ArbitrationsIcon.svg'
-import arbitrationsIconDark from '../assets/arbitrationsIconDark.svg'
-import { lerp } from '../lib/math-utils'
+import dashboardMenuIcon from '../assets/DashboardIcon.svg';
+import dashboardIconDark from '../assets/dashboardIconDark.svg';
+import profileIcon from '../assets/ProfileIcon.svg';
+import profileIconDark from '../assets/profileIconDark.svg';
+import arbitrationsIcon from '../assets/ArbitrationsIcon.svg';
+import arbitrationsIconDark from '../assets/arbitrationsIconDark.svg';
+import { lerp } from '../lib/math-utils';
+import styled from 'styled-components';
 
-export const MENU_PANEL_SHADOW_WIDTH = 3
-export const MENU_PANEL_WIDTH = 25 * GU
+export const MENU_PANEL_SHADOW_WIDTH = 3;
+export const MENU_PANEL_WIDTH = 25 * GU;
 
-const { div: AnimDiv } = animated
+const { div: AnimDiv } = animated;
+
+// const Navigation = styled.nav`
+//   background-color: red;
+//   menuitem {
+//     color: 'red';
+//   }
+// `;
 
 function MenuPanel({ showHeaderLogo, onOpenPage }) {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <nav
@@ -58,40 +66,47 @@ function MenuPanel({ showHeaderLogo, onOpenPage }) {
           Menu
         </h2>
         <MenuItem
-          to="/dashboard"
+          to='/dashboard'
           icon={dashboardMenuIcon}
           darkIcon={dashboardIconDark}
-          label="Dashboard"
+          label='Dashboard'
           onActivate={onOpenPage}
         />
         <MenuItem
-          to="/arbitrations"
+          to='/arbitrations'
           icon={arbitrationsIcon}
           darkIcon={arbitrationsIconDark}
-          label="Arbitrations"
+          label='Arbitrations'
           onActivate={onOpenPage}
         />
         <MenuItem
-          to="/profile"
+          to='/agreements'
+          icon={arbitrationsIcon}
+          darkIcon={arbitrationsIconDark}
+          label='Agreements'
+          onActivate={onOpenPage}
+        />
+        <MenuItem
+          to='/profile'
           icon={profileIcon}
           darkIcon={profileIconDark}
-          label="Profile"
+          label='Profile'
           onActivate={onOpenPage}
         />
       </div>
     </nav>
-  )
+  );
 }
 
 function MenuItem({ to, icon, darkIcon, label, onActivate }) {
-  const history = useHistory()
-  const theme = useTheme()
-  const active = useRouteMatch(to) !== null
+  const history = useHistory();
+  const theme = useTheme();
+  const active = useRouteMatch(to) !== null;
 
   const handlePageRequest = useCallback(() => {
-    onActivate()
-    history.push(to)
-  }, [history, onActivate, to])
+    onActivate();
+    history.push(to);
+  }, [history, onActivate, to]);
 
   return (
     <ButtonBase
@@ -126,7 +141,7 @@ function MenuItem({ to, icon, darkIcon, label, onActivate }) {
         `}
       />
 
-      <img src={active ? darkIcon : icon} alt="" />
+      <img src={active ? darkIcon : icon} alt='' />
       <span
         css={`
           margin-left: ${1 * GU}px;
@@ -140,7 +155,7 @@ function MenuItem({ to, icon, darkIcon, label, onActivate }) {
         {label}
       </span>
     </ButtonBase>
-  )
+  );
 }
 
 function AnimatedMenuPanel({
@@ -149,17 +164,17 @@ function AnimatedMenuPanel({
   onMenuPanelClose,
   ...props
 }) {
-  const theme = useTheme()
-  const [animate, setAnimate] = useState(autoClosing)
+  const theme = useTheme();
+  const [animate, setAnimate] = useState(autoClosing);
 
   useEffect(() => {
     // If autoClosing has changed, it means we are switching from autoClosing
     // to fixed or the opposite, and we should stop animating the panel for a
     // short period of time.
-    setAnimate(false)
-    const animateTimer = setTimeout(() => setAnimate(true), 0)
-    return () => clearTimeout(animateTimer)
-  }, [autoClosing])
+    setAnimate(false);
+    const animateTimer = setTimeout(() => setAnimate(true), 0);
+    return () => clearTimeout(animateTimer);
+  }, [autoClosing]);
 
   return (
     <Spring
@@ -208,7 +223,7 @@ function AnimatedMenuPanel({
             style={{
               position: autoClosing ? 'absolute' : 'relative',
               transform: menuPanelProgress.interpolate(
-                v =>
+                (v) =>
                   `translate3d(
                   ${lerp(
                     v,
@@ -223,7 +238,7 @@ function AnimatedMenuPanel({
         </div>
       )}
     </Spring>
-  )
+  );
 }
 
-export default AnimatedMenuPanel
+export default AnimatedMenuPanel;

@@ -78,3 +78,16 @@ body {
 .Main___StyledScrollView-sc-1n64cjc-0 .hZYLiF {
   height: auto;
 }
+
+.MenuPanel___StyledDiv2-sc-1warxvz-4 .egeaz {
+  margin-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.gZFkef {
+  background: #f9fafc;
+}

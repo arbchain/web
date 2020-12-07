@@ -14,6 +14,7 @@ import SignUp from './components/Login/SignUp';
 import Dashboard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
 import Arbitrations from './components/Arbitrations/Arbitrations';
+import Agreements from './components/Arbitrations/Agreements';
 import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
 import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
@@ -34,6 +35,7 @@ function App() {
                 <Route exact path='/dashboard' component={Dashboard} />
                 <Route exact path='/db' component={Database}/>
                 <Route exact path='/arbitrations' component={Arbitrations} />
+                <Route exact path='/agreements' component={Agreements} />
                 <Route path='/profile' component={Profile} />
                 <Route
                   path='/arbitrations/:address/:groupId'
