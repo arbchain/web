@@ -1,18 +1,17 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { Steps, Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
-import { Main } from '@aragon/ui';
+import { Main, Header } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
+import Logo from '../../assets/mainLogo.png';
+import { PoweroffOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
-import {authorizeUser, registerNewUser} from "../../lib/db/threadDB";
 
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
-const Web3 = require('web3');
-const web3 = new Web3();
 
 const accounts = require('../../wallet/keys.js');
 const networks = require('../../wallet/network.js');
@@ -24,26 +23,6 @@ const NODES = Object.keys(networks).map((node) => {
 const ACCOUNTS = accounts.map((node) => {
   return `${node.name} - (${node.orionPublicKey})`;
 });
-
-// Form Layout
-const layout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 8,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 16,
-    },
-  },
-};
 
 // Form Validation
 const validateMessages = {
@@ -61,7 +40,7 @@ const validateMessages = {
 
 const openSuccessNotification = (type) => {
   notification[type]({
-    message: 'User Account has been created, please Login to continue',
+    message: 'Your Account has been created, please Login to continue',
   });
 };
 
@@ -73,7 +52,7 @@ const openWarningNotification = (type) => {
 
 const Signup = () => {
   // state for stepper
-  const [current, setCurrent] = useState(0);
+  const [spinner, setSpinner] = useState(false);
 
   // network
   const [network, setNetwork] = useState(0);
@@ -96,29 +75,14 @@ const Signup = () => {
   // password
   const [password, setPassword] = useState('');
 
-  // state for account dropdown
-  const [account, setAccount] = useState(0);
-
   let history = useHistory();
-
-  // Stepper Handler
-  function next() {
-    setCurrent(current + 1);
-  }
-
-  function prev() {
-    setCurrent(current - 1);
-  }
 
   // Form Handlers
 
   // Dropdowns
   function selectRole(value) {
+    console.log(`Selected role : ${value}`);
     setRole(value);
-  }
-
-  function selectNetwork(value) {
-    setNetwork(value);
   }
 
   // Network selection
@@ -127,198 +91,173 @@ const Signup = () => {
 
   // This is an action to be invoked onclick
   async function registerUser() {
+    wallet
+      .create(password, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=')
+      .then(async (res) => {
+        console.log('Wallet Created', res);
+        if (res) {
+          const account = await wallet.login(password);
+          setSpinner(true);
+          console.log(`0x${account[0]}`);
+          await newUserCreation(
+            name,
+            zip,
+            phone,
+            'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
+            role,
+            {
+              privateKey: account[0],
+              orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
+            }
+          );
+          setSpinner(false);
+          openSuccessNotification('success');
 
-    wallet.create(password, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=').then(async res => {
-      console.log('Wallet Created:', res);
-      if (res) {
-        const account = await wallet.login(password);
-        await newUserCreation(name, zip, phone, 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
-          role, { privateKey:account[0], orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo='});
-        const dbClient = await authorizeUser(password)
-        const user = web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
-        await registerNewUser(name, zip, phone, user.address,
-          'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, account[0], dbClient)
-        openSuccessNotification('success');
-        setTimeout(() => {
           history.push('/login');
-        }, 3000);
-      } else {
-        openWarningNotification('warning');
-      }
-    });
+        } else {
+          openWarningNotification('warning');
+        }
+      });
   }
 
-  let userInformation = (
-    <>
-      <Form
-        {...layout}
-        id='form'
-        name='nest-messages'
-        validateMessages={validateMessages}
-      >
-        <Form.Item
-          name={['user', 'name']}
-          label='Name'
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input value={name} onChange={(e) => setName(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item
-          name='zip'
-          label='Zip Code'
-          rules={[
-            {
-              required: true,
-              message: 'Please enter your Zip code!',
-            },
-          ]}
-        >
-          <Input
-            style={{ width: '100%' }}
-            value={zip}
-            onChange={(e) => setZip(e.target.value)}
-          />
-        </Form.Item>
-
-        <Form.Item
-          name='phone'
-          label='Phone Number'
-          rules={[
-            {
-              required: true,
-              message: 'Please input your phone number!',
-            },
-          ]}
-        >
-          <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
-        </Form.Item>
-        <Form.Item
-          name={['user', 'email']}
-          label='Email'
-          rules={[
-            {
-              type: 'email',
-            },
-          ]}
-        >
-          <Input value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Form.Item>
-
-        <Form.Item
-          label='Role'
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Select label='Role' defaultValue='Role' onChange={selectRole}>
-            <OptGroup label='Networks'>
-              <Option value={0}>Party</Option>
-              <Option value={1}>Arbitrator</Option>
-              <Option value={2}>Arbitratral Court</Option>
-            </OptGroup>
-          </Select>
-        </Form.Item>
-        <Form.Item
-          label='Password'
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-          <Input.Password
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Item>
-      </Form>
-    </>
-  );
-
-  // Preview:- Readonly
-
-  let preview = (
-    <>
-      <Form
-        {...layout}
-        id='form'
-        name='nest-messages'
-        onFinish={registerUser}
-        validateMessages={validateMessages}
-      >
-        <Form.Item name={['user', 'name']} label='Name'>
-          <Input value={name} readOnly />
-        </Form.Item>
-
-        <Form.Item name='zip' label='Zip Code'>
-          <Input style={{ width: '100%' }} value={zip} readOnly />
-        </Form.Item>
-
-        <Form.Item name='phone' label='Phone Number'>
-          <Input value={phone} readOnly />
-        </Form.Item>
-        <Form.Item name={['user', 'email']} label='Email'>
-          <Input value={email} readOnly />
-        </Form.Item>
-
-        <Form.Item label='Role'>
-          <Select label='Role' defaultValue='Role'>
-            <OptGroup label='Networks'>
-              <Option value={role} readOnly>
-                {role}
-              </Option>
-            </OptGroup>
-          </Select>
-        </Form.Item>
-      </Form>
-    </>
-  );
-
-  // stepper
-  const steps = [
-    {
-      title: 'User Information',
-      content: userInformation,
-    },
-    {
-      title: 'Sign up',
-      content: preview,
-    },
-  ];
-
   return (
-    <Main layout={false}>
-      <div className='container'>
-        <Steps current={current} className='stepper'>
-          {steps.map((item) => (
-            <Step key={item.title} title={item.title} />
-          ))}
-        </Steps>
-        <div className='steps-content'>{steps[current].content}</div>
-        <div className='steps-action'>
-          {current < steps.length - 1 && (
-            <Button type='primary' onClick={next}>
-              Next
-            </Button>
-          )}
-          {current === steps.length - 1 && (
-            <Button type='primary' onClick={registerUser}>
+    <Main layout={true}>
+      <Header
+        primary={<img src={Logo} alt='LOGO' srcset='' />}
+        secondary={
+          <>
+            <h1>
+              Having Trouble? <Link>Request Help </Link>
+            </h1>
+          </>
+        }
+      />
+
+      <div className='registration__container'>
+        <Form
+          className='form__container'
+          layout='vertical'
+          id='form'
+          name='nest-messages'
+          validateMessages={validateMessages}
+        >
+          <div className='form__heading'>
+            <h2> Welcome to Arbchain</h2>
+          </div>
+          <div className='form__grid'>
+            <Form.Item
+              name={['user', 'name']}
+              label='Name'
+              layout='inline'
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input value={name} onChange={(e) => setName(e.target.value)} />
+            </Form.Item>
+
+            <Form.Item
+              name={['user', 'email']}
+              label='Email'
+              layout='inline'
+              rules={[
+                {
+                  type: 'email',
+                  required: true,
+                },
+              ]}
+            >
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            </Form.Item>
+            {/* </Form> */}
+
+            {/* <Form layout='inline' style={{ maxWidth: '600px' }}> */}
+            <Form.Item
+              name='phone'
+              label='Phone Number'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your phone number!',
+                },
+              ]}
+            >
+              <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </Form.Item>
+
+            <Form.Item
+              name='zip'
+              label='Zip Code'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter your Zip code!',
+                },
+              ]}
+            >
+              <Input value={zip} onChange={(e) => setZip(e.target.value)} />
+            </Form.Item>
+            {/* </Form> */}
+          </div>
+
+          <Form.Item
+            label='Role'
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Select label='Role' defaultValue='Role' onChange={selectRole}>
+              <OptGroup label='Roles'>
+                <Option value={0}>Party</Option>
+                <Option value={1}>Arbitrator</Option>
+                <Option value={2}>Arbitratral Court</Option>
+              </OptGroup>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label='Password'
+            rules={[
+              {
+                required: true,
+              },
+            ]}
+          >
+            <Input.Password
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Item>
+          {spinner == false ? (
+            <Button
+              type='primary'
+              style={{ width: '100%' }}
+              onClick={registerUser}
+            >
               Sign up
             </Button>
-          )}
-          {current > 0 && (
-            <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-              Previous
+          ) : (
+            <Button loading type='primary' style={{ width: '100%' }}>
+              Registering Account
             </Button>
           )}
-        </div>
+
+          <div
+            css={`
+              margin-top: 14px;
+            `}
+          >
+            <h1>
+              Already have an account?
+              <span style={{ marginLeft: '4px' }}>
+                <Link to='/login'>Login Here</Link>
+              </span>
+            </h1>
+          </div>
+        </Form>
       </div>
     </Main>
   );

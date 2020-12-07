@@ -10,6 +10,7 @@ const OutterContainer = styled.div`
   padding: 1.5rem;
   box-shadow: rgba(51, 77, 117, 0.2) 0px 1px 3px;
   border-radius: 4px;
+  background-color: #fff !important;
   h3 {
     color: #637381;
     ${textStyle('label2')};
