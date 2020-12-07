@@ -281,9 +281,10 @@ section h2 {
 }
 
 .form__container {
-  max-width: 900px;
-
-  width: 33%;
+  max-width: 1200px;
+  background-color: #fff;
+  width: 40%;
+  padding: 48px;
 }
 
 .form__grid {
@@ -295,8 +296,93 @@ section h2 {
 
 .form__heading {
   margin-bottom: 14px;
+  text-align: center;
 }
 
 .form__heading > h2 {
   font-size: 20px;
+}
+
+@media only screen and (min-width: 768px) {
+  .form__container {
+    max-width: 1200px;
+    background-color: #fff;
+    width: 40%;
+    padding: 48px;
+  }
+}
+
+/* 
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+
+@media (min-width: 1025px) and (max-width: 1280px) {
+  /* CSS */
+  .form__container {
+    max-width: 1200px;
+    background-color: #fff;
+    width: 60%;
+    padding: 48px;
+  }
+}
+
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* CSS */
+  .form__container {
+    max-width: 1200px;
+    background-color: #fff;
+    width: 60%;
+    padding: 48px;
+  }
+}
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  /* CSS */
+  .form__container {
+    max-width: 1200px;
+    background-color: #fff;
+    width: 60%;
+    padding: 48px;
+  }
+}
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  /* CSS */
+  .form__container {
+    max-width: 1200px;
+    background-color: #fff;
+    width: 60%;
+    padding: 48px;
+  }
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  /* CSS */
+  .form__container {
+    max-width: 1200px;
+    background-color: #fff;
+    width: 70%;
+    padding: 48px;
+  }
 }

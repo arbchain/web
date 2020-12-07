@@ -12,13 +12,14 @@ import {
 import Avatar from '../../assets/avatar.png';
 
 import styled from 'styled-components';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const OuterContainer = styled.div`
   border: 1px solid #dde4e9;
   padding: 1.5rem;
   box-shadow: rgba(51, 77, 117, 0.2) 0px 1px 3px;
   border-radius: 4px;
+  background-color: #fff !important;
   h3 {
     color: #637381;
     ${textStyle('label2')};
@@ -54,7 +55,7 @@ const FlexContainer = styled.div`
 
 const RespondentContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 22px;
   margin-bottom: ${2 * GU}px;
   margin-top: 30px;
@@ -66,7 +67,7 @@ const RespondentContainer = styled.div`
 
 const DisputeContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 22px;
   margin-top: 28px;
 `;

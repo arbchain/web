@@ -22,9 +22,12 @@ import { useAccount } from '../../wallet/Account.js';
 import {
   authorizeUser,
   getAllUsers,
-  getAgreementContractAddress, getAgreementMetaData
+  getAgreementContractAddress,
+  getAgreementMetaData,
 } from '../../lib/db/threadDB';
+import useAuthentication from '../../utils/auth';
 import wallet from 'wallet-besu';
+import styled from 'styled-components';
 
 const Web3 = require('web3');
 const networks = require('../../wallet/network');
@@ -33,6 +36,35 @@ const web3 = new Web3();
 const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
+
+// styles
+
+const Loader = styled.div`
+  justify-content: center;
+  display: flex;
+  height: 300px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dde4e9;
+`;
+
+const BarContainer = styled.div`
+  height: ${8 * GU}px;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  grid-gap: ${1 * GU}px;
+  align-items: center;
+  padding: 0 ${3 * GU}px;
+
+  .span {
+    margin-left: ${1.5 * GU}px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: ${useTheme.info};
+    ${textStyle('label3')};
+  }
+`;
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
@@ -44,15 +76,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
   const [agreementDetails, setAgreementDetails] = useState([]);
-  const [agreementAddress, setAgreementAddress] = useState(null)
-  const [agreementsLoading, setAgreementsLoading] = useState(true)
-  const [isAuth, setIsAuth] = useState(true);
-
+  const [agreementAddress, setAgreementAddress] = useState(null);
+  const [agreementsLoading, setAgreementsLoading] = useState(true);
 
   const openAgreement = () => setAgreementModal(true);
 
   const walletAccount = useAccount();
-  const history = useHistory();
+  useAuthentication();
 
   useEffect(() => {
     async function load() {
@@ -68,9 +98,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         setClient(client);
         const users = await getAllUsers(client, account[0]);
-        const address = await getAgreementContractAddress(client, account[0])
-        setAgreementAddress(address)
-        setAgreementsLoading(false)
+        const address = await getAgreementContractAddress(client, account[0]);
+        setAgreementAddress(address);
+        setAgreementsLoading(false);
         console.log('ADRess:', address);
 
         setParties(users.party);
@@ -99,7 +129,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               agreementAddress[index].groupId,
               walletAccount.account
             );*/
-            const details = await getAgreementMetaData(dbClient, agreementAddress[index].metaData)
+            const details = await getAgreementMetaData(
+              dbClient,
+              agreementAddress[index].metaData
+            );
             allDetails.push(details);
             index++;
           }
@@ -110,36 +143,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       } catch (err) {
         return false;
       }
-      
     }
     agreementAddressCall();
   }, [agreementAddress]);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        // Fetching the password locally.
-        const account = await wallet.login(localStorage.getItem('wpassword'));
-        const OrianKey = await localStorage.getItem('orionKey');
-        console.log('OIARKEY', OrianKey);
-
-        if (
-          account === null ||
-          account === undefined ||
-          OrianKey === null ||
-          OrianKey === undefined
-        ) {
-          setIsAuth(false);
-          history.push('/login');
-        }
-        console.log('ACCOUNT from Dashboard', account);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    load();
-  }, [isAuth]);
-  console.log('ISAUTH', isAuth);
 
   return (
     <>
@@ -166,8 +172,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             justifyContent: 'space-between',
             width: '100%',
           }}
-        >
-        </div>
+        ></div>
 
         <div style={{ display: 'flex', marginBottom: '12px' }}>
           <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
@@ -182,16 +187,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       </div>
 
       <Bar>
-        <div
-          css={`
-            height: ${8 * GU}px;
-            display: grid;
-            grid-template-columns: auto auto 1fr auto;
-            grid-gap: ${1 * GU}px;
-            align-items: center;
-            padding: 0 ${3 * GU}px;
-          `}
-        >
+        <BarContainer>
           <DropDown
             header='Status'
             placeholder='Status'
@@ -201,16 +197,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               // eslint-disable-next-line
               <div>
                 All
-                <span
-                  css={`
-                    margin-left: ${1.5 * GU}px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: ${theme.info};
-                    ${textStyle('label3')};
-                  `}
-                >
+                <span>
                   <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
@@ -225,28 +212,25 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           // onChange={handleDisputeDateRangeFilterChange}
           />
           {/* <Button>My disputes</Button> */}
-        </div>
+        </BarContainer>
       </Bar>
 
       {loading || agreementsLoading ? (
-        <div
-          style={{
-            justifyContent: 'center',
-            display: 'flex',
-            height: '300px',
-            alignItems: 'center',
-          }}
-        >
+        <Loader>
           <span> Fetching arbitrations </span> <br />
           <LoadingRing mode='half-circle' />
-        </div>
-      ) :
-      agreementAddress.length ?
-      agreementDetails.map(agreement => {
-        return (
-          <AgreementCard key={agreement[0]} agreement={agreement} selectDispute={selectDispute} />
-        );
-      }): (
+        </Loader>
+      ) : agreementAddress.length ? (
+        agreementDetails.map((agreement) => {
+          return (
+            <AgreementCard
+              key={agreement[0]}
+              agreement={agreement}
+              selectDispute={selectDispute}
+            />
+          );
+        })
+      ) : (
         <EmptyStateCard text='No arbitrations found.' />
       )}
     </>

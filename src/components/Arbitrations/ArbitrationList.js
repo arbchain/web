@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   Bar,
   Button,
@@ -8,7 +7,6 @@ import {
   LoadingRing,
   DateRangePicker,
   DropDown,
-  IconRefresh,
   GU,
   Tag,
   textStyle,
