@@ -13,46 +13,47 @@ import {
 import Stepper from '../Stepper';
 import Step from '../Step';
 
-const timeline = [
-  {
-    label: 'Aribtration Created',
-    date: '20/11/2019',
-    Icon: IconFundraising,
-  },
-  {
-    label: 'Response Submitted',
-    date: '20/11/2019',
-    Icon: IconChat,
-  },
-  {
-    label: 'Tribunal Formed',
-    date: '20/11/2019',
-    Icon: IconChat,
-  },
-  {
-    label: 'Challenge Arbitrator',
-    date: '20/11/2019',
-    Icon: IconFolder,
-  },
-  {
-    label: 'Nomination',
-    date: '20/11/2019',
-    Icon: IconGroup,
-  },
-  {
-    label: 'Arbitration Started',
-    date: '20/11/2019',
-    Icon: IconFlag,
-  },
-  {
-    label: 'Award',
-    date: '20/11/2019',
-    Icon: IconFlag,
-  },
-];
-
-function DisputeTimeline({ stage }) {
+function DisputeTimeline({ stage, contractTime, globalTime }) {
   const theme = useTheme();
+
+  const arbitrationCreation = new Date(contractTime * 1000);
+  const timeline = [
+    {
+      label: 'Aribtration Created',
+      date: arbitrationCreation.toDateString(),
+      Icon: IconFundraising,
+    },
+    {
+      label: 'Response Submitted',
+      date: '20/11/2019',
+      Icon: IconChat,
+    },
+    {
+      label: 'Tribunal Formed',
+      date: '20/11/2019',
+      Icon: IconChat,
+    },
+    {
+      label: 'Challenge Arbitrator',
+      date: '20/11/2019',
+      Icon: IconFolder,
+    },
+    {
+      label: 'Nomination',
+      date: '20/11/2019',
+      Icon: IconGroup,
+    },
+    {
+      label: 'Arbitration Started',
+      date: '20/11/2019',
+      Icon: IconFlag,
+    },
+    {
+      label: 'Award',
+      date: '20/11/2019',
+      Icon: IconFlag,
+    },
+  ];
 
   return (
     <div>

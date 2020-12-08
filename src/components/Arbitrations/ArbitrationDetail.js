@@ -66,7 +66,7 @@ const ArbitrationDetail = props => {
   useEffect(() => {
     async function getDetails() {
       try {
-        if (parties) {
+        if (walletAccount.account) {
           setLoading(true);
           const details = await getArbitrationDetails(
             NODES[0],
@@ -152,7 +152,11 @@ const ArbitrationDetail = props => {
             <React.Fragment>
               <Box heading="Dispute timeline" padding={0}>
                 {details ? (
-                  <DisputeTimeline stage={parseInt(details[4])} />
+                  <DisputeTimeline
+                    stage={parseInt(details[4])}
+                    contractTime={details[8]}
+                    globalTime={details[9]}
+                  />
                 ) : (
                   <>
                     <Skeleton active />
