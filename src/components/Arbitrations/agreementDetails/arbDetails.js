@@ -14,15 +14,12 @@ import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from '.././modals/ProcedureStatement';
 import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
-import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 
-function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
+function ArbDetails({ groupId, contractAddress, details, caller, parties, account, loading }) {
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [details, setDetails] = useState(null);
   const openStatement = () => setStatementModal(true);
 
   const status = ['Open', 'Close'];
@@ -30,31 +27,6 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
   // Procedure Statement form
   const openProcedureStatement = () => setProcedureStatementModal(true);
-
-  useEffect(() => {
-    async function getDetails() {
-      try {
-        if (Object.keys(account).length) {
-          setLoading(true);
-          const details = await getArbitrationDetails(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
-          console.log('DETAILS:', details);
-          // There is an addition call being made that replaces the details. A quick fix
-          if (details) {
-            setDetails(details);
-          }
-          setLoading(false);
-        }
-      } catch (err) {
-        return false;
-      }
-    }
-    getDetails();
-  }, [account]);
 
   return (
     <>
@@ -102,7 +74,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         </>
       ) : details ? (
         <>
-          <Box heading='Agreement Details'>
+          <Box heading="Agreement Details">
             <section
               css={`
                 display: grid;
@@ -243,7 +215,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
               </div>
 
               <Button
-                mode='strong'
+                mode="strong"
                 onClick={() => {
                   openStatement();
                 }}
@@ -257,7 +229,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
 
               <div>
                 <Button
-                  mode='strong'
+                  mode="strong"
                   onClick={() => {
                     openProcedureStatement();
                   }}
@@ -273,7 +245,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
           </Box>
         </>
       ) : (
-        <EmptyStateCard text='No arbitrations details found.' />
+        <EmptyStateCard text="No arbitrations details found." />
       )}
     </>
   );

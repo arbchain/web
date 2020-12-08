@@ -1,13 +1,58 @@
-import React from 'react'
-import { GU, textStyle, useTheme } from '@aragon/ui'
+import React from 'react';
+import {
+  GU,
+  textStyle,
+  useTheme,
+  IconChat,
+  IconFolder,
+  IconFlag,
+  IconGroup,
+  IconFundraising,
+} from '@aragon/ui';
 
-import { timeline } from '../../arbitrations-mock-data'
-import Stepper from '../Stepper'
-import Step from '../Step'
+import Stepper from '../Stepper';
+import Step from '../Step';
 
-function DisputeTimeline() {
-  const theme = useTheme()
-  const current = 4
+const timeline = [
+  {
+    label: 'Aribtration Created',
+    date: '20/11/2019',
+    Icon: IconFundraising,
+  },
+  {
+    label: 'Response Submitted',
+    date: '20/11/2019',
+    Icon: IconChat,
+  },
+  {
+    label: 'Tribunal Formed',
+    date: '20/11/2019',
+    Icon: IconChat,
+  },
+  {
+    label: 'Challenge Arbitrator',
+    date: '20/11/2019',
+    Icon: IconFolder,
+  },
+  {
+    label: 'Nomination',
+    date: '20/11/2019',
+    Icon: IconGroup,
+  },
+  {
+    label: 'Arbitration Started',
+    date: '20/11/2019',
+    Icon: IconFlag,
+  },
+  {
+    label: 'Award',
+    date: '20/11/2019',
+    Icon: IconFlag,
+  },
+];
+
+function DisputeTimeline({ stage }) {
+  const theme = useTheme();
 
   return (
     <div>
@@ -19,7 +64,7 @@ function DisputeTimeline() {
         `}
       >
         {timeline.map(({ label, date, Icon }, index) => {
-          const active = current === index
+          const active = stage === index;
           return (
             <Step
               key={index}
@@ -71,11 +116,11 @@ function DisputeTimeline() {
                 </div>
               }
             />
-          )
+          );
         })}
       </Stepper>
     </div>
-  )
+  );
 }
 
-export default DisputeTimeline
+export default DisputeTimeline;
