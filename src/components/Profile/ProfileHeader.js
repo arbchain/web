@@ -44,13 +44,13 @@ const ProfileContainer = styled(Box)`
   }
   @media (min-width: 481px) and (max-width: 767px) {
     .flex {
-      width: 350px;
+      width: 290px;
       overflow: hidden;
     }
   }
   @media (min-width: 320px) and (max-width: 480px) {
     .flex {
-      width: 350px;
+      width: 290px;
       overflow: hidden;
     }
   }
@@ -99,6 +99,10 @@ const Profile = styled.div`
   .btn-primary {
     color: #fff;
     background: #4d4cbb;
+  }
+
+  @media (min-width: 1281px) {
+    display: flex;
   }
 
   @media (min-width: 481px) and (max-width: 767px) {
