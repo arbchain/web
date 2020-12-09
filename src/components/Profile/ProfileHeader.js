@@ -36,9 +36,23 @@ const NODES = Object.keys(networks).map((node) => {
 
 const ProfileContainer = styled(Box)`
   overflow: hidden;
+  border-radius: 0;
+  margin-bottom: ${2 * GU}px;
   .avatar__group {
     display: flex;
     flex-direction: row;
+  }
+  @media (min-width: 481px) and (max-width: 767px) {
+    .flex {
+      width: 350px;
+      overflow: hidden;
+    }
+  }
+  @media (min-width: 320px) and (max-width: 480px) {
+    .flex {
+      width: 350px;
+      overflow: hidden;
+    }
   }
 `;
 
@@ -57,6 +71,18 @@ const GridContainer = styled.div`
       overflow: hidden;
     }
   }
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+  }
 `;
 
 const Profile = styled.div`
@@ -69,6 +95,33 @@ const Profile = styled.div`
   }
   .address-group {
     padding-left: 10px;
+  }
+  .btn-primary {
+    color: #fff;
+    background: #4d4cbb;
+  }
+
+  @media (min-width: 481px) and (max-width: 767px) {
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+    .btn-primary {
+      color: #fff;
+      background: #4d4cbb;
+      margin-top: 14px;
+    }
+  }
+
+  @media (min-width: 320px) and (max-width: 480px) {
+    display: flex !important;
+    flex-direction: column;
+    overflow: hidden;
+    .btn-primary {
+      color: #fff;
+      background: #4d4cbb;
+      margin-top: 14px;
+      overflow: hidden;
+    }
   }
 `;
 
@@ -139,13 +192,7 @@ export default function ProfileHeader({ active }) {
 
   return (
     <>
-      <ProfileContainer
-        padding={40}
-        css={`
-          border-radius: 0;
-          margin-bottom: ${2 * GU}px;
-        `}
-      >
+      <ProfileContainer padding={40}>
         <Profile className='flex'>
           <div className='avatar__group'>
             <img className='avatar' src={Avatar} alt='' srcset='' />
@@ -155,12 +202,9 @@ export default function ProfileHeader({ active }) {
             </div>
           </div>
           <Button
+            className='btn-primary'
             icon={<IconEdit style={{ color: '#fff' }} />}
             label='EDIT PROFILE'
-            style={{
-              backgroundColor: theme.selected,
-              color: 'white',
-            }}
           />
         </Profile>
 
