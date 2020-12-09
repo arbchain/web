@@ -26,11 +26,15 @@ import wallet from 'wallet-besu';
 import styled from 'styled-components';
 import useAuthentication from '../../utils/auth';
 
+// testing
+
+import NewProcedure from './modals/Popovers/NewProcedure';
+
 const Web3 = require('web3');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
@@ -78,6 +82,7 @@ const ButtonContainer = styled.div`
     display: flex;
     margin-bottom: 12px;
     margin-left: 0.5rem;
+
     background-color: #4d4cbb;
     color: #fff;
   }
@@ -96,8 +101,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [procedureAddress, setProcedureAddress] = useState(null);
   const [proceduresLoading, setProceduresLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(true);
+  const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
+  const closeSide = () => setOpened(true);
 
   const walletAccount = useAccount();
 
@@ -138,7 +145,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
+            const details = await getProcedureMetaData(
+              dbClient,
+              procedureAddress[index].metaData
+            );
             allDetails.push(details);
             index++;
           }
@@ -159,7 +169,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   return (
     <>
       <ButtonContainer>
-        <div className="ProcedureModal">
+        <div className='ProcedureModal'>
           <ProcedureForm
             procedureModal={procedureModal}
             setProcedureModal={setProcedureModal}
@@ -170,10 +180,19 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           />
         </div>
 
+        <NewProcedure opened={opened} setOpened={setOpened} />
+
         <Button
-          label="+NEW PROCEDURE"
+          label='+NEW PROCEDURE'
           onClick={() => {
             openProcedure();
+          }}
+        />
+
+        <Button
+          label='+NEW test Proc'
+          onClick={() => {
+            setOpened();
           }}
         />
       </ButtonContainer>
@@ -181,22 +200,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       <Bar>
         <BarContainer>
           <DropDown
-            header="Status"
-            placeholder="Status"
+            header='Status'
+            placeholder='Status'
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
               // eslint-disable-next-line
               <div>
                 All
-                <span className="span">
-                  <Tag limitDigits={4} label={disputes.length} size="small" />
+                <span className='span'>
+                  <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width="128px"
+            width='128px'
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -209,7 +228,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {loading || proceduresLoading ? (
         <Loader>
-          <LoadingRing mode="half-circle" />
+          <LoadingRing mode='half-circle' />
           <br />
           <span> Fetching arbitrations </span>
         </Loader>
@@ -225,7 +244,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           );
         })
       ) : (
-        <EmptyStateCard text="No arbitrations found." />
+        <EmptyStateCard text='No arbitrations found.' />
       )}
     </>
   );

@@ -7,7 +7,7 @@ import { createProcedureStatement } from '../../../lib/contracts/SPC';
 import { Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import {uploadDoc} from "../../../lib/file-storage";
+import { uploadDoc } from '../../../lib/file-storage';
 
 // styledcomponent -css
 
@@ -44,7 +44,7 @@ export default function ProcedureStatementForm({
   groupId,
   account,
   caller,
-  parties
+  parties,
 }) {
   const theme = useTheme();
   const [party, setParty] = useState(0);
@@ -52,7 +52,7 @@ export default function ProcedureStatementForm({
   const [language, setLanguage] = useState(0);
   const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
-  const [document, setDocument] = useState(null)
+  const [document, setDocument] = useState(null);
   //   loader
   const [statementSubmit, setStatementSubmit] = useState(false);
 
@@ -69,7 +69,7 @@ export default function ProcedureStatementForm({
   const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    customRequest: data => {
+    customRequest: (data) => {
       setDocument(data.file);
     },
     onChange(status) {
@@ -83,16 +83,21 @@ export default function ProcedureStatementForm({
 
   const handleClick = async () => {
     setStatementSubmit(true);
-    const uploadStatus = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
-    console.log("UploadStatus:",uploadStatus)
+    const uploadStatus = await uploadDoc(
+      document,
+      localStorage.getItem('wpassword'),
+      'AWS'
+    );
+    console.log('UploadStatus:', uploadStatus);
     const partiesInvolved = [
       {
         partyAddress: caller.address,
-        name: caller.name
-      },{
+        name: caller.name,
+      },
+      {
         partyAddress: parties[party].address,
-        name: parties[party].name
-      }
+        name: parties[party].name,
+      },
     ];
     await procedureStatementCreation(
       partiesInvolved,
@@ -140,7 +145,7 @@ export default function ProcedureStatementForm({
             alignItems: 'center',
           }}
         >
-         {/* <div style={{ flexBasis: '100%' }}> Parties:</div>
+          {/* <div style={{ flexBasis: '100%' }}> Parties:</div>
           <TextInput
             style={{ flexBasis: '100%' }}
             value={parties}
@@ -151,9 +156,9 @@ export default function ProcedureStatementForm({
           <div style={{ flexBasis: '100%' }}>Select Party:</div>
           <div style={{ flexBasis: '100%' }}>
             <DropDown
-              style={{ borderColor: '#D9D9D9', width:'100%' }}
+              style={{ borderColor: '#D9D9D9', width: '100%' }}
               items={parties.map((value) => {
-                return value.name
+                return value.name;
               })}
               selected={party}
               onChange={(index, items) => {
