@@ -10,7 +10,7 @@ import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
 import { Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import {authorizeUser} from "../../../lib/db/threadDB";
+import { authorizeUser } from '../../../lib/db/threadDB';
 
 // styledcomponent -css
 
@@ -62,7 +62,7 @@ export default function AgreementForm({
   account,
   node,
   counterParties,
-  caller
+  caller,
 }) {
   const theme = useTheme();
 
@@ -95,18 +95,24 @@ export default function AgreementForm({
 
   const handleClick = async () => {
     setAgreementSubmit(true);
-    const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
-    create(account, [
-      2,
-      seat,
-      languages[language],
-      'LCIA',
-      'Consenso Labs',
-      counterParties[counterParty].address,
-      'Apple Inc',
-      disputeType + 1,
-      docHash,
-    ], dbClient, caller, counterParties[counterParty]);
+    const dbClient = await authorizeUser(localStorage.getItem('wpassword'));
+    create(
+      account,
+      [
+        2,
+        seat,
+        languages[language],
+        'LCIA',
+        'Consenso Labs',
+        counterParties[counterParty].address,
+        'Apple Inc',
+        disputeType + 1,
+        docHash,
+      ],
+      dbClient,
+      caller,
+      counterParties[counterParty]
+    );
     if (result !== false && resultProcedureContract) {
       agreementAddition(result.contractAddress, result.privacyGroupId, account);
     }
@@ -118,7 +124,7 @@ export default function AgreementForm({
       visible={agreementModal}
       onClose={closeAgreement}
     >
-      <Title>Create an Arbitration Agreement</Title>
+      <Title>Create New Agreement</Title>
 
       {agreementSubmit ? (
         result ? (
@@ -230,7 +236,7 @@ export default function AgreementForm({
                 style={{ borderColor: '#D9D9D9' }}
                 items={counterParties.map((party) => {
                   //return party.address.slice(0, 15) + '...';
-                  return party.name
+                  return party.name;
                 })}
                 selected={counterParty}
                 onChange={(index, items) => {

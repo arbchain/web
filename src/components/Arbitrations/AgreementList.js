@@ -17,6 +17,7 @@ import {
 } from '@aragon/ui';
 
 import AgreementForm from './modals/AgreementForm';
+import NewAgreement from './modals/Popovers/NewAgreement';
 import AgreementCard from './AgreementCard';
 import { useAccount } from '../../wallet/Account.js';
 import {
@@ -33,7 +34,7 @@ const Web3 = require('web3');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
@@ -66,6 +67,27 @@ const BarContainer = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .AgreementModal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  button {
+    display: flex;
+    margin-bottom: 12px;
+    margin-left: 0.5rem;
+
+    background-color: #4d4cbb;
+    color: #fff;
+  }
+`;
+
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
@@ -78,8 +100,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementAddress, setAgreementAddress] = useState(null);
   const [agreementsLoading, setAgreementsLoading] = useState(true);
+  const [opened, setOpened] = useState(false);
 
   const openAgreement = () => setAgreementModal(true);
+  const openSidePanel = () => setOpened(true);
 
   const walletAccount = useAccount();
   useAuthentication();
@@ -128,7 +152,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               agreementAddress[index].groupId,
               walletAccount.account
             ); */
-            const details = await getAgreementMetaData(dbClient, agreementAddress[index].metaData);
+            const details = await getAgreementMetaData(
+              dbClient,
+              agreementAddress[index].metaData
+            );
             allDetails.push(details);
             index++;
           }
@@ -145,13 +172,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
+      <ButtonContainer>
         <AgreementForm
           agreementModal={agreementModal}
           setAgreementModal={setAgreementModal}
@@ -160,33 +181,35 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           counterParties={parties}
           caller={caller}
         />
-        <div />
-        {/* procedure modal */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
+
+        <NewAgreement
+          opened={opened}
+          setOpened={setOpened}
+          account={walletAccount.account}
+          node={NODES[0]}
+          counterParties={parties}
+          caller={caller}
         />
 
-        <div style={{ display: 'flex', marginBottom: '12px' }}>
-          <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
-            <Button
-              label="+NEW AGREEMENT"
-              onClick={() => {
-                openAgreement();
-              }}
-            />
-          </div>
-        </div>
-      </div>
+        <Button
+          label='+NEW AGREEMENT'
+          onClick={() => {
+            openAgreement();
+          }}
+        />
+        <Button
+          label='+NEW '
+          onClick={() => {
+            openSidePanel();
+          }}
+        />
+      </ButtonContainer>
 
       <Bar>
         <BarContainer>
           <DropDown
-            header="Status"
-            placeholder="Status"
+            header='Status'
+            placeholder='Status'
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
@@ -194,13 +217,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
               <div>
                 All
                 <span>
-                  <Tag limitDigits={4} label={disputes.length} size="small" />
+                  <Tag limitDigits={4} label={disputes.length} size='small' />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width="128px"
+            width='128px'
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -214,16 +237,20 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       {loading || agreementsLoading ? (
         <Loader>
           <span> Fetching arbitrations </span> <br />
-          <LoadingRing mode="half-circle" />
+          <LoadingRing mode='half-circle' />
         </Loader>
       ) : agreementAddress.length ? (
-        agreementDetails.map(agreement => {
+        agreementDetails.map((agreement) => {
           return (
-            <AgreementCard key={agreement[0]} agreement={agreement} selectDispute={selectDispute} />
+            <AgreementCard
+              key={agreement[0]}
+              agreement={agreement}
+              selectDispute={selectDispute}
+            />
           );
         })
       ) : (
-        <EmptyStateCard text="No arbitrations found." />
+        <EmptyStateCard style={{ width: '100%' }} text='No Agreements found.' />
       )}
     </>
   );

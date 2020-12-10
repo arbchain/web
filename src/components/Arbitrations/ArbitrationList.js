@@ -81,7 +81,6 @@ const ButtonContainer = styled.div`
   button {
     display: flex;
     margin-bottom: 12px;
-    margin-left: 0.5rem;
 
     background-color: #4d4cbb;
     color: #fff;
@@ -100,11 +99,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [dbClient, setClient] = useState(null);
   const [procedureAddress, setProcedureAddress] = useState(null);
   const [proceduresLoading, setProceduresLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(true);
+
   const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
-  const closeSide = () => setOpened(true);
 
   const walletAccount = useAccount();
 
@@ -244,7 +242,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           );
         })
       ) : (
-        <EmptyStateCard text='No arbitrations found.' />
+        <EmptyStateCard
+          style={{ width: '100%' }}
+          text='No Arbitrations found.'
+        />
       )}
     </>
   );
