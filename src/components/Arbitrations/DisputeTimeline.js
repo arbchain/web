@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   GU,
   textStyle,
@@ -13,14 +13,40 @@ import {
 import Stepper from '../Stepper';
 import Step from '../Step';
 
-function DisputeTimeline({ stage, contractTime, globalTime }) {
-  const theme = useTheme();
+import { getTimeLine } from '../../lib/contracts/SPC';
 
-  const arbitrationCreation = new Date(contractTime * 1000);
-  const timeline = [
+function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
+  const theme = useTheme();
+  const [loading, setLoading] = useState(true);
+  const [timeline, setTimeLine] = useState(null);
+  const current = 4;
+
+  useEffect(() => {
+    async function getDetails() {
+      try {
+        console.log(account);
+        if (Object.keys(account).length) {
+          setLoading(true);
+          const res = await getTimeLine(NODE, contractAddress, groupId, account);
+          // There is an addition call detailsbeing made that replaces the details. A quick fix
+          if (res) {
+            console.log(res);
+            setTimeLine(res);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getDetails();
+  }, [account]);
+  // const arbitrationCreation = new Date(contractTime * 1000);
+
+  const stages = [
     {
       label: 'Aribtration Created',
-      date: arbitrationCreation.toDateString(),
+      date: '20/11/2019',
       Icon: IconFundraising,
     },
     {
@@ -64,8 +90,8 @@ function DisputeTimeline({ stage, contractTime, globalTime }) {
           padding: ${3 * GU}px 0;
         `}
       >
-        {timeline.map(({ label, date, Icon }, index) => {
-          const active = stage === index;
+        {stages.map(({ label, date, Icon }, index) => {
+          const active = current === index;
           return (
             <Step
               key={index}

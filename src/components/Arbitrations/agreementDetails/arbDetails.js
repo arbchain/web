@@ -14,12 +14,14 @@ import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from '.././modals/ProcedureStatement';
 import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
+import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 
-function ArbDetails({ groupId, contractAddress, details, caller, parties, account, loading }) {
+function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }) {
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState(null);
   const openStatement = () => setStatementModal(true);
 
   const status = ['Open', 'Close'];
@@ -27,6 +29,26 @@ function ArbDetails({ groupId, contractAddress, details, caller, parties, accoun
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
   // Procedure Statement form
   const openProcedureStatement = () => setProcedureStatementModal(true);
+
+  useEffect(() => {
+    async function getDetails() {
+      try {
+        console.log(account);
+        if (Object.keys(account).length) {
+          setLoading(true);
+          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
+          // There is an addition call being made that replaces the details. A quick fix
+          if (details) {
+            setDetails(details);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getDetails();
+  }, [account]);
 
   return (
     <>
