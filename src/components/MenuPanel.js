@@ -11,6 +11,8 @@ import profileIcon from '../assets/ProfileIcon.svg';
 import profileIconDark from '../assets/profileIconDark.svg';
 import arbitrationsIcon from '../assets/ArbitrationsIcon.svg';
 import arbitrationsIconDark from '../assets/arbitrationsIconDark.svg';
+import agreement from '../assets/agreement.svg';
+import agreementDark from '../assets/agreementDark.svg';
 import { lerp } from '../lib/math-utils';
 
 export const MENU_PANEL_SHADOW_WIDTH = 3;
@@ -80,8 +82,8 @@ function MenuPanel({ showHeaderLogo, onOpenPage }) {
         />
         <MenuItem
           to='/agreements'
-          icon={arbitrationsIcon}
-          darkIcon={arbitrationsIconDark}
+          icon={agreement}
+          darkIcon={agreementDark}
           label='Agreements'
           onActivate={onOpenPage}
         />

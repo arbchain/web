@@ -28,7 +28,7 @@ import useAuthentication from '../../utils/auth';
 
 // testing
 
-import NewProcedure from './modals/Popovers/NewProcedure';
+import NewProcedure from './modals/Forms/NewProcedure';
 
 const Web3 = require('web3');
 const networks = require('../../wallet/network');
@@ -81,7 +81,7 @@ const ButtonContainer = styled.div`
   button {
     display: flex;
     margin-bottom: 12px;
-
+    width: auto;
     background-color: #4d4cbb;
     color: #fff;
   }
@@ -187,12 +187,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           }}
         />
 
-        <Button
+        {/* <Button
           label='+NEW test Proc'
           onClick={() => {
             setOpened();
           }}
-        />
+        /> */}
       </ButtonContainer>
 
       <Bar>

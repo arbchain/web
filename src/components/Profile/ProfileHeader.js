@@ -161,6 +161,17 @@ export default function ProfileHeader({ active }) {
     load();
   }, []);
 
+  console.log('ADDDDDDD', address);
+
+  let shortenAddr;
+  if (address) {
+    shortenAddr = `${address.substring(0, 6)}...${address.substring(
+      address.length - 4
+    )}`;
+
+    console.log('SHRRR', shortenAddr);
+  }
+
   let card;
   if (userData != null) {
     const { name, number, zipCode, role } = userData;
@@ -202,7 +213,11 @@ export default function ProfileHeader({ active }) {
             <img className='avatar' src={Avatar} alt='' srcset='' />
             <div className='address-group'>
               <h3>Address</h3>
-              <TextCopy value={address} readOnly />
+              <TextCopy
+                style={{ width: '240px' }}
+                value={shortenAddr}
+                readOnly
+              />
             </div>
           </div>
           <Button

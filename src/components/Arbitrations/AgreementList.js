@@ -17,7 +17,7 @@ import {
 } from '@aragon/ui';
 
 import AgreementForm from './modals/AgreementForm';
-import NewAgreement from './modals/Popovers/NewAgreement';
+//import NewAgreement from './modals/Popovers/NewAgreement';
 import AgreementCard from './AgreementCard';
 import { useAccount } from '../../wallet/Account.js';
 import {
@@ -182,14 +182,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           caller={caller}
         />
 
-        <NewAgreement
+        {/* <NewAgreement
           opened={opened}
           setOpened={setOpened}
           account={walletAccount.account}
           node={NODES[0]}
           counterParties={parties}
           caller={caller}
-        />
+        /> */}
 
         <Button
           label='+NEW AGREEMENT'

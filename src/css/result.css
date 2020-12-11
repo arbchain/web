@@ -13,6 +13,12 @@
 .ant-result-warning .ant-result-icon > .anticon {
   color: #faad14;
 }
+
+.ant-upload .ant-upload-select {
+  display: inline-block;
+  width: 100%;
+}
+
 .ant-result-image {
   width: 250px;
   height: 295px;

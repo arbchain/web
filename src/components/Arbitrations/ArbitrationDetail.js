@@ -14,11 +14,11 @@ import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
 const networks = require('../../wallet/network');
 
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ArbitrationDetail = props => {
+const ArbitrationDetail = (props) => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
@@ -38,7 +38,7 @@ const ArbitrationDetail = props => {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
 
-  const handleTabChange = tabs => {
+  const handleTabChange = (tabs) => {
     setSelectTabs(tabs);
   };
 
@@ -104,7 +104,11 @@ const ArbitrationDetail = props => {
             <React.Fragment>
               <div style={{ marginTop: '14px' }}>
                 <Tabs
-                  items={['Arbitration Details', 'All Statements', 'All Proposals']}
+                  items={[
+                    'Arbitration Details',
+                    'All Statements',
+                    'All Proposals',
+                  ]}
                   selected={tabs}
                   onChange={handleTabChange}
                 />
@@ -150,7 +154,7 @@ const ArbitrationDetail = props => {
           }
           secondary={
             <React.Fragment>
-              <Box heading="Dispute timeline" padding={0}>
+              <Box heading='Dispute timeline' padding={0}>
                 {details ? (
                   <DisputeTimeline
                     stage={parseInt(details[4])}
