@@ -6,9 +6,13 @@ import wallet from 'wallet-besu';
 import { Main, Header } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
 import Logo from '../../assets/mainLogo.png';
-import { PoweroffOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
+import {authorizeUser, registerNewUser} from "../../lib/db/threadDB";
+
+const Web3 = require('web3');
+const web3 = new Web3();
+
 
 const { Step } = Steps;
 const { Option, OptGroup } = Select;
@@ -110,6 +114,10 @@ const Signup = () => {
               orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
             }
           );
+          const dbClient = await authorizeUser(password)
+          const user = web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
+          await registerNewUser(name, zip, phone, user.address,
+            'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, account[0], dbClient)
           setSpinner(false);
           openSuccessNotification('success');
 

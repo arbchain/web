@@ -23,9 +23,9 @@ import DisputeEvidences from './DisputeEvidences';
 import DisputeTimeline from './DisputeTimeline';
 import ArbitrationCardDispute from '../../assets/ArbitrationCardDispute.svg';
 
-import AllProcedureStatements from './agreementDetails/allDetailCards/AllProcedureStatements';
-import AllAgreementStatements from './agreementDetails/allDetailCards/AllProcedureStatements';
-import NominateArbitrator from './agreementDetails/NominateArbitrator';
+import AllProcedureStatements from './arbitrationDetails/allDetailCards/AllProcedureStatements';
+import AllAgreementStatements from './arbitrationDetails/allDetailCards/AllProcedureStatements';
+import NominateArbitrator from './arbitrationDetails/NominateArbitrator';
 
 const ProcedureDetails = () => {
   let history = useHistory();

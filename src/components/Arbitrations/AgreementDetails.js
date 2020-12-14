@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {BackButton, Bar, Box, Split, useTheme, Tabs} from '@aragon/ui';
 import { useHistory } from 'react-router-dom';
 import DisputeTimeline from './DisputeTimeline';
-import ArbDetails from './arbitrationDetails/arbDetails';
-import AllStatements from './arbitrationDetails/allStatements';
-import NominationPage from './arbitrationDetails/NominationPage';
+import Details from './agreementDetails/Details';
 import useAuthentication from '../../utils/auth';
 import { useAccount } from '../../wallet/Account';
 import wallet from 'wallet-besu';
@@ -15,7 +13,7 @@ const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ArbitrationDetail = (props) => {
+const AgreementDetails = (props) => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
   console.log("address", contractAddress)
@@ -81,9 +79,7 @@ const ArbitrationDetail = (props) => {
               <div style={{ marginTop: '14px' }}>
                 <Tabs
                   items={[
-                    'Arbitration Details',
-                    'All Statements',
-                    'All Proposals',
+                    'Agreement Details'
                   ]}
                   selected={tabs}
                   onChange={handleTabChange}
@@ -92,7 +88,7 @@ const ArbitrationDetail = (props) => {
 
               {tabs === 0 ? (
                 <>
-                  <ArbDetails
+                  <Details
                     contractAddress={contractAddress}
                     groupId={groupId}
                     NODE={NODES[0]}
@@ -102,35 +98,12 @@ const ArbitrationDetail = (props) => {
                   />
                 </>
               ) : null}
-
-              {tabs === 1 ? (
-                <>
-                  <AllStatements
-                    contractAddress={contractAddress}
-                    groupId={groupId}
-                    NODE={NODES[0]}
-                    account={walletAccount.account}
-                  />
-                  {/*<AllProcedure />*/}
-                </>
-              ) : null}
-
-              {tabs === 2 ? (
-                <>
-                  <NominationPage
-                    contractAddress={contractAddress}
-                    groupId={groupId}
-                    NODE={NODES[0]}
-                    account={walletAccount.account}
-                  />
-                </>
-              ) : null}
             </React.Fragment>
           }
           secondary={
             <React.Fragment>
-              <Box heading='Dispute timeline' padding={0}>
-                <DisputeTimeline />
+              <Box heading='Agreement timeline' padding={0}>
+                  TBD
               </Box>
             </React.Fragment>
           }
@@ -140,4 +113,4 @@ const ArbitrationDetail = (props) => {
   );
 };
 
-export default ArbitrationDetail;
+export default AgreementDetails;
