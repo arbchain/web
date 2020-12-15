@@ -6,12 +6,13 @@ import wallet from 'wallet-besu';
 import { Main, Header } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
 import Logo from '../../assets/mainLogo.png';
-import { PoweroffOutlined } from '@ant-design/icons';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
 import {authorizeUser, registerNewUser} from "../../lib/db/threadDB";
+
 const Web3 = require('web3');
 const web3 = new Web3();
+
 
 const { Step } = Steps;
 const { Option, OptGroup } = Select;

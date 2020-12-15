@@ -17,6 +17,7 @@ import Arbitrations from './components/Arbitrations/Arbitrations';
 import Agreements from './components/Arbitrations/Agreements';
 import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
 import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
+import AgreementDetails from './components/Arbitrations/AgreementDetails';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
 import { AccountProvider } from './wallet/Account.js';
 import Database from "./components/Database";
@@ -40,6 +41,10 @@ function App() {
                 <Route
                   path='/arbitrations/:address/:groupId'
                   component={ArbitrationDetail}
+                />
+                <Route
+                  path='/agreements/:address/:groupId'
+                  component={AgreementDetails}
                 />
                 <Route path='/proceduredetails' component={ProcedureDetails} />
                 <Route component={ErrorPage} />
