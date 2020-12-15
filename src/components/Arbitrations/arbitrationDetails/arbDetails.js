@@ -15,6 +15,8 @@ import ProcedureStatementForm from '.././modals/ProcedureStatement';
 import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
+import Respond from './allDetailCards/Response';
+import Statement from './allDetailCards/Statement';
 
 function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
   console.log("add", contractAddress)
@@ -104,7 +106,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         </>
       ) : details ? (
         <>
-          <Box heading='Agreement Details'>
+          <Box heading='Arbitration Details'>
             <section
               css={`
                 display: grid;
@@ -244,32 +246,13 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
                 </Text>
               </div>
 
-              <Button
-                mode='strong'
-                onClick={() => {
-                  openStatement();
-                }}
-                wide
-                css={`
-                  background: ${theme.selected};
-                `}
-              >
-                + NEW STATEMENT
-              </Button>
+              <Statement stage={'hearing'} role={'respondant'} contractAddress={contractAddress} groupId={groupId}
+          account={account}
+          caller={caller}
+          parties={parties}/>
 
               <div>
-                <Button
-                  mode='strong'
-                  onClick={() => {
-                    openProcedureStatement();
-                  }}
-                  wide
-                  css={`
-                    background: ${theme.selected};
-                  `}
-                >
-                  + NEW PROCEDURE STATEMENT
-                </Button>
+              <Respond stage={'response'} role={'respondant'}/>
               </div>
             </section>
           </Box>
