@@ -1,18 +1,20 @@
 import { Result, Spin } from 'antd';
 import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
-// import {} from '../../../lib/contracts/'
 import '../../../css/result.css';
 import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
-
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
-import { authorizeUser } from '../../../lib/db/threadDB';
 import styled from 'styled-components';
+import {uploadDoc} from "../../../lib/file-storage";
+import {signDocuments} from "../../../lib/contracts/SPC";
 
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
+
+const languages = ['English', 'French', 'Spanish'];
+const arbitrationSeats = ['London', 'lorem', 'lorem'];
 
 const ageementAddr = [
   '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
@@ -70,9 +72,10 @@ export default function ProcedureForm({
   node,
   counterParties,
   caller,
+  client
 }) {
   const theme = useTheme();
-  console.log('Caller:', caller);
+  //console.log('Caller:', caller);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [agreementAddress, setAgreementAddress] = useState(0);
@@ -95,12 +98,20 @@ export default function ProcedureForm({
     createProcedureContract,
   } = deployProcedureContract(node);
 
-  console.log('Procedure Addition Staus', procedureAdditionStatus);
-  console.log('Procedure Contract', resultProcedureContract);
-
   const handleClick = async () => {
     setProcedureSubmit(true);
-    const dbClient = await authorizeUser(localStorage.getItem('wpassword'));
+    const partiesInvolved = [
+      {
+        partyAddress: caller.address,
+        name: caller.name
+      },{
+        partyAddress: counterParties[respondentAddress].address,
+        name: counterParties[respondentAddress].name
+      }
+    ];
+
+    const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
+    console.log("UploadStatus:",fileDetails)
     await createProcedureContract(
       account,
       [
@@ -111,9 +122,13 @@ export default function ProcedureForm({
         counterParties[respondentAddress].address,
         courtAddr[courtAddress],
       ],
-      dbClient,
+      client,
       caller,
-      counterParties[respondentAddress]
+      counterParties[respondentAddress],
+      partiesInvolved,
+      arbitrationSeats[seat],
+      languages[language],
+      fileDetails
     );
   };
 
@@ -240,7 +255,7 @@ export default function ProcedureForm({
               <DropDown
                 className='dropDown'
                 wide
-                items={['London', 'France', 'Lorem1']}
+                items={arbitrationSeats}
                 selected={seat}
                 onChange={(index, items) => {
                   setSeat(index);
@@ -253,7 +268,7 @@ export default function ProcedureForm({
               <DropDown
                 className='dropDown'
                 wide
-                items={['English', 'French', 'Gernam']}
+                items={languages}
                 selected={language}
                 onChange={(index, items) => {
                   setLanguage(index);

@@ -125,7 +125,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const address = await getAgreementContractAddress(client, account[0]);
         setAgreementAddress(address);
         setAgreementsLoading(false);
-        console.log('ADRess:', address);
         setParties(users.party);
         setCaller(users.caller);
         setArbitrator(users.arbitrator);
@@ -142,24 +141,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       try {
         if (agreementAddress.length) {
           setLoading(true);
-          console.log('Agreement adrees length', agreementAddress.length);
           let index = 0;
           const allDetails = [];
           while (index < parseInt(agreementAddress.length)) {
-            /* const details = await fetchAgreement(
-              NODES[0],
-              agreementAddress[index].contractAddress,
-              agreementAddress[index].groupId,
-              walletAccount.account
-            ); */
-            const details = await getAgreementMetaData(
-              dbClient,
-              agreementAddress[index].metaData
-            );
-            allDetails.push(details);
+            allDetails.push(agreementAddress[index].metaData);
             index++;
           }
-          console.log(allDetails);
           setAgreementDetails(allDetails);
           setLoading(false);
         }

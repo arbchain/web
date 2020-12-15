@@ -75,7 +75,7 @@ const DisputeContainer = styled.div`
 function AgreementCard({ agreement }) {
   const theme = useTheme();
   const disputeType = ['Future', 'Existing'];
-  console.log('Card logging', agreement);
+
   return (
     <Main>
       <Link to='/arbitrations/:address' style={{ color: '#000000d9' }}>

@@ -84,7 +84,6 @@ const Signup = () => {
 
   // Dropdowns
   function selectRole(value) {
-    console.log(`Selected role : ${value}`);
     setRole(value);
   }
 
@@ -101,7 +100,6 @@ const Signup = () => {
         if (res) {
           const account = await wallet.login(password);
           setSpinner(true);
-          console.log(`0x${account[0]}`);
           await newUserCreation(
             name,
             zip,
@@ -115,7 +113,7 @@ const Signup = () => {
           );
           const dbClient = await authorizeUser(password)
           const user = web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
-          await registerNewUser(name, zip, phone, user.address,
+          await registerNewUser(name, email, zip, phone, user.address,
             'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, account[0], dbClient)
           setSpinner(false);
           openSuccessNotification('success');

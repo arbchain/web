@@ -20,6 +20,7 @@ export default function Database(){
             _id: {type:'string'},
             address: {type: 'string'},
             name: {type: 'string'},
+            email: {type: 'string'},
             zipCode: {type: 'string'},
             number: {type: 'string'},
             orionPublicKey: { type: 'string'},

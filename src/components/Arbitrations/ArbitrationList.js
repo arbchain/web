@@ -18,8 +18,7 @@ import { useAccount } from '../../wallet/Account.js';
 import {
   authorizeUser,
   getAllUsers,
-  getProcedureContractAddress,
-  getProcedureMetaData,
+  getProcedureContractAddress
 } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
@@ -99,7 +98,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [dbClient, setClient] = useState(null);
   const [procedureAddress, setProcedureAddress] = useState(null);
   const [proceduresLoading, setProceduresLoading] = useState(true);
-
   const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
@@ -114,9 +112,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
         // Update the account context by using a callback function
+        const user = await web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
+       // console.log("USERR:",user)
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
+          address: user.address,
+          sign: user
         });
 
         const client = await authorizeUser(localStorage.getItem('wpassword'));
@@ -143,14 +145,11 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            const details = await getProcedureMetaData(
-              dbClient,
-              procedureAddress[index].metaData
-            );
-            allDetails.push(details);
+            //const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
+            allDetails.push(procedureAddress[index].metaData);
             index++;
+            setArbitrationDetails(allDetails);
           }
-          setArbitrationDetails(allDetails);
           setLoading(false);
         }
       } catch (err) {
@@ -160,9 +159,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     procedureAddressCall();
   }, [proceduresLoading]);
 
-  if (arbitrationDetails.length !== 0) {
+  /*if (arbitrationDetails.length !== 0) {
     console.log('All Arbitration Details', arbitrationDetails);
-  }
+  }*/
 
   return (
     <>
@@ -175,6 +174,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             node={NODES[0]}
             counterParties={parties}
             caller={caller}
+            client={dbClient}
           />
         </div>
 

@@ -161,8 +161,6 @@ export default function ProfileHeader({ active }) {
     load();
   }, []);
 
-  console.log('ADDDDDDD', address);
-
   let shortenAddr;
   if (address) {
     shortenAddr = `${address.substring(0, 6)}...${address.substring(
@@ -174,7 +172,7 @@ export default function ProfileHeader({ active }) {
 
   let card;
   if (userData != null) {
-    const { name, number, zipCode, role } = userData;
+    const { name, number, zipCode, role, email } = userData;
 
     card = (
       <>
@@ -190,7 +188,7 @@ export default function ProfileHeader({ active }) {
 
         <div className='inputGroups '>
           <h3>Email</h3>
-          <TextInput className='input' readOnly value='JohnDoe@domain.com' />
+          <TextInput className='input' readOnly value={email} />
         </div>
 
         <div className='inputGroups '>

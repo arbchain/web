@@ -11,7 +11,7 @@ import {
 } from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { createStatement } from '../../../lib/contracts/SPC';
+import { createStatement, signDocuments } from '../../../lib/contracts/SPC';
 import { Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -89,6 +89,12 @@ export default function StatementForm({
     setStatementModal(false);
   };
 
+  const { connect, documentSign} = signDocuments(
+    NODES[0],
+    contractAddress,
+    groupId
+  )
+
   const handleClick = async () => {
     setStatementSubmitting(true);
     const uploadStatus = await uploadDoc(
@@ -107,6 +113,7 @@ export default function StatementForm({
         name: parties[party].name,
       },
     ];
+
     await statementCreation(
       partiesInvolved,
       stakeHolder,
@@ -118,6 +125,12 @@ export default function StatementForm({
       uploadStatus.fileName,
       account
     );
+
+    await documentSign(
+      uploadStatus.fileHash,
+      account,
+    )
+
     console.log('submitted');
     setStatementSubmitting(false);
   };

@@ -6,8 +6,8 @@ const keyInfo = {
   secret:'bcm7zjaxlipajgsm6qd6big7lv52cihf2whbbaji'
 }
 
-const threadDbId = [1, 85, 173, 231, 242, 36, 236, 106, 180, 7, 240, 13, 44, 247, 33, 194, 240, 34, 75,
-  144, 96, 226, 57, 127, 86, 167, 252, 6, 151, 236, 250, 8, 104, 226]
+const threadDbId = [1, 85, 213, 17, 54, 129, 83, 10, 44, 133, 138, 32, 158, 111, 255, 125, 20, 112,
+  32, 44, 198, 229, 202, 174, 142, 194, 133, 176, 140, 187, 124, 54, 148, 80]
 
 const threadId = ThreadID.fromBytes(threadDbId)
 

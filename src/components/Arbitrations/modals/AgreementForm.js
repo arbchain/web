@@ -85,8 +85,8 @@ export default function AgreementForm({
     create,
   } = createAgreement(node);
 
-  console.log('Agreement Addition Status', agreementAdditionStatus);
-  console.log(' Agreement Contract', result);
+  // console.log('Agreement Addition Status', agreementAdditionStatus);
+  // console.log(' Agreement Contract', result);
 
   const createAgain = () => {
     setAgreementSubmit(false);

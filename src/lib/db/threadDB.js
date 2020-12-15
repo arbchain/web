@@ -12,12 +12,14 @@ export const authorizeUser = async (password)=>{
   return db.authorizeUser(password)
 }
 
-export const registerNewUser = async(name, zipCode, number, address, orionPublicKey, role, privateKey, client)=>{
+export const registerNewUser = async(name, email, zipCode, number, address,
+                                     orionPublicKey, role, privateKey, client)=>{
   try {
     let publicKey = e2e.getPublicKey(privateKey)
     const data = {
       address: address,
       name: name,
+      email: email,
       zipCode: zipCode,
       number: number,
       orionPublicKey: orionPublicKey,
@@ -98,7 +100,6 @@ export const updateAgreementContracts = async(dbClient, groupId, contractAddress
     documentName: 'DEMO DOC',
     createdAt: date.toDateString()
   }
-  const metaDataStatus = await db.insertDataToDB(dbClient, agreementMetaDataSchema, metaData)
   
   for (let i=0; i<partyAddress.length;i++){
     const query = new Where('address').eq(partyAddress[i])
@@ -108,13 +109,13 @@ export const updateAgreementContracts = async(dbClient, groupId, contractAddress
       user[0].agreementContracts = [{
         contractAddress:contractAddress,
         groupId:groupId,
-        metaData: metaDataStatus[0]
+        metaData: metaData
       }]
     }else {
       user[0].agreementContracts.push({
         contractAddress:contractAddress,
         groupId:groupId,
-        metaData: metaDataStatus[0]
+        metaData: metaData
       })
     }
     await db.updateData(dbClient,registerSchema,user[0])
@@ -135,23 +136,21 @@ export const updateProcedureContracts = async(dbClient, groupId, contractAddress
     courtAddress: args[5],
     createdAt: date.toDateString()
   }
-  const metaDataStatus = await db.insertDataToDB(dbClient, procedureMetaDataSchema, metaData)
 
   for (let i=0; i<partyAddress.length;i++){
     const query = new Where('address').eq(partyAddress[i])
     const user = await db.findFromDB(dbClient, registerSchema, query)
-    console.log("USER:",user)
     if (user[0].procedureContract.length===1 && user[0].procedureContract[0].id==="-1"){
       user[0].procedureContract = [{
         contractAddress:contractAddress,
         groupId:groupId,
-        metaData: metaDataStatus[0]
+        metaData: metaData
       }]
     }else {
       user[0].procedureContract.push({
         contractAddress:contractAddress,
         groupId:groupId,
-        metaData: metaDataStatus[0]
+        metaData: metaData
       })
     }
     await db.updateData(dbClient,registerSchema,user[0])
@@ -191,9 +190,7 @@ export const getProcedureContractAddress = async(dbClient,privateKey)=>{
 
 export const getProcedureMetaData = async(dbClient, id)=>{
   try {
-    const result = await db.findById(dbClient, procedureMetaDataSchema, id)
-    console.log("ProcedureMetaData:", result)
-    return result
+    return await db.findById(dbClient, procedureMetaDataSchema, id)
   } catch (err) {
     throw err
   }
@@ -201,9 +198,7 @@ export const getProcedureMetaData = async(dbClient, id)=>{
 
 export const getAgreementMetaData = async(dbClient, id)=>{
   try {
-    const result = await db.findById(dbClient, agreementMetaDataSchema, id)
-    console.log("AgreementMetaData:", result)
-    return result
+    return await db.findById(dbClient, agreementMetaDataSchema, id)
   } catch (err) {
     throw err
   }
