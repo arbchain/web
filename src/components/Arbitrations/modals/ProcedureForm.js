@@ -6,8 +6,8 @@ import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import { Upload, message } from 'antd';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 import styled from 'styled-components';
-import {uploadDoc} from "../../../lib/file-storage";
-import {signDocuments} from "../../../lib/contracts/SPC";
+import { uploadDoc } from '../../../lib/file-storage';
+import { signDocuments } from '../../../lib/contracts/SPC';
 
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
@@ -28,7 +28,6 @@ const courtAddr = [
 
 const ProcedureContainer = styled.div`
   margin-top: 18px;
-
   display: flex;
   flex-direction: column;
   border: 4px;
@@ -37,7 +36,6 @@ const ProcedureContainer = styled.div`
   border-style: solid;
   margin: 30px;
   padding: 30px;
-
   .inputGroups {
     margin-bottom: 28px !important;
     justify-content: center;
@@ -58,7 +56,6 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 8px;
-
   .inputGroups {
     margin-bottom: 28px !important;
     justify-content: center;
@@ -72,7 +69,7 @@ export default function ProcedureForm({
   node,
   counterParties,
   caller,
-  client
+  client,
 }) {
   const theme = useTheme();
   //console.log('Caller:', caller);
@@ -103,15 +100,20 @@ export default function ProcedureForm({
     const partiesInvolved = [
       {
         partyAddress: caller.address,
-        name: caller.name
-      },{
+        name: caller.name,
+      },
+      {
         partyAddress: counterParties[respondentAddress].address,
-        name: counterParties[respondentAddress].name
-      }
+        name: counterParties[respondentAddress].name,
+      },
     ];
 
-    const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
-    console.log("UploadStatus:",fileDetails)
+    const fileDetails = await uploadDoc(
+      document,
+      localStorage.getItem('wpassword'),
+      'AWS'
+    );
+    console.log('UploadStatus:', fileDetails);
     await createProcedureContract(
       account,
       [
@@ -277,32 +279,35 @@ export default function ProcedureForm({
               />
             </div>
           </GridContainer>
-          <div className='inputGroups '>
-            <h3>Court Address</h3>
-            <DropDown
-              className='dropDown'
-              wide
-              items={courtAddr.map((party) => {
-                return party.slice(0, 20) + '...';
-              })}
-              selected={courtAddress}
-              onChange={(index, items) => {
-                setCourtAddress(index);
-                setProcedureModal(true);
-              }}
-            />
-          </div>
-          <div className='inputGroups '>
-            <h3>Upload Documents </h3>
-            <Upload className='upload' {...props}>
-              <Button
-                className='upload'
+
+          <GridContainer>
+            <div className='inputGroups '>
+              <h3>Court Address</h3>
+              <DropDown
+                className='dropDown'
                 wide
-                icon={<UploadOutlined style={{ color: 'black' }} />}
-                label='Click to Upload'
+                items={courtAddr.map((party) => {
+                  return party.slice(0, 20) + '...';
+                })}
+                selected={courtAddress}
+                onChange={(index, items) => {
+                  setCourtAddress(index);
+                  setProcedureModal(true);
+                }}
               />
-            </Upload>
-          </div>
+            </div>
+            <div className='inputGroups '>
+              <h3>Upload Documents </h3>
+              <Upload className='upload' {...props}>
+                <Button
+                  className='upload'
+                  wide
+                  icon={<UploadOutlined style={{ color: '#212b36' }} />}
+                  label='Click to Upload'
+                />
+              </Upload>
+            </div>
+          </GridContainer>
           <Button
             wide
             label='SUBMIT'

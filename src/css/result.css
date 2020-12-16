@@ -101,3 +101,8 @@ body {
 .inputGroups {
   overflow: hidden;
 }
+
+.ant-upload-select {
+  display: inline-block;
+  width: inherit;
+}
