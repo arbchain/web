@@ -72,13 +72,19 @@ const DisputeContainer = styled.div`
   margin-top: 28px;
 `;
 
-function AgreementCard({ agreement }) {
+function AgreementCard({ agreement, agreementAddress }) {
   const theme = useTheme();
+  const groupId = encodeURIComponent(agreementAddress.groupId);
   const disputeType = ['Future', 'Existing'];
 
   return (
     <Main>
-      <Link to='/arbitrations/:address' style={{ color: '#000000d9' }}>
+      <Link
+        to={{
+          pathname: `/agreements/${agreementAddress.contractAddress}/${groupId}`,
+        }}
+        style={{ color: '#000000d9' }}
+      >
         <>
           <section>
             <OuterContainer>

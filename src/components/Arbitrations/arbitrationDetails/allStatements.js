@@ -18,12 +18,8 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
       try {
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getAllStatements(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
+          const details = await getAllStatements(NODE, contractAddress, groupId, account);
+
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -45,7 +41,7 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
           <Skeleton active />
         </>
       ) : details && details[0].length >= 1 ? (
-        details[0].map((value) => (
+        details[0].map(value => (
           <Accordion
             accordion
             items={[
@@ -72,7 +68,7 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
         ))
       ) : null}
       {details && details[1].length >= 1
-        ? details[1].map((value) => {
+        ? details[1].map(value => {
             const heading = value.subject;
             return (
               <Accordion

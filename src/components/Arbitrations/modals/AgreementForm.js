@@ -95,24 +95,19 @@ export default function AgreementForm({
 
   const handleClick = async () => {
     setAgreementSubmit(true);
-    const dbClient = await authorizeUser(localStorage.getItem('wpassword'));
-    create(
-      account,
-      [
-        2,
-        seat,
-        languages[language],
-        'LCIA',
-        'Consenso Labs',
-        counterParties[counterParty].address,
-        'Apple Inc',
-        disputeType + 1,
-        docHash,
-      ],
-      dbClient,
-      caller,
-      counterParties[counterParty]
-    );
+    const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
+    create(account, [
+      2,
+      seat,
+      languages[language],
+      'LCIA',
+      'Consenso Labs',
+      counterParties[counterParty].address,
+      'Apple Inc',
+      disputeType,
+      docHash,
+    ], dbClient, caller, counterParties[counterParty]);
+
     if (result !== false && resultProcedureContract) {
       agreementAddition(result.contractAddress, result.privacyGroupId, account);
     }
@@ -175,9 +170,10 @@ export default function AgreementForm({
             <div style={{ flexBasis: '100%' }}> Dispute Type:</div>
             <DropDown
               style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={['Existing', 'Future']}
+              items={['Future', 'Existing']}
               selected={disputeType}
               onChange={(index, items) => {
+                console.log(index)
                 setDisputeType(index);
                 setAgreementModal(true);
               }}

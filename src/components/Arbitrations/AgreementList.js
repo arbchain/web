@@ -223,21 +223,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {loading || agreementsLoading ? (
         <Loader>
-          <span> Fetching arbitrations </span> <br />
-          <LoadingRing mode='half-circle' />
+          <span> Fetching agreements </span> <br />
+          <LoadingRing mode="half-circle" />
         </Loader>
       ) : agreementAddress.length ? (
-        agreementDetails.map((agreement) => {
+        agreementDetails.map((agreement, index) => {
           return (
             <AgreementCard
               key={agreement[0]}
               agreement={agreement}
               selectDispute={selectDispute}
+              agreementAddress={agreementAddress[index]}
             />
           );
         })
       ) : (
-        <EmptyStateCard style={{ width: '100%' }} text='No Agreements found.' />
+        <EmptyStateCard text="No agreement found." />
       )}
     </>
   );

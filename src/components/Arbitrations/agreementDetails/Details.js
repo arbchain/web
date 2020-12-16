@@ -11,32 +11,31 @@ import {
 } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
-import ProcedureStatementForm from '.././modals/ProcedureStatement';
-import StatementForm from '../modals/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
-import { getArbitrationDetails } from '../../../lib/contracts/SPC';
+import { fetchAgreement } from '../../../lib/contracts/Agreement';
 
-function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }) {
+function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
+  console.log("add", contractAddress)
   const history = useHistory();
   const theme = useTheme();
-  const [statementModal, setStatementModal] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
-  const openStatement = () => setStatementModal(true);
 
   const status = ['Open', 'Close'];
-  // Procedure statement modal
-  const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
-  // Procedure Statement form
-  const openProcedureStatement = () => setProcedureStatementModal(true);
 
   useEffect(() => {
     async function getDetails() {
       try {
-        console.log(account);
+        console.log(account)
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
+          const details = await fetchAgreement(
+            NODE,
+            contractAddress,
+            groupId,
+            account
+          );
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -52,41 +51,6 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <StatementForm
-          statementModal={statementModal}
-          setStatementModal={setStatementModal}
-          contractAddress={contractAddress}
-          groupId={groupId}
-          account={account}
-          caller={caller}
-          parties={parties}
-        />
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <ProcedureStatementForm
-          ProcedureStatementModal={ProcedureStatementModal}
-          setProcedureStatementModal={setProcedureStatementModal}
-          contractAddress={contractAddress}
-          groupId={groupId}
-          account={account}
-          caller={caller}
-          parties={parties}
-        />
-      </div>
 
       {loading ? (
         <>
@@ -96,7 +60,7 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
         </>
       ) : details ? (
         <>
-          <Box heading="Agreement Details">
+          <Box heading='Agreement Details'>
             <section
               css={`
                 display: grid;
@@ -135,10 +99,10 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                       css={`
                         display: block;
                         margin-bottom: ${GU}px;
-                        ${textStyle('title3')};
+                        ${textStyle('label2')};
                       `}
                     >
-                      {details[0]}
+                      {details[5]}
                     </Text>
                   </div>
                 </div>
@@ -164,7 +128,7 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                       margin-bottom: ${2 * GU}px;
                     `}
                   >
-                    Description
+                    Seat
                   </h2>
                   <Text
                     css={`
@@ -182,7 +146,7 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                       margin-bottom: ${2 * GU}px;
                     `}
                   >
-                    Claimant
+                    Language
                   </h2>
                   <div
                     css={`
@@ -190,11 +154,18 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                       align-items: flex-start;
                     `}
                   >
-                    {details[6]}
+                    {details[2]}
                   </div>
                 </div>
               </div>
-
+              <div
+                css={`
+                  display: grid;
+                  grid-template-columns: 1fr minmax(250px, auto);
+                  grid-gap: ${5 * GU}px;
+                  margin-bottom: ${2 * GU}px;
+                `}
+              >
               <div>
                 <h2
                   css={`
@@ -203,7 +174,7 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                     margin-bottom: ${2 * GU}px;
                   `}
                 >
-                  ARBITRATION AGREEMENT
+                  Governing Law
                 </h2>
                 <Text
                   css={`
@@ -211,7 +182,7 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                     ${textStyle('body2')};
                   `}
                 >
-                  {details[2]}
+                  {details[3]}
                 </Text>
               </div>
 
@@ -223,7 +194,7 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                     margin-bottom: ${2 * GU}px;
                   `}
                 >
-                  Respondent
+                  Dispute Type
                 </h2>
 
                 <Text
@@ -232,45 +203,31 @@ function ArbDetails({ groupId, contractAddress, caller, parties, account, NODE }
                     ${textStyle('body2')};
                   `}
                 >
-                  {details[7]}
+                  {['Future','Existing'][details[4]]}
                 </Text>
+              </div>
               </div>
 
               <Button
-                mode="strong"
+                mode='strong'
                 onClick={() => {
-                  openStatement();
+                  // Call to sign the agreement
                 }}
                 wide
                 css={`
                   background: ${theme.selected};
                 `}
               >
-                + NEW STATEMENT
+                 AGREE
               </Button>
-
-              <div>
-                <Button
-                  mode="strong"
-                  onClick={() => {
-                    openProcedureStatement();
-                  }}
-                  wide
-                  css={`
-                    background: ${theme.selected};
-                  `}
-                >
-                  + NEW PROCEDURE STATEMENT
-                </Button>
-              </div>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard text="No arbitrations details found." />
+        <EmptyStateCard text='No agreement details found.' />
       )}
     </>
   );
 }
 
-export default ArbDetails;
+export default Details;
