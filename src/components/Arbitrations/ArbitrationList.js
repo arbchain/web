@@ -30,7 +30,7 @@ const Web3 = require('web3');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map((node) => {
+const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
@@ -111,15 +111,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         // Update the account context by using a callback function
         walletAccount.changeAccount({
           privateKey: account[0],
-          orionPublicKey: localStorage.getItem('orionKey')
+          orionPublicKey: localStorage.getItem('orionKey'),
         });
 
-        const client = await authorizeUser(localStorage.getItem('wpassword'))
-        setClient(client)
-        const users = await getAllUsers(client,account[0])
-        const address = await getProcedureContractAddress(client, account[0])
-        setProcedureAddress(address)
-        setProceduresLoading(false)
+        const client = await authorizeUser(localStorage.getItem('wpassword'));
+        setClient(client);
+        const users = await getAllUsers(client, account[0]);
+        const address = await getProcedureContractAddress(client, account[0]);
+        setProcedureAddress(address);
+        setProceduresLoading(false);
         setParties(users.party);
         setCaller(users.caller);
         setArbitrator(users.arbitrator);
@@ -138,10 +138,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            const details = await getProcedureMetaData(
-              dbClient,
-              procedureAddress[index].metaData
-            );
+            const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
             allDetails.push(details);
             index++;
           }
@@ -162,7 +159,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   return (
     <>
       <ButtonContainer>
-        <div className='ProcedureModal'>
+        <div className="ProcedureModal">
           <ProcedureForm
             procedureModal={procedureModal}
             setProcedureModal={setProcedureModal}
@@ -174,7 +171,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         </div>
 
         <Button
-          label='+NEW PROCEDURE'
+          label="+NEW PROCEDURE"
           onClick={() => {
             openProcedure();
           }}
@@ -184,22 +181,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       <Bar>
         <BarContainer>
           <DropDown
-            header='Status'
-            placeholder='Status'
+            header="Status"
+            placeholder="Status"
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
               // eslint-disable-next-line
               <div>
                 All
-                <span className='span'>
-                  <Tag limitDigits={4} label={disputes.length} size='small' />
+                <span className="span">
+                  <Tag limitDigits={4} label={disputes.length} size="small" />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width='128px'
+            width="128px"
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -212,7 +209,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {loading || proceduresLoading ? (
         <Loader>
-          <LoadingRing mode='half-circle' />
+          <LoadingRing mode="half-circle" />
           <br />
           <span> Fetching arbitrations </span>
         </Loader>
@@ -228,7 +225,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           );
         })
       ) : (
-        <EmptyStateCard text='No arbitrations found.' />
+        <EmptyStateCard text="No arbitrations found." />
       )}
     </>
   );
