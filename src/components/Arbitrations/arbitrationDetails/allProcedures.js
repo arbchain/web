@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
 // import { AgreementContext } from './Contexts';
-import {
- 
-  Accordion,
- 
-} from '@aragon/ui';
+import { Accordion } from '@aragon/ui';
 
 import AllProcedureStatements from './allDetailCards/AllProcedureStatements';
-
 
 const networks = require('../../../wallet/network');
 

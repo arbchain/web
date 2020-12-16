@@ -69,7 +69,7 @@ const BarContainer = styled.div`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 100%;
 
   .AgreementModal {
@@ -184,12 +184,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             openAgreement();
           }}
         />
-        <Button
-          label='+NEW '
-          onClick={() => {
-            openSidePanel();
-          }}
-        />
       </ButtonContainer>
 
       <Bar>
@@ -223,21 +217,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {loading || agreementsLoading ? (
         <Loader>
-          <span> Fetching arbitrations </span> <br />
+          <span> Fetching agreements </span> <br />
           <LoadingRing mode='half-circle' />
         </Loader>
       ) : agreementAddress.length ? (
-        agreementDetails.map((agreement) => {
+        agreementDetails.map((agreement, index) => {
           return (
             <AgreementCard
               key={agreement[0]}
               agreement={agreement}
               selectDispute={selectDispute}
+              agreementAddress={agreementAddress[index]}
             />
           );
         })
       ) : (
-        <EmptyStateCard style={{ width: '100%' }} text='No Agreements found.' />
+        <EmptyStateCard width='100%' text='No Agreements found.' />
       )}
     </>
   );

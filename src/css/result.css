@@ -106,3 +106,7 @@ body {
   display: inline-block;
   width: inherit;
 }
+
+.fSGKCD {
+  height: auto !important;
+}

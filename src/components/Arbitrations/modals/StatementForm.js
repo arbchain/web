@@ -89,11 +89,11 @@ export default function StatementForm({
     setStatementModal(false);
   };
 
-  const { connect, documentSign} = signDocuments(
+  const { connect, documentSign } = signDocuments(
     NODES[0],
     contractAddress,
     groupId
-  )
+  );
 
   const handleClick = async () => {
     setStatementSubmitting(true);
@@ -126,10 +126,7 @@ export default function StatementForm({
       account
     );
 
-    await documentSign(
-      uploadStatus.fileHash,
-      account,
-    )
+    await documentSign(uploadStatus.fileHash, account);
 
     console.log('submitted');
     setStatementSubmitting(false);
@@ -141,7 +138,7 @@ export default function StatementForm({
       visible={statementModal}
       onClose={closeStatement}
     >
-      <Title> Create an Statement Agreement</Title>
+      <Title> Create an Statement </Title>
 
       <div
         style={{
