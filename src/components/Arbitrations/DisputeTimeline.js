@@ -91,20 +91,21 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
 
   return (
     <div>
-      <Stepper
-        lineColor={theme.surfaceIcon}
-        lineTop={15}
-        css={`
-          padding: ${3 * GU}px 0;
-        `}
-      >
         {loading ? (
           <>
             <Skeleton active />
             <Skeleton active />
             <Skeleton active />
           </>
-        ) : timeline ? (
+        ) : timeline ? ( 
+          <Stepper
+        lineColor={theme.surfaceIcon}
+        lineTop={15}
+        css={`
+          padding: ${3 * GU}px 0;
+        `}
+      >
+        {
           stages.map(({ label, date, Icon }, index) => {
             const active = parseInt(timeline[0]) === index;
             return (
@@ -160,10 +161,12 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
               />
             );
           })
-        ) : (
+        }
+        </Stepper> 
+          ) : (
           <EmptyStateCard text="No Timeline details found." />
         )}
-      </Stepper>
+      
     </div>
   );
 }
