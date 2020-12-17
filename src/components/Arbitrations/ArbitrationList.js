@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Bar,
   Button,
@@ -15,11 +15,7 @@ import {
 
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
-import {
-  authorizeUser,
-  getAllUsers,
-  getProcedureContractAddress
-} from '../../lib/db/threadDB';
+import { authorizeUser, getAllUsers, getProcedureContractAddress } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 import styled from 'styled-components';
@@ -33,7 +29,7 @@ const Web3 = require('web3');
 const networks = require('../../wallet/network');
 
 const web3 = new Web3();
-const NODES = Object.keys(networks).map((node) => {
+const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
@@ -106,6 +102,20 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
   useAuthentication();
 
+  const updateProcedureList = useCallback(
+    procedureData => {
+      setArbitrationDetails([...arbitrationDetails, procedureData]);
+    },
+    [arbitrationDetails]
+  );
+
+  const updateAddressList = useCallback(
+    addressData => {
+      setProcedureAddress([...procedureAddress, addressData]);
+    },
+    [procedureAddress]
+  );
+
   useEffect(() => {
     async function load() {
       try {
@@ -113,12 +123,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const account = await wallet.login(localStorage.getItem('wpassword'));
         // Update the account context by using a callback function
         const user = await web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
-       // console.log("USERR:",user)
+        // console.log("USERR:",user)
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
           address: user.address,
-          sign: user
+          sign: user,
         });
 
         const client = await authorizeUser(localStorage.getItem('wpassword'));
@@ -145,7 +155,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            //const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
+            // const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
             allDetails.push(procedureAddress[index].metaData);
             index++;
             setArbitrationDetails(allDetails);
@@ -159,14 +169,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     procedureAddressCall();
   }, [proceduresLoading]);
 
-  /*if (arbitrationDetails.length !== 0) {
-    console.log('All Arbitration Details', arbitrationDetails);
-  }*/
-
   return (
     <>
       <ButtonContainer>
-        <div className='ProcedureModal'>
+        <div className="ProcedureModal">
           <ProcedureForm
             procedureModal={procedureModal}
             setProcedureModal={setProcedureModal}
@@ -175,13 +181,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             counterParties={parties}
             caller={caller}
             client={dbClient}
+            updateProcedureList={updateProcedureList}
+            updateAddressList={updateAddressList}
           />
         </div>
 
         <NewProcedure opened={opened} setOpened={setOpened} />
 
         <Button
-          label='+NEW PROCEDURE'
+          label="+NEW PROCEDURE"
           onClick={() => {
             openProcedure();
           }}
@@ -198,22 +206,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       <Bar>
         <BarContainer>
           <DropDown
-            header='Status'
-            placeholder='Status'
+            header="Status"
+            placeholder="Status"
             // selected={disputeStatusFilter}
             // onChange={handleDisputeStatusFilterChange}
             items={[
               // eslint-disable-next-line
               <div>
                 All
-                <span className='span'>
-                  <Tag limitDigits={4} label={disputes.length} size='small' />
+                <span className="span">
+                  <Tag limitDigits={4} label={disputes.length} size="small" />
                 </span>
               </div>,
               'Open',
               'Closed',
             ]}
-            width='128px'
+            width="128px"
           />
           <DateRangePicker
           // startDate={disputeDateRangeFilter.start}
@@ -226,7 +234,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
       {loading || proceduresLoading ? (
         <Loader>
-          <LoadingRing mode='half-circle' />
+          <LoadingRing mode="half-circle" />
           <br />
           <span> Fetching arbitrations </span>
         </Loader>
@@ -242,10 +250,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           );
         })
       ) : (
-        <EmptyStateCard
-          style={{ width: '100%' }}
-          text='No Arbitrations found.'
-        />
+        <EmptyStateCard style={{ width: '100%' }} text="No Arbitrations found." />
       )}
     </>
   );

@@ -278,14 +278,14 @@ export function signDocuments(nodeSelected, contractAddress, privacyGroupId) {
 
   const documentSign = useCallback(
     async (document, account) => {
-      console.log("Signing Document:",document)
-      const {replayNonce, signature} = await web3Contract.documentSigning([document], account);
-      const res = await web3Contract.call('signDocuments', [
-        replayNonce,
-        signature.signature,
-        document
-      ], account)
-      console.log("Signing status:",res)
+      console.log('Signing Document:', document);
+      const { replayNonce, signature } = await web3Contract.documentSigning([document], account);
+      const res = await web3Contract.call(
+        'signDocuments',
+        [replayNonce, signature.signature, document],
+        account
+      );
+      console.log('Signing status:', res);
     },
     [connect]
   );
@@ -425,15 +425,21 @@ export async function getTimeLine(nodeSelected, contractAddress, privacyGroupId,
   return res;
 }
 
-export async function getSignature(nodeSelected, contractAddress, privacyGroupId, account, fileHash) {
+export async function getSignature(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account,
+  fileHash
+) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
     if (connected) {
-      console.log("GEtting sig")
+      console.log('GEtting sig');
       await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
       res = await web3Contract.call('getDocumentDetails', [fileHash], account);
-      //console.log(res);
+      // console.log(res);
     }
   } catch (err) {
     return false;

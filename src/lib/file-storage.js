@@ -8,7 +8,7 @@ AWS.config.update({
   accessKeyId: 'AKIAWRATGLMSCHON7VVK',
   secretAccessKey: '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',
 });
-let s3 = new AWS.S3();
+const s3 = new AWS.S3();
 
 const fleekApiKey = 't8DYhMZ1ztjUtOFC8qEDqg==';
 const fleekApiSecret = 'XwZyU7RZ3H2Z1QHhUdFdi4MJx8j1axJm2hEq1olRWeU=';
@@ -22,7 +22,7 @@ const storeFileFleek = async (fileName, encryptedDoc) => {
   });
 };
 
-const getFileFleek = async (fileName) => {
+const getFileFleek = async fileName => {
   const file = await fleekStorage.get({
     apiKey: fleekApiKey,
     apiSecret: fleekApiSecret,
@@ -50,7 +50,7 @@ const storeFileAWS = (awsKey, encryptedDoc) => {
   });
 };
 
-const getFileAWS = (key) => {
+const getFileAWS = key => {
   return new Promise((resolve, reject) => {
     s3.getObject(
       {
@@ -71,21 +71,18 @@ const getFileAWS = (key) => {
 export const uploadDoc = async (file, password, storageType) => {
   const fileSplit = file.name.split('.');
   const fileFormat = fileSplit[fileSplit.length - 1];
-  let reader = new FileReader();
+  const reader = new FileReader();
   reader.readAsArrayBuffer(file);
 
   return new Promise((resolve, reject) => {
-    reader.onload = async (val) => {
+    reader.onload = async val => {
       const fileInput = new Uint8Array(val.target.result);
       const cipherKey = await e2e.generateCipherKey(Math.random(1000));
-      const encryptedFile = await e2e.encryptData(
-        Buffer.from(fileInput),
-        cipherKey
-      );
+      const encryptedFile = await e2e.encryptData(Buffer.from(fileInput), cipherKey);
 
       const fileHash = e2e.calculateHash(fileInput);
 
-      let fileKey = fileHash
+      const fileKey = fileHash
         .toString('hex')
         .concat('.')
         .concat(storageType)
@@ -113,20 +110,20 @@ export const downloadFile = async (name, documentLocation, cipherKey) => {
   const fileSplit = documentLocation.split('.');
   const storageType = fileSplit[fileSplit.length - 2];
 
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     if (storageType === 'AWS') {
-      getFileAWS(documentLocation).then((encryptedFile) => {
+      getFileAWS(documentLocation).then(encryptedFile => {
         console.log('enc:', encryptedFile);
         console.log(typeof cipherKey);
         cipherKey = Buffer.from(cipherKey, 'hex');
-        e2e.decryptData(encryptedFile, cipherKey).then((decryptedFile) => {
+        e2e.decryptData(encryptedFile, cipherKey).then(decryptedFile => {
           fileDownload(decryptedFile, name);
           resolve(true);
         });
       });
     } else {
-      getFileFleek(documentLocation).then((encryptedFile) => {
-        e2e.decryptData(encryptedFile, cipherKey).then((decryptedFile) => {
+      getFileFleek(documentLocation).then(encryptedFile => {
+        e2e.decryptData(encryptedFile, cipherKey).then(decryptedFile => {
           fileDownload(decryptedFile, name);
           resolve(true);
         });

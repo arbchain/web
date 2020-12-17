@@ -93,6 +93,9 @@ export default function AgreementForm({
   node,
   counterParties,
   caller,
+  updateAgreementList,
+  updateAddressList,
+  updateAgreementData
 }) {
   const theme = useTheme();
 
@@ -123,7 +126,7 @@ export default function AgreementForm({
   const handleClick = async () => {
     setAgreementSubmit(true);
     const dbClient = await authorizeUser(localStorage.getItem('wpassword'));
-    create(
+    const res = await create(
       account,
       [
         2,
@@ -141,9 +144,39 @@ export default function AgreementForm({
       counterParties[counterParty]
     );
 
-    if (result !== false && resultProcedureContract) {
-      agreementAddition(result.contractAddress, result.privacyGroupId, account);
+    // updateAgreementData({
+    //   claimantName: caller.name,
+    //   createdAt: new Date().toDateString(),
+    //   disputeType: disputeType,
+    //   documentName: "DEMO DOC",
+    //   language:  languages[language],
+    //   law: "LCIA",
+    //   respondentName: counterParties[counterParty].name,
+    //   seat: seat
+    // }, {contractAddress: res.contractAddress,
+    //   groupId: res.privacyGroupId,})
+    
+    updateAgreementList({
+      claimantName: caller.name,
+      createdAt: new Date().toDateString(),
+      disputeType: disputeType,
+      documentName: "DEMO DOC",
+      language:  languages[language],
+      law: "LCIA",
+      respondentName: counterParties[counterParty].name,
+      seat: seat
+    });
+    
+    if(res){
+      updateAddressList({
+        contractAddress: res.contractAddress,
+        groupId: res.privacyGroupId,
+      });
     }
+  
+
+  
+   
   };
 
   return (

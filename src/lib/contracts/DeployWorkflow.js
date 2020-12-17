@@ -28,6 +28,7 @@ export function createAgreement(nodeSelected) {
       await agreementContractAddition(res.contractAddress, res.privacyGroupId, account);
       await updateAgreementContracts(dbClient, res.privacyGroupId, res.contractAddress, args, caller, counterParty)
       setResult(res);
+      return res
     },
     [nodeSelected]
   );
@@ -69,6 +70,7 @@ export function deployProcedureContract(nodeSelected) {
 
       await updateProcedureContracts(dbClient, res.privacyGroupId, res.contractAddress, args, caller, counterParty)
       setResult(res);
+      return res
 
     },
     [nodeSelected]
