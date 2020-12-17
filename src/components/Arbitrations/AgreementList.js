@@ -91,13 +91,13 @@ const ButtonContainer = styled.div`
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementModal, setAgreementModal] = useState(false);
   const [caller, setCaller] = useState(null);
   const [parties, setParties] = useState([]);
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
-  const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementAddress, setAgreementAddress] = useState(null);
   const [agreementsLoading, setAgreementsLoading] = useState(true);
   const [opened, setOpened] = useState(false);
@@ -108,14 +108,19 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const walletAccount = useAccount();
   useAuthentication();
 
-  const updateAgreementData = useCallback(
-    (agreementData, addressData) => {
-      console.log('Agreement Data', agreementData);
-      console.log('Agreement Address', addressData);
+  // const updateAgreementData = useCallback(
+  //   (agreementData, addressData) => {
+  //     setAgreementAddress([...agreementAddress, addressData]);
+  //     setAgreementDetails([...agreementDetails, agreementData]);
+  //   },
+  //   [agreementDetails, agreementAddress]
+  // );
+
+  const updateAgreementList = useCallback(
+    agreementData => {
       setAgreementDetails([...agreementDetails, agreementData]);
-      setAgreementAddress([...agreementAddress, addressData]);
     },
-    [agreementDetails, agreementAddress]
+    [agreementDetails]
   );
 
   const updateAddressList = useCallback(
@@ -123,14 +128,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       setAgreementAddress([...agreementAddress, addressData]);
     },
     [agreementAddress]
-  );
-
-  const updateAgreementList = useCallback(
-    agreementData => {
-      console.log(agreementData);
-      setAgreementDetails([...agreementDetails, agreementData]);
-    },
-    [agreementDetails]
   );
 
   useEffect(() => {
@@ -198,9 +195,9 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           node={NODES[0]}
           counterParties={parties}
           caller={caller}
+          dbClient={dbClient}
           updateAgreementList={updateAgreementList}
           updateAddressList={updateAddressList}
-          updateAgreementData={updateAgreementData}
         />
 
         {/* <NewAgreement

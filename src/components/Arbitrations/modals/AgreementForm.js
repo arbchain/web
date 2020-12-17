@@ -93,6 +93,7 @@ export default function AgreementForm({
   node,
   counterParties,
   caller,
+  dbClient,
   updateAgreementList,
   updateAddressList,
   updateAgreementData
@@ -109,7 +110,6 @@ export default function AgreementForm({
   const closeAgreement = () => {
     setAgreementModal(false);
     setAgreementSubmit(false);
-    setResult(false);
   };
   const {
     result,
@@ -120,12 +120,10 @@ export default function AgreementForm({
 
   const createAgain = () => {
     setAgreementSubmit(false);
-    setResult(false);
   };
 
   const handleClick = async () => {
     setAgreementSubmit(true);
-    const dbClient = await authorizeUser(localStorage.getItem('wpassword'));
     const res = await create(
       account,
       [
@@ -144,7 +142,24 @@ export default function AgreementForm({
       counterParties[counterParty]
     );
 
-    // updateAgreementData({
+    // if(res){
+    //   updateAgreementData({claimantName: caller.name,
+    //     createdAt: new Date().toDateString(),
+    //     disputeType: disputeType,
+    //     documentName: "DEMO DOC",
+    //     language:  languages[language],
+    //     law: "LCIA",
+    //     respondentName: counterParties[counterParty].name,
+    //     seat: seat}, {contractAddress: res.contractAddress,
+    //       groupId: res.privacyGroupId,})
+    // }
+
+    // updateAddressList({
+    //   contractAddress: res.contractAddress,
+    //   groupId: res.privacyGroupId,
+    // });
+
+    // updateAgreementList({
     //   claimantName: caller.name,
     //   createdAt: new Date().toDateString(),
     //   disputeType: disputeType,
@@ -153,30 +168,7 @@ export default function AgreementForm({
     //   law: "LCIA",
     //   respondentName: counterParties[counterParty].name,
     //   seat: seat
-    // }, {contractAddress: res.contractAddress,
-    //   groupId: res.privacyGroupId,})
-    
-    updateAgreementList({
-      claimantName: caller.name,
-      createdAt: new Date().toDateString(),
-      disputeType: disputeType,
-      documentName: "DEMO DOC",
-      language:  languages[language],
-      law: "LCIA",
-      respondentName: counterParties[counterParty].name,
-      seat: seat
-    });
-    
-    if(res){
-      updateAddressList({
-        contractAddress: res.contractAddress,
-        groupId: res.privacyGroupId,
-      });
-    }
-  
-
-  
-   
+    // });
   };
 
   return (
