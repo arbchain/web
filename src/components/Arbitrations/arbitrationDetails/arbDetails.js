@@ -8,21 +8,33 @@ import {
   Button,
   LoadingRing,
   EmptyStateCard,
+  SidePanel,
 } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from '.././modals/ProcedureStatement';
 import StatementForm from '../modals/StatementForm';
+import AcceptResponse from '../modals/responseForm/AcceptResponse';
+import CounterClaim from '../modals/responseForm/CounterClaim';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 
-function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
+function ArbDetails({
+  groupId,
+  contractAddress,
+  NODE,
+  account,
+  caller,
+  parties,
+}) {
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
-  const openStatement = () => setStatementModal(true);
+
+  const [openResponse, setOpenResponse] = useState(false);
+  const [openClaim, setOpenClaim] = useState(false);
 
   const status = ['Open', 'Close'];
   // Procedure statement modal
@@ -30,13 +42,25 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
   // Procedure Statement form
   const openProcedureStatement = () => setProcedureStatementModal(true);
 
+  const openStatement = () => setStatementModal(true);
+
+  // response
+  const openResponsePanel = () => setOpenResponse(true);
+
+  const openCounterClaimPanel = () => setOpenClaim(true);
+
   useEffect(() => {
     async function getDetails() {
       try {
         console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
+          const details = await getArbitrationDetails(
+            NODE,
+            contractAddress,
+            groupId,
+            account
+          );
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -68,6 +92,22 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
           caller={caller}
           parties={parties}
         />
+
+        {/* <AcceptResponse/> */}
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}
+      >
+        <AcceptResponse
+          openResponse={openResponse}
+          setOpenResponse={setOpenResponse}
+        />
+        <CounterClaim openClaim={openClaim} setOpenClain={setOpenClaim} />
       </div>
 
       <div
@@ -96,7 +136,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         </>
       ) : details ? (
         <>
-          <Box heading="Agreement Details">
+          <Box heading='Agreement Details'>
             <section
               css={`
                 display: grid;
@@ -143,8 +183,20 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
                   </div>
                 </div>
                 <div>
-                  {/* <DisputeStatus dispute={dispute} /> */}
-                  <h1>{status[details[3]]}</h1>
+                  <h1>
+                    <span
+                      css={`
+                        ${textStyle('label3')}
+                        text-transform: Uppercase;
+                        background: rgba(200, 215, 234, 0.4);
+                        border-radius: 100px;
+                        padding: 5px 10px;
+                        font-size: 14px;
+                      `}
+                    >
+                      {status[details[3]]}
+                    </span>
+                  </h1>
                 </div>
               </div>
 
@@ -237,7 +289,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
               </div>
 
               <Button
-                mode="strong"
+                mode='strong'
                 onClick={() => {
                   openStatement();
                 }}
@@ -251,7 +303,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
 
               <div>
                 <Button
-                  mode="strong"
+                  mode='strong'
                   onClick={() => {
                     openProcedureStatement();
                   }}
@@ -263,11 +315,52 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
                   + NEW PROCEDURE STATEMENT
                 </Button>
               </div>
+
+              <div
+                css={`
+                  display: flex;
+                  justify-content: center;
+                  margin: 0 14px;
+                `}
+              >
+                <div
+                  css={`
+                    margin: 0 14px;
+                  `}
+                >
+                  <Button
+                    style={{ width: '169.79px' }}
+                    mode='strong'
+                    onClick={() => {
+                      openResponsePanel();
+                    }}
+                    css={`
+                      background: ${theme.selected};
+                    `}
+                  >
+                    ACCEPT
+                  </Button>
+                </div>
+
+                <div>
+                  <Button
+                    mode='strong'
+                    onClick={() => {
+                      openCounterClaimPanel();
+                    }}
+                    css={`
+                      background: #ffb26e;
+                    `}
+                  >
+                    COUNTER CLAIM
+                  </Button>
+                </div>
+              </div>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard text="No arbitrations details found." />
+        <EmptyStateCard text='No arbitrations details found.' />
       )}
     </>
   );
