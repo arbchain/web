@@ -13,6 +13,8 @@ import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { fetchAgreement } from '../../../lib/contracts/Agreement';
+import Agree from './Agree';
+
 
 function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
   console.log('add', contractAddress);
@@ -207,18 +209,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                 </div>
               </div>
 
-              <Button
-                mode='strong'
-                onClick={() => {
-                  // Call to sign the agreement
-                }}
-                wide
-                css={`
-                  background: ${theme.selected};
-                `}
-              >
-                AGREE
-              </Button>
+              <Agree stage={'response'} role={'respondant'}/>
             </section>
           </Box>
         </>

@@ -16,7 +16,7 @@ function Agreements() {
 
   return (
     <React.Fragment>
-      <Header primary="Arbitrations" />
+      <Header primary="Agreements" />
       {selectedDispute ? (
         <ArbitrationDetail arbitration={selectedDispute} onBack={handleBack} />
       ) : (
