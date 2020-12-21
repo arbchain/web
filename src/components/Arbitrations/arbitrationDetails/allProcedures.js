@@ -6,14 +6,17 @@ import AllProcedureStatements from './allDetailCards/AllProcedureStatements';
 
 const networks = require('../../../wallet/network');
 
-const NODES = Object.keys(networks).map(node => {
+const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
 function AllProcedure(props) {
   return (
     <div>
-      <Accordion accordion items={[['Procedure Statements', [<AllProcedureStatements />]]]} />
+      <Accordion
+        accordion
+        items={[['Procedure Statements', [<AllProcedureStatements />]]]}
+      />
     </div>
   );
 }

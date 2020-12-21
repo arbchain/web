@@ -8,8 +8,9 @@ const NominateWrapper = styled.div`
   margin: 24px 0 18px 0;
 `;
 
-function NominateArbitrator({ contractAddress, groupId, node, account, nominatedArbitrator }) {
-  console.log('nominatedArbitrator:', nominatedArbitrator);
+function NominateArbitrator({contractAddress, groupId, node, account, nominatedArbitrator}) {
+  //console.log('nominatedArbitrator:', nominatedArbitrator);
+
   const theme = useTheme();
   const arbitratorList = ['arbitrator1', 'arbitrator2', 'arbitrator3'];
 
@@ -30,7 +31,6 @@ function NominateArbitrator({ contractAddress, groupId, node, account, nominated
   ];
 
   const handleClick = async () => {
-    console.log('SElected arbitrator:', arbitratorList[arbitrator]);
     await arbitratorNomination('0xf17f52151EbEF6C7334FAD080c5704D77216b732', account);
     console.log('nominated!!!');
   };

@@ -23,7 +23,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
   const [timeline, setTimeLine] = useState(null);
   const [stages, setStages] = useState(null);
 
-  const getDate = value => {
+  const getDate = (value) => {
     const date = new Date(parseInt(value) * 1000);
     return date.toDateString();
   };
@@ -34,7 +34,12 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
         console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const res = await getTimeLine(NODE, contractAddress, groupId, account);
+          const res = await getTimeLine(
+            NODE,
+            contractAddress,
+            groupId,
+            account
+          );
           // There is an addition call detailsbeing made that replaces the details. A quick fix
           if (res) {
             console.log(res);
@@ -87,26 +92,26 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
       getDetails();
     }, 3000);
   }, [account]);
+
   // const arbitrationCreation = new Date(contractTime * 1000);
 
   return (
     <div>
-        {loading ? (
-          <>
-            <Skeleton active />
-            <Skeleton active />
-            <Skeleton active />
-          </>
-        ) : timeline ? ( 
-          <Stepper
-        lineColor={theme.surfaceIcon}
-        lineTop={15}
-        css={`
-          padding: ${3 * GU}px 0;
-        `}
-      >
-        {
-          stages.map(({ label, date, Icon }, index) => {
+      {loading ? (
+        <>
+          <Skeleton active />
+          <Skeleton active />
+          <Skeleton active />
+        </>
+      ) : timeline ? (
+        <Stepper
+          lineColor={theme.surfaceIcon}
+          lineTop={15}
+          css={`
+            padding: ${3 * GU}px 0;
+          `}
+        >
+          {stages.map(({ label, date, Icon }, index) => {
             const active = parseInt(timeline[0]) === index;
             return (
               <Step
@@ -160,13 +165,11 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
                 }
               />
             );
-          })
-        }
-        </Stepper> 
-          ) : (
-          <EmptyStateCard text="No Timeline details found." />
-        )}
-      
+          })}
+        </Stepper>
+      ) : (
+        <EmptyStateCard width='100%' text='No Timeline details found.' />
+      )}
     </div>
   );
 }

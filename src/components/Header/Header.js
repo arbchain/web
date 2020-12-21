@@ -1,8 +1,9 @@
 import React from 'react';
-import { ButtonIcon, GU, IconMenu } from '@aragon/ui';
+import { ButtonIcon, GU, IconMenu, IconDown, theme } from '@aragon/ui';
 import ActivityButton from '../Activity/ActivityButton';
 import GlobalPreferencesButton from '../GlobalPreferences/GlobalPreferencesButton';
 import HeaderLogo from './HeaderLogo';
+import IconPower from '@aragon/ui/dist/IconPower';
 
 const Header = React.memo(function Header({
   compactMode,
@@ -62,6 +63,7 @@ const Header = React.memo(function Header({
         >
           <GlobalPreferencesButton onOpen={onOpenPreferences} />
         </div>
+
         <div
           css={`
             display: flex;

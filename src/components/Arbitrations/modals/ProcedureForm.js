@@ -1,16 +1,18 @@
-import { Result, Spin } from 'antd';
+import { Result, Spin, Upload, message } from 'antd';
 import React, { useState } from 'react';
 import { Button, DropDown, Modal, TextInput, useTheme } from '@aragon/ui';
-// import {} from '../../../lib/contracts/'
 import '../../../css/result.css';
-import { LoadingOutlined } from '@ant-design/icons';
-import TextArea from 'antd/lib/input/TextArea';
-import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
-import { authorizeUser} from "../../../lib/db/threadDB";
+import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 
-const antIcon = (
-  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
-);
+import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
+import styled from 'styled-components';
+import { uploadDoc } from '../../../lib/file-storage';
+import { signDocuments } from '../../../lib/contracts/SPC';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
+
+const languages = ['English', 'French', 'Spanish'];
+const arbitrationSeats = ['London', 'lorem', 'lorem'];
 
 const ageementAddr = [
   '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
@@ -22,16 +24,55 @@ const courtAddr = [
   '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
 ];
 
+const ProcedureContainer = styled.div`
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  border: 4px;
+  border-color: #d9d9d9;
+  border-width: thin;
+  border-style: solid;
+  margin: 30px;
+  padding: 30px;
+  .inputGroups {
+    margin-bottom: 28px !important;
+    justify-content: center;
+    .dropDown {
+      border-color: #d9d9d9;
+    }
+  }
+  .upload {
+    width: 100%;
+  }
+  .submit-btn {
+    background-color: #4d4cbb;
+    color: #fff;
+  }
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 8px;
+  .inputGroups {
+    margin-bottom: 28px !important;
+    justify-content: center;
+  }
+`;
+
 export default function ProcedureForm({
   procedureModal,
   setProcedureModal,
   account,
   node,
   counterParties,
-  caller
+  caller,
+  client,
+  updateProcedureList,
+  updateAddressList,
 }) {
   const theme = useTheme();
-  console.log("Caller:",caller)
+  // console.log('Caller:', caller);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [agreementAddress, setAgreementAddress] = useState(0);
@@ -39,6 +80,9 @@ export default function ProcedureForm({
   const [respondentAddress, setRespondentAddress] = useState(0);
   const [courtAddress, setCourtAddress] = useState(0);
   const [procedureSubmit, setProcedureSubmit] = useState(false);
+  const [seat, setSeat] = useState(0);
+  const [language, setLanguage] = useState(0);
+  const [document, setDocument] = useState(null);
 
   const closeProcedure = () => {
     setProcedureModal(false);
@@ -51,34 +95,77 @@ export default function ProcedureForm({
     createProcedureContract,
   } = deployProcedureContract(node);
 
-  console.log('Procedure Addition Staus', procedureAdditionStatus);
-  console.log('Procedure Contract', resultProcedureContract);
-
   const handleClick = async () => {
     setProcedureSubmit(true);
-    const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
-    await createProcedureContract(account, [
-      name,
-      description,
-      ageementAddr[agreementAddress],
-      caller.address, // Add user public key not private key!//
-      counterParties[respondentAddress].address,
-      courtAddr[courtAddress],
-    ], dbClient, caller, counterParties[respondentAddress]);
+    const partiesInvolved = [
+      {
+        partyAddress: caller.address,
+        name: caller.name,
+      },
+      {
+        partyAddress: counterParties[respondentAddress].address,
+        name: counterParties[respondentAddress].name,
+      },
+    ];
+
+    const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'), 'AWS');
+    console.log('UploadStatus:', fileDetails);
+    const res = await createProcedureContract(
+      account,
+      [
+        name,
+        description,
+        ageementAddr[agreementAddress],
+        caller.address, // Add user public key not private key!//
+        counterParties[respondentAddress].address,
+        courtAddr[courtAddress],
+      ],
+      client,
+      caller,
+      counterParties[respondentAddress],
+      partiesInvolved,
+      arbitrationSeats[seat],
+      languages[language],
+      fileDetails
+    );
+
+    updateAddressList({
+      contractAddress: res.contractAddress,
+      groupId: res.privacyGroupId,
+    });
+    updateProcedureList({
+      agreementAddress: ageementAddr[agreementAddress],
+      claimantName: caller.name,
+      courtAddress: courtAddr[courtAddress],
+      createdAt: new Date().toDateString(),
+      description: description,
+      name: name,
+      respondentName: counterParties[respondentAddress].name,
+    });
   };
 
   const createAgain = () => {
     setProcedureSubmit(false);
   };
 
-  return (
+  // file upload
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    customRequest: data => {
+      setDocument(data.file);
+    },
+    onChange(status) {
+      if (status) {
+        message.success(` file uploaded successfully.`);
+      } else {
+        message.error(`file upload failed.`);
+      }
+    },
+  };
 
-    <Modal
-      style={{ zIndex: '50' }}
-      width='50rem'
-      visible={procedureModal}
-      onClose={closeProcedure}
-    >
+  return (
+    <Modal style={{ zIndex: '50' }} width="45rem" visible={procedureModal} onClose={closeProcedure}>
       <div
         style={{
           fontSize: '1.5rem',
@@ -93,8 +180,8 @@ export default function ProcedureForm({
       {procedureSubmit ? (
         resultProcedureContract ? (
           <Result
-            status='success'
-            title='Successfully created Procedure Agreement!'
+            status="success"
+            title="Successfully created Procedure Agreement!"
             extra={[
               <Button
                 style={{
@@ -115,154 +202,119 @@ export default function ProcedureForm({
           </div>
         )
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            borderRadius: 10,
-            borderColor: '#D9D9D9',
-            borderWidth: 'thin',
-            borderStyle: 'solid',
-            margin: '30px',
-            padding: '30px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Name </div>
+        <ProcedureContainer>
+          <GridContainer>
+            <div className="inputGroups ">
+              <h3>Name</h3>
+              <TextInput
+                wide
+                value={name}
+                onChange={event => {
+                  setName(event.target.value);
+                }}
+              />
+            </div>
+            <div className="inputGroups ">
+              <h3>Agreement Address</h3>
+              <DropDown
+                className="dropDown"
+                wide
+                items={ageementAddr}
+                selected={agreementAddress}
+                onChange={(index, items) => {
+                  setAgreementAddress(index);
+                  setProcedureModal(true);
+                }}
+              />
+            </div>
+          </GridContainer>
+          <div className="inputGroups ">
+            <h3>Description</h3>
             <TextInput
-              style={{ flexBasis: '100%' }}
-              value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Description</div>
-            <TextArea
-              style={{ flexBasis: '100%' }}
+              multiline
+              wide
               value={description}
-              onChange={(event) => {
+              onChange={event => {
                 setDescription(event.target.value);
               }}
             />
           </div>
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Agreement Addresses</div>
+          <div className="inputGroups ">
+            <h3>Respondant Address</h3>
             <DropDown
-              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={ageementAddr}
-              selected={agreementAddress}
+              className="dropDown"
+              wide
+              items={counterParties.map(party => {
+                // return party.address.slice(0, 15) + '...';
+                return party.name;
+              })}
+              selected={respondentAddress}
               onChange={(index, items) => {
-                setAgreementAddress(index);
+                setRespondentAddress(index);
                 setProcedureModal(true);
               }}
             />
           </div>
-
-          {/*<div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Claimant Address:</div>
-
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={claimantAddress}
-              onChange={(event) => {
-                setClaimantAddress(event.target.value);
-              }}
-            />
-          </div>*/}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Respondent Address:</div>
-            {/*<TextInput
-              style={{ flexBasis: '100%' }}
-              value={respondentAddress}
-              onChange={(event) => {
-                setRespondentAddress(event.target.value);
-              }}
-            />*/}
-            <div style={{ flexBasis: '100%' }}>
+          <GridContainer>
+            <div className="inputGroups ">
+              <h3>Seat</h3>
               <DropDown
-                style={{ borderColor: '#D9D9D9' }}
-                items={counterParties.map((party) => {
-                  //return party.address.slice(0, 15) + '...';
-                  return party.name
-                })}
-                selected={respondentAddress}
+                className="dropDown"
+                wide
+                items={arbitrationSeats}
+                selected={seat}
                 onChange={(index, items) => {
-                  setRespondentAddress(index);
+                  setSeat(index);
                   setProcedureModal(true);
                 }}
               />
             </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Court Address:</div>
-            <DropDown
-              style={{ borderColor: '#D9D9D9' }}
-              items={courtAddr.map((party) => {
-                return party.slice(0, 20) + '...';
-              })}
-              selected={courtAddress}
-              onChange={(index, items) => {
-                setCourtAddress(index);
-                setProcedureModal(true);
-              }}
-            />
-          </div>
+            <div className="inputGroups ">
+              <h3>Language</h3>
+              <DropDown
+                className="dropDown"
+                wide
+                items={languages}
+                selected={language}
+                onChange={(index, items) => {
+                  setLanguage(index);
+                  setProcedureModal(true);
+                }}
+              />
+            </div>
+          </GridContainer>
 
-          <Button
-            label='SUBMIT'
-            style={{
-              backgroundColor: theme.selected,
-              color: 'white',
-            }}
-            onClick={handleClick}
-          />
-        </div>
+          <GridContainer>
+            <div className="inputGroups ">
+              <h3>Court Address</h3>
+              <DropDown
+                className="dropDown"
+                wide
+                items={courtAddr.map(party => {
+                  return party.slice(0, 20) + '...';
+                })}
+                selected={courtAddress}
+                onChange={(index, items) => {
+                  setCourtAddress(index);
+                  setProcedureModal(true);
+                }}
+              />
+            </div>
+            <div className="inputGroups ">
+              <h3>Upload Documents </h3>
+              <Upload className="upload" {...props}>
+                <Button
+                  className="upload"
+                  wide
+                  icon={<UploadOutlined style={{ color: '#212b36' }} />}
+                  label="Click to Upload"
+                />
+              </Upload>
+            </div>
+          </GridContainer>
+          <Button wide label="SUBMIT" className="submit-btn" onClick={handleClick} />
+        </ProcedureContainer>
       )}
     </Modal>
   );

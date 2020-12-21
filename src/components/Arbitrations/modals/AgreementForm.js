@@ -1,16 +1,15 @@
 /* eslint-disable */
 
-import { Result, Spin } from 'antd';
+import { Result, Spin, message } from 'antd';
 import React, { useState } from 'react';
 import { DropDown, Modal, TextInput, useTheme, Button } from '@aragon/ui';
-
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
-import { Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import {authorizeUser} from "../../../lib/db/threadDB";
+import { authorizeUser } from '../../../lib/db/threadDB';
+
+const Web3 = require('web3');
 
 // styledcomponent -css
 
@@ -27,15 +26,46 @@ const ModalWrapper = styled(Modal)`
   z-index: 50;
 `;
 
-const Web3 = require('web3');
+const AgreementContainer = styled.div`
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  border: 4px;
+  border-color: #d9d9d9;
+  border-width: thin;
+  border-style: solid;
+  margin: 30px;
+  padding: 30px;
+  .inputGroups {
+    margin-bottom: 28px !important;
+    justify-content: center;
+    .dropDown {
+      border-color: #d9d9d9;
+    }
+  }
+  .upload {
+    width: 100%;
+  }
+  .submit-btn {
+    background-color: #4d4cbb;
+    color: #fff;
+  }
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 8px;
+  .inputGroups {
+    margin-bottom: 28px !important;
+    justify-content: center;
+  }
+`;
+
 const antIcon = (
   <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
 );
 
-/*const counterParties = [
-  '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
-  '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
-];*/
 const languages = ['English', 'French', 'Spanish'];
 
 const props = {
@@ -62,7 +92,11 @@ export default function AgreementForm({
   account,
   node,
   counterParties,
-  caller
+  caller,
+  dbClient,
+  updateAgreementList,
+  updateAddressList,
+  updateAgreementData
 }) {
   const theme = useTheme();
 
@@ -76,7 +110,6 @@ export default function AgreementForm({
   const closeAgreement = () => {
     setAgreementModal(false);
     setAgreementSubmit(false);
-    setResult(false);
   };
   const {
     result,
@@ -85,40 +118,66 @@ export default function AgreementForm({
     create,
   } = createAgreement(node);
 
-  console.log('Agreement Addition Status', agreementAdditionStatus);
-  console.log(' Agreement Contract', result);
-
   const createAgain = () => {
     setAgreementSubmit(false);
-    setResult(false);
   };
 
   const handleClick = async () => {
     setAgreementSubmit(true);
-    const dbClient = await authorizeUser(localStorage.getItem('wpassword'))
-    create(account, [
-      2,
-      seat,
-      languages[language],
-      'LCIA',
-      'Consenso Labs',
-      counterParties[counterParty].address,
-      'Apple Inc',
-      disputeType,
-      docHash,
-    ], dbClient, caller, counterParties[counterParty]);
-    if (result !== false && resultProcedureContract) {
-      agreementAddition(result.contractAddress, result.privacyGroupId, account);
-    }
+    const res = await create(
+      account,
+      [
+        2,
+        seat,
+        languages[language],
+        'LCIA',
+        'Consenso Labs',
+        counterParties[counterParty].address,
+        'Apple Inc',
+        disputeType,
+        docHash,
+      ],
+      dbClient,
+      caller,
+      counterParties[counterParty]
+    );
+
+    // if(res){
+    //   updateAgreementData({claimantName: caller.name,
+    //     createdAt: new Date().toDateString(),
+    //     disputeType: disputeType,
+    //     documentName: "DEMO DOC",
+    //     language:  languages[language],
+    //     law: "LCIA",
+    //     respondentName: counterParties[counterParty].name,
+    //     seat: seat}, {contractAddress: res.contractAddress,
+    //       groupId: res.privacyGroupId,})
+    // }
+
+    // updateAddressList({
+    //   contractAddress: res.contractAddress,
+    //   groupId: res.privacyGroupId,
+    // });
+
+    // updateAgreementList({
+    //   claimantName: caller.name,
+    //   createdAt: new Date().toDateString(),
+    //   disputeType: disputeType,
+    //   documentName: "DEMO DOC",
+    //   language:  languages[language],
+    //   law: "LCIA",
+    //   respondentName: counterParties[counterParty].name,
+    //   seat: seat
+    // });
   };
 
   return (
     <ModalWrapper
-      width='50rem'
+      width='40rem'
       visible={agreementModal}
       onClose={closeAgreement}
     >
-      <Title>Create an Arbitration Agreement</Title>
+      <Title>Create New Agreement</Title>
 
       {agreementSubmit ? (
         result ? (
@@ -146,142 +205,87 @@ export default function AgreementForm({
           </div>
         )
       ) : (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            borderRadius: 10,
-            borderColor: '#D9D9D9',
-            borderWidth: 'thin',
-            borderStyle: 'solid',
-            margin: '30px',
-            padding: '30px',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Dispute Type:</div>
-            <DropDown
-              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={['Future', 'Existing']}
-              selected={disputeType}
-              onChange={(index, items) => {
-                console.log(index)
-                setDisputeType(index);
-                setAgreementModal(true);
-              }}
-            />
-          </div>
+        <>
+          <AgreementContainer>
+            <GridContainer>
+              <div className='inputGroups '>
+                <h3>Dispute Type</h3>
+                <DropDown
+                  className='dropDown'
+                  wide
+                  items={['Future', 'Existing']}
+                  selected={disputeType}
+                  onChange={(index, items) => {
+                    console.log(index);
+                    setDisputeType(index);
+                    setAgreementModal(true);
+                  }}
+                />
+              </div>
+              <div className='inputGroups '>
+                <h3>Arbitration Seat</h3>
+                <TextInput
+                  wide
+                  value={seat}
+                  onChange={(event) => {
+                    setSeat(event.target.value);
+                  }}
+                />
+              </div>
+            </GridContainer>
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Arbitration Seat:</div>
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={seat}
-              onChange={(event) => {
-                setSeat(event.target.value);
-              }}
-            />
-          </div>
+            <GridContainer>
+              <div className='inputGroups '>
+                <h3>Arbitration Language</h3>
+                <DropDown
+                  wide
+                  className='dropDown'
+                  items={languages}
+                  selected={language}
+                  onChange={(index, items) => {
+                    setLanguage(index);
+                    setAgreementModal(true);
+                  }}
+                />
+              </div>
+              <div className='inputGroups '>
+                <h3>Counter Party</h3>
+                <DropDown
+                  wide
+                  className='dropDown'
+                  items={counterParties.map((party) => {
+                    //return party.address.slice(0, 15) + '...';
+                    return party.name;
+                  })}
+                  selected={counterParty}
+                  onChange={(index, items) => {
+                    setCounterParty(index);
+                    setAgreementModal(true);
+                  }}
+                />
+              </div>
+            </GridContainer>
 
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Arbitration Language:</div>
-            <DropDown
-              style={{ flexBasis: '100%', borderColor: '#D9D9D9' }}
-              items={languages}
-              selected={language}
-              onChange={(index, items) => {
-                setLanguage(index);
-                setAgreementModal(true);
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Counter Party:</div>
-            <div style={{ flexBasis: '100%' }}>
-              <DropDown
-                style={{ borderColor: '#D9D9D9' }}
-                items={counterParties.map((party) => {
-                  //return party.address.slice(0, 15) + '...';
-                  return party.name
-                })}
-                selected={counterParty}
-                onChange={(index, items) => {
-                  setCounterParty(index);
-                  setAgreementModal(true);
+            <div className='inputGroups '>
+              <h3>Agreement Document</h3>
+              <TextInput
+                wide
+                value={docHash}
+                onChange={(event) => {
+                  setDocHash(event.target.value);
                 }}
               />
             </div>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Agreement Document:</div>
-            <TextInput
-              style={{ flexBasis: '100%' }}
-              value={docHash}
-              onChange={(event) => {
-                setDocHash(event.target.value);
-              }}
+
+            <Button
+              wide
+              label='SUBMIT'
+              className='submit-btn'
+              label='SUBMIT'
+              onClick={handleClick}
             />
-          </div>
-
-          {/*<div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              margin: '20px',
-              alignItems: 'center',
-            }}
-          >
-            <div style={{ flexBasis: '100%' }}> Upload Document:</div>
-            <Upload {...props}>
-              <button icon={<UploadOutlined />}>Click to Upload</button>
-            </Upload>
-          </div>*/}
-
-          <Button
-            label='SUBMIT'
-            style={{
-              backgroundColor: theme.selected,
-              color: 'white',
-            }}
-            onClick={handleClick}
-          />
-        </div>
+          </AgreementContainer>
+        </>
       )}
     </ModalWrapper>
   );

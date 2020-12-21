@@ -15,7 +15,7 @@ import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { fetchAgreement } from '../../../lib/contracts/Agreement';
 
 function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
-  console.log("add", contractAddress)
+  console.log('add', contractAddress);
   const history = useHistory();
   const theme = useTheme();
 
@@ -27,7 +27,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
   useEffect(() => {
     async function getDetails() {
       try {
-        console.log(account)
+        console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
           const details = await fetchAgreement(
@@ -51,7 +51,6 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
 
   return (
     <>
-
       {loading ? (
         <>
           <Skeleton active />
@@ -166,46 +165,46 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                   margin-bottom: ${2 * GU}px;
                 `}
               >
-              <div>
-                <h2
-                  css={`
-                    ${textStyle('label2')};
-                    color: ${theme.surfaceContentSecondary};
-                    margin-bottom: ${2 * GU}px;
-                  `}
-                >
-                  Governing Law
-                </h2>
-                <Text
-                  css={`
-                    display: inline-block;
-                    ${textStyle('body2')};
-                  `}
-                >
-                  {details[3]}
-                </Text>
-              </div>
+                <div>
+                  <h2
+                    css={`
+                      ${textStyle('label2')};
+                      color: ${theme.surfaceContentSecondary};
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    Governing Law
+                  </h2>
+                  <Text
+                    css={`
+                      display: inline-block;
+                      ${textStyle('body2')};
+                    `}
+                  >
+                    {details[3]}
+                  </Text>
+                </div>
 
-              <div>
-                <h2
-                  css={`
-                    ${textStyle('label2')};
-                    color: ${theme.surfaceContentSecondary};
-                    margin-bottom: ${2 * GU}px;
-                  `}
-                >
-                  Dispute Type
-                </h2>
+                <div>
+                  <h2
+                    css={`
+                      ${textStyle('label2')};
+                      color: ${theme.surfaceContentSecondary};
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    Dispute Type
+                  </h2>
 
-                <Text
-                  css={`
-                    display: inline-block;
-                    ${textStyle('body2')};
-                  `}
-                >
-                  {['Future','Existing'][details[4]]}
-                </Text>
-              </div>
+                  <Text
+                    css={`
+                      display: inline-block;
+                      ${textStyle('body2')};
+                    `}
+                  >
+                    {['Future', 'Existing'][details[4]]}
+                  </Text>
+                </div>
               </div>
 
               <Button
@@ -218,13 +217,13 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                   background: ${theme.selected};
                 `}
               >
-                 AGREE
+                AGREE
               </Button>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard text='No agreement details found.' />
+        <EmptyStateCard width='100%' text='No agreement details found.' />
       )}
     </>
   );

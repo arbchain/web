@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
   Bar,
@@ -17,6 +17,7 @@ import {
 } from '@aragon/ui';
 
 import AgreementForm from './modals/AgreementForm';
+// import NewAgreement from './modals/Popovers/NewAgreement';
 import AgreementCard from './AgreementCard';
 import { useAccount } from '../../wallet/Account.js';
 import {
@@ -66,23 +67,68 @@ const BarContainer = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+
+  .AgreementModal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  button {
+    display: flex;
+    margin-bottom: 12px;
+    margin-left: 0.5rem;
+
+    background-color: #4d4cbb;
+    color: #fff;
+  }
+`;
+
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
   const [loading, setLoading] = useState(false);
+  const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementModal, setAgreementModal] = useState(false);
   const [caller, setCaller] = useState(null);
   const [parties, setParties] = useState([]);
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
-  const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementAddress, setAgreementAddress] = useState(null);
   const [agreementsLoading, setAgreementsLoading] = useState(true);
+  const [opened, setOpened] = useState(false);
 
   const openAgreement = () => setAgreementModal(true);
+  const openSidePanel = () => setOpened(true);
 
   const walletAccount = useAccount();
   useAuthentication();
+
+  // const updateAgreementData = useCallback(
+  //   (agreementData, addressData) => {
+  //     setAgreementAddress([...agreementAddress, addressData]);
+  //     setAgreementDetails([...agreementDetails, agreementData]);
+  //   },
+  //   [agreementDetails, agreementAddress]
+  // );
+
+  const updateAgreementList = useCallback(
+    agreementData => {
+      setAgreementDetails([...agreementDetails, agreementData]);
+    },
+    [agreementDetails]
+  );
+
+  const updateAddressList = useCallback(
+    addressData => {
+      setAgreementAddress([...agreementAddress, addressData]);
+    },
+    [agreementAddress]
+  );
 
   useEffect(() => {
     async function load() {
@@ -101,7 +147,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const address = await getAgreementContractAddress(client, account[0]);
         setAgreementAddress(address);
         setAgreementsLoading(false);
-        console.log('ADRess:', address);
         setParties(users.party);
         setCaller(users.caller);
         setArbitrator(users.arbitrator);
@@ -118,22 +163,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       try {
         if (agreementAddress.length) {
           setLoading(true);
-          console.log('Agreement adrees length', agreementAddress.length);
           let index = 0;
           const allDetails = [];
           while (index < parseInt(agreementAddress.length)) {
-            /* const details = await fetchAgreement(
-              NODES[0],
-              agreementAddress[index].contractAddress,
-              agreementAddress[index].groupId,
-              walletAccount.account
-            ); */
-            const details = await getAgreementMetaData(dbClient, agreementAddress[index].metaData);
-            allDetails.push(details);
+            allDetails.push(agreementAddress[index].metaData);
             index++;
           }
-          console.log(allDetails);
           setAgreementDetails(allDetails);
+          console.log(allDetails);
           setLoading(false);
         }
       } catch (err) {
@@ -143,15 +180,14 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     agreementAddressCall();
   }, [agreementAddress]);
 
+  if (agreementDetails) {
+    console.log('Agreement Details', agreementDetails);
+    console.log('Agreement Addresses', agreementAddress);
+  }
+
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
+      <ButtonContainer>
         <AgreementForm
           agreementModal={agreementModal}
           setAgreementModal={setAgreementModal}
@@ -159,28 +195,27 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           node={NODES[0]}
           counterParties={parties}
           caller={caller}
-        />
-        <div />
-        {/* procedure modal */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}
+          dbClient={dbClient}
+          updateAgreementList={updateAgreementList}
+          updateAddressList={updateAddressList}
         />
 
-        <div style={{ display: 'flex', marginBottom: '12px' }}>
-          <div style={{ marginLeft: '0.5rem', marginRight: '0.25rem' }}>
-            <Button
-              label="+NEW AGREEMENT"
-              onClick={() => {
-                openAgreement();
-              }}
-            />
-          </div>
-        </div>
-      </div>
+        {/* <NewAgreement
+          opened={opened}
+          setOpened={setOpened}
+          account={walletAccount.account}
+          node={NODES[0]}
+          counterParties={parties}
+          caller={caller}
+        /> */}
+
+        <Button
+          label="+NEW AGREEMENT"
+          onClick={() => {
+            openAgreement();
+          }}
+        />
+      </ButtonContainer>
 
       <Bar>
         <BarContainer>
@@ -220,7 +255,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         agreementDetails.map((agreement, index) => {
           return (
             <AgreementCard
-              key={agreement[0]}
+              key={index}
               agreement={agreement}
               selectDispute={selectDispute}
               agreementAddress={agreementAddress[index]}
@@ -228,7 +263,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           );
         })
       ) : (
-        <EmptyStateCard text="No agreement found." />
+        <EmptyStateCard width="100%" text="No Agreements found." />
       )}
     </>
   );

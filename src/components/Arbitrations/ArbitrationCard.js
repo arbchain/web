@@ -75,7 +75,7 @@ const RespondantContainer = styled.div`
 function ArbitrationCard({ arbitration, procedureAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(procedureAddress.groupId);
-  console.log('Card logging', arbitration);
+
 
   return (
     <Main>

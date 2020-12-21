@@ -19,7 +19,7 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
         if (Object.keys(account).length) {
           setLoading(true);
           const details = await getAllStatements(NODE, contractAddress, groupId, account);
-          console.log('Statement DETAILS:', details);
+
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -55,6 +55,11 @@ function AllStatements({ groupId, contractAddress, NODE, account }) {
                     documentLocation={value.documentLocation}
                     documentName={value.documentName}
                     cipherKey={value.cipherKey}
+                    hash={value.documentHash}
+                    node={NODE}
+                    contractAddress ={contractAddress}
+                    groupId = {groupId}
+                    account={account}
                   />,
                 ],
               ],

@@ -15,7 +15,6 @@ const NODES = Object.keys(networks).map((node) => {
 });
 
 function NominateWitness({contractAddress, account, groupId, NODE, nominatedWitness}) {
-  console.log('nominatedWitness:', nominatedWitness);
   const theme = useTheme();
   const witnessList = ['wit1', 'wit2', 'wit3'];
 
@@ -32,7 +31,6 @@ function NominateWitness({contractAddress, account, groupId, NODE, nominatedWitn
   ];
 
   const handleClick = async () => {
-    console.log('Nominated witness:', nominatedWitness[witness]);
     await witnessNomination('0xf17f52151EbEF6C7334FAD080c5704D77216b732', account);
     console.log('nominated!!!');
   };

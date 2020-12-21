@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Bar,
   Button,
@@ -15,16 +15,16 @@ import {
 
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
-import {
-  authorizeUser,
-  getAllUsers,
-  getProcedureContractAddress,
-  getProcedureMetaData,
-} from '../../lib/db/threadDB';
+import { useMetaData } from '../../contexts/MetaData.js';
+import { authorizeUser, getAllUsers, getProcedureContractAddress } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
 import styled from 'styled-components';
 import useAuthentication from '../../utils/auth';
+
+// testing
+
+import NewProcedure from './modals/Forms/NewProcedure';
 
 const Web3 = require('web3');
 const networks = require('../../wallet/network');
@@ -77,15 +77,17 @@ const ButtonContainer = styled.div`
   button {
     display: flex;
     margin-bottom: 12px;
-    margin-left: 0.5rem;
+    width: auto;
     background-color: #4d4cbb;
     color: #fff;
   }
 `;
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
-  const [loading, setLoading] = useState(true);
+  const walletAccount = useAccount();
+  const metaDataContext = useMetaData();
 
+  const [loading, setLoading] = useState(!metaDataContext.metadata.length);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
   const [caller, setCaller] = useState(null);
@@ -93,15 +95,27 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
-  const [procedureAddress, setProcedureAddress] = useState(null);
-  const [proceduresLoading, setProceduresLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(true);
+  const [procedureAddress, setProcedureAddress] = useState(metaDataContext.metadata);
+  const [proceduresLoading, setProceduresLoading] = useState(!metaDataContext.metadata.length);
+  const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
 
-  const walletAccount = useAccount();
-
   useAuthentication();
+
+  const updateProcedureList = useCallback(
+    procedureData => {
+      setArbitrationDetails([...arbitrationDetails, procedureData]);
+    },
+    [arbitrationDetails]
+  );
+
+  const updateAddressList = useCallback(
+    addressData => {
+      setProcedureAddress([...procedureAddress, addressData]);
+    },
+    [procedureAddress]
+  );
 
   useEffect(() => {
     async function load() {
@@ -109,9 +123,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
         // Update the account context by using a callback function
+        const user = await web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
+          address: user.address,
+          sign: user,
         });
 
         const client = await authorizeUser(localStorage.getItem('wpassword'));
@@ -119,6 +136,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const users = await getAllUsers(client, account[0]);
         const address = await getProcedureContractAddress(client, account[0]);
         setProcedureAddress(address);
+        metaDataContext.changeMetaData(address);
         setProceduresLoading(false);
         setParties(users.party);
         setCaller(users.caller);
@@ -138,11 +156,11 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(procedureAddress.length)) {
-            const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
-            allDetails.push(details);
+            // const details = await getProcedureMetaData(dbClient, procedureAddress[index].metaData);
+            allDetails.push(procedureAddress[index].metaData);
             index++;
+            setArbitrationDetails(allDetails);
           }
-          setArbitrationDetails(allDetails);
           setLoading(false);
         }
       } catch (err) {
@@ -151,10 +169,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     }
     procedureAddressCall();
   }, [proceduresLoading]);
-
-  if (arbitrationDetails.length !== 0) {
-    console.log('All Arbitration Details', arbitrationDetails);
-  }
 
   return (
     <>
@@ -167,8 +181,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             node={NODES[0]}
             counterParties={parties}
             caller={caller}
+            client={dbClient}
+            updateProcedureList={updateProcedureList}
+            updateAddressList={updateAddressList}
           />
         </div>
+
+        <NewProcedure opened={opened} setOpened={setOpened} />
 
         <Button
           label="+NEW PROCEDURE"
@@ -176,6 +195,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             openProcedure();
           }}
         />
+
+        {/* <Button
+          label='+NEW test Proc'
+          onClick={() => {
+            setOpened();
+          }}
+        /> */}
       </ButtonContainer>
 
       <Bar>
@@ -225,7 +251,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           );
         })
       ) : (
-        <EmptyStateCard text="No arbitrations found." />
+        <EmptyStateCard style={{ width: '100%' }} text="No Arbitrations found." />
       )}
     </>
   );
