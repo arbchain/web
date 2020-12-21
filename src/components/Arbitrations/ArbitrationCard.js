@@ -107,7 +107,7 @@ function ArbitrationCard({ arbitration, procedureAddress }) {
           </Description>
           <RespondantContainer>
             <div>
-              <h3>Respondant Name</h3>
+              <h3>Respondent Name</h3>
               <h2>{arbitration.respondentName}</h2>
             </div>
 

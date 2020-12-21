@@ -141,7 +141,7 @@ export default function ProcedureForm({
     updateProcedureList({
       agreementAddress: agreementContracts[agreementAddress].contractAddress,
       claimantName: caller.name,
-      courtAddress: court.name,
+      courtName: court.name,
       createdAt: new Date().toDateString(),
       description: description,
       name: name,

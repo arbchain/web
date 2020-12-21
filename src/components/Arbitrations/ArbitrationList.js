@@ -15,6 +15,7 @@ import {
 
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
+import { useMetaData } from '../../contexts/MetaData.js';
 import { authorizeUser, getAllUsers, getProcedureContractAddress } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
@@ -83,8 +84,10 @@ const ButtonContainer = styled.div`
 `;
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
-  const [loading, setLoading] = useState(true);
+  const walletAccount = useAccount();
+  const metaDataContext = useMetaData();
 
+  const [loading, setLoading] = useState(!metaDataContext.metadata.length);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
   const [caller, setCaller] = useState(null);
@@ -92,14 +95,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
-  const [procedureAddress, setProcedureAddress] = useState(null);
   const [agreementContracts, setAgreementContracts] = useState([]);
-  const [proceduresLoading, setProceduresLoading] = useState(true);
+  const [procedureAddress, setProcedureAddress] = useState(metaDataContext.metadata);
+  const [proceduresLoading, setProceduresLoading] = useState(!metaDataContext.metadata.length);
   const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
-
-  const walletAccount = useAccount();
 
   useAuthentication();
 
@@ -124,7 +125,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const account = await wallet.login(localStorage.getItem('wpassword'));
         // Update the account context by using a callback function
         const user = await web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
-        // console.log("USERR:",user)
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
@@ -143,8 +143,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           setAgreementContracts(users.caller.agreementContracts)
         }
         // console.log("Meta:",users.caller)
-        //const address = await getProcedureContractAddress(client, account[0]);
         setProcedureAddress(address);
+        metaDataContext.changeMetaData(address);
+        setProceduresLoading(false);
+        setParties(users.party);
         setCaller(users.caller);
         setParties(users.party);
         setArbitrator(users.arbitrator);

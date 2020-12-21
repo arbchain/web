@@ -19,12 +19,14 @@ import ProcedureDetails from './components/Arbitrations/ProcedureDetails';
 import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
 import AgreementDetails from './components/Arbitrations/AgreementDetails';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
-import { AccountProvider } from './wallet/Account.js';
+import { AccountProvider } from './wallet/Account';
+import { MetaDataProvider } from './contexts/MetaData';
 import Database from "./components/Database";
 
 function App() {
   return (
     <AccountProvider>
+      <MetaDataProvider>
       <BrowserRouter>
         <ActivityProvider>
           <Route exact path='/login' component={LoginPage} />
@@ -53,6 +55,7 @@ function App() {
           </Main>
         </ActivityProvider>
       </BrowserRouter>
+      </MetaDataProvider>
     </AccountProvider>
   );
 }
