@@ -113,7 +113,7 @@ export function createProcedureStatement(nodeSelected, contractAddress, privacyG
     ) => {
       const res = await web3Contract.call(
         'createProcedureStatement',
-        [parties, seat, language, documentLocation, documentName,documentHash, cipherKey],
+        [parties, seat, language, documentLocation, documentName, documentHash, cipherKey],
         account
       );
       console.log('RES:', res);
@@ -133,7 +133,7 @@ export function nominateArbitrator(nodeSelected, contractAddress, privacyGroupId
   const arbitratorNomination = useCallback(
     async (arbitratorAddress, account) => {
       const res = await web3Contract.call('nominateArbitrator', [arbitratorAddress], account);
-      console.log("Nominate res:",res)
+      console.log('Nominate res:', res);
     },
     [connected]
   );
@@ -206,7 +206,16 @@ export function createStatement(nodeSelected, contractAddress, privacyGroupId) {
       // const docHash = Web3.utils.fromAscii(documentHash)
       const res = await web3Contract.call(
         'createStatement',
-        [parties, stakeholder, statementType, subject, documentHash, cipherKey, documentLocation, documentName],
+        [
+          parties,
+          stakeholder,
+          statementType,
+          subject,
+          documentHash,
+          cipherKey,
+          documentLocation,
+          documentName,
+        ],
         account
       );
       console.log('RES:', res);
@@ -264,17 +273,24 @@ export function issueAward(nodeSelected) {
 /**
  * Function 12: signDocuments
  */
-export function signDocuments(nodeSelected) {
-  const { connected } = useContract(nodeSelected);
+export function signDocuments(nodeSelected, contractAddress, privacyGroupId) {
+  const { connect } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const documentSign = useCallback(
     async (document, account) => {
-      return web3Contract.documentSigning('signDocuments', [document], account);
+      console.log('Signing Document:', document);
+      const { replayNonce, signature } = await web3Contract.documentSigning([document], account);
+      const res = await web3Contract.call(
+        'signDocuments',
+        [replayNonce, signature.signature, document],
+        account
+      );
+      console.log('Signing status:', res);
     },
-    [connected]
+    [connect]
   );
 
-  return { connected, documentSign };
+  return { connect, documentSign };
 }
 
 /**
@@ -336,7 +352,7 @@ export function nominateWitness(nodeSelected, contractAddress, privacyGroupId) {
   const witnessNomination = useCallback(
     async (arbitratorAddress, account) => {
       const res = await web3Contract.call('submitWitness', [arbitratorAddress], account);
-      console.log("Nominate res:",res)
+      console.log('Nominate res:', res);
     },
     [connected]
   );
@@ -374,7 +390,12 @@ export async function getAllProposals(nodeSelected, contractAddress, privacyGrou
   return res;
 }
 
-export async function getArbitrationDetails(nodeSelected, contractAddress, privacyGroupId, account) {
+export async function getArbitrationDetails(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
@@ -382,6 +403,43 @@ export async function getArbitrationDetails(nodeSelected, contractAddress, priva
       await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
       res = await web3Contract.call('getArbitrationDetails', [], account);
       console.log(res);
+    }
+  } catch (err) {
+    return false;
+  }
+  return res;
+}
+
+export async function getTimeLine(nodeSelected, contractAddress, privacyGroupId, account) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getTimeLine', [], account);
+      console.log(res);
+    }
+  } catch (err) {
+    return false;
+  }
+  return res;
+}
+
+export async function getSignature(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account,
+  fileHash
+) {
+  const connected = await web3Contract.connect(nodeSelected);
+  let res = null;
+  try {
+    if (connected) {
+      console.log('GEtting sig');
+      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      res = await web3Contract.call('getDocumentDetails', [fileHash], account);
+      // console.log(res);
     }
   } catch (err) {
     return false;

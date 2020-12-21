@@ -5,48 +5,42 @@ import {
   Text,
   textStyle,
   useTheme,
-  Button,
-  LoadingRing,
   EmptyStateCard,
 } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ProcedureStatementForm from '.././modals/ProcedureStatement';
-import StatementForm from '../modals/StatementForm';
+// import StatementForm from '../modals/StatementForm';
+import StatementForm from '.././modals/Forms/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 import Respond from './allDetailCards/Response';
 import Statement from './allDetailCards/Statement';
 
 function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
-  console.log("add", contractAddress)
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
-
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
+  const [opened, setOpened] = useState(false);
   const openStatement = () => setStatementModal(true);
 
   const status = ['Open', 'Close'];
   // Procedure statement modal
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
+
+  const openSidePanel = () => setOpened(true);
   // Procedure Statement form
   const openProcedureStatement = () => setProcedureStatementModal(true);
 
   useEffect(() => {
     async function getDetails() {
       try {
-        console.log(account)
+        console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getArbitrationDetails(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
-          console.log('DETAILS:', details);
+          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -70,31 +64,15 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         }}
       >
         <StatementForm
-          statementModal={statementModal}
-          setStatementModal={setStatementModal}
+          // statementModal={statementModal}
+          // setStatementModal={setStatementModal}
           contractAddress={contractAddress}
           groupId={groupId}
           account={account}
           caller={caller}
           parties={parties}
-        />
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <ProcedureStatementForm
-          ProcedureStatementModal={ProcedureStatementModal}
-          setProcedureStatementModal={setProcedureStatementModal}
-          contractAddress={contractAddress}
-          groupId={groupId}
-          account={account}
-          caller={caller}
-          parties={parties}
+          opened={opened}
+          setOpened={setOpened}
         />
       </div>
 
@@ -106,7 +84,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         </>
       ) : details ? (
         <>
-          <Box heading='Arbitration Details'>
+          <Box heading="Arbitration Details">
             <section
               css={`
                 display: grid;
@@ -246,19 +224,24 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
                 </Text>
               </div>
 
-              <Statement stage={'hearing'} role={'respondant'} contractAddress={contractAddress} groupId={groupId}
-          account={account}
-          caller={caller}
-          parties={parties}/>
+              <Statement
+                stage="hearing"
+                role="respondant"
+                contractAddress={contractAddress}
+                groupId={groupId}
+                account={account}
+                caller={caller}
+                parties={parties}
+              />
 
               <div>
-              <Respond stage={'response'} role={'respondant'}/>
+                <Respond stage="response" role="respondant" />
               </div>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard text='No arbitrations details found.' />
+        <EmptyStateCard width="100%" text="No arbitrations details found." />
       )}
     </>
   );

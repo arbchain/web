@@ -1,13 +1,21 @@
 import { Result, Spin } from 'antd';
 import React, { useState } from 'react';
-import { Button, DropDown, IconUpload, LoadingRing, Modal, TextInput, useTheme } from '@aragon/ui';
+import {
+  Button,
+  DropDown,
+  IconUpload,
+  LoadingRing,
+  Modal,
+  TextInput,
+  useTheme,
+} from '@aragon/ui';
 import '../../../css/result.css';
 import { LoadingOutlined } from '@ant-design/icons';
-import { createStatement } from '../../../lib/contracts/SPC';
+import { createStatement, signDocuments } from '../../../lib/contracts/SPC';
 import { Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import {uploadDoc} from "../../../lib/file-storage";
+import { uploadDoc } from '../../../lib/file-storage';
 
 // styledcomponent -css
 
@@ -41,7 +49,7 @@ export default function StatementForm({
   groupId,
   account,
   caller,
-  parties
+  parties,
 }) {
   const theme = useTheme();
   const [network, setNetwork] = useState(0);
@@ -52,13 +60,13 @@ export default function StatementForm({
   const [documentHash, setDocumentHash] = useState('0x646f632068617368');
   const [documentIpfsHash, setDocumentIpfsHash] = useState('');
   const [statementSubmitting, setStatementSubmitting] = useState(false);
-  const [document, setDocument] = useState(null)
+  const [document, setDocument] = useState(null);
 
   // file upload
   const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    customRequest: data => {
+    customRequest: (data) => {
       setDocument(data.file);
     },
     onChange(status) {
@@ -81,19 +89,31 @@ export default function StatementForm({
     setStatementModal(false);
   };
 
+  const { connect, documentSign } = signDocuments(
+    NODES[0],
+    contractAddress,
+    groupId
+  );
+
   const handleClick = async () => {
     setStatementSubmitting(true);
-    const uploadStatus = await uploadDoc(document, localStorage.getItem('wpassword'),'AWS')
-    console.log("UploadStatus:",uploadStatus)
+    const uploadStatus = await uploadDoc(
+      document,
+      localStorage.getItem('wpassword'),
+      'AWS'
+    );
+    console.log('UploadStatus:', uploadStatus);
     const partiesInvolved = [
       {
         partyAddress: caller.address,
-        name: caller.name
-      },{
+        name: caller.name,
+      },
+      {
         partyAddress: parties[party].address,
-        name: parties[party].name
-      }
+        name: parties[party].name,
+      },
     ];
+
     await statementCreation(
       partiesInvolved,
       stakeHolder,
@@ -105,6 +125,9 @@ export default function StatementForm({
       uploadStatus.fileName,
       account
     );
+
+    await documentSign(uploadStatus.fileHash, account);
+
     console.log('submitted');
     setStatementSubmitting(false);
   };
@@ -115,7 +138,7 @@ export default function StatementForm({
       visible={statementModal}
       onClose={closeStatement}
     >
-      <Title> Create an Statement Agreement</Title>
+      <Title> Create an Statement </Title>
 
       <div
         style={{
@@ -140,9 +163,9 @@ export default function StatementForm({
           <div style={{ flexBasis: '100%' }}>Select Party:</div>
           <div style={{ flexBasis: '100%' }}>
             <DropDown
-              style={{ borderColor: '#D9D9D9', width:'100%' }}
+              style={{ borderColor: '#D9D9D9', width: '100%' }}
               items={parties.map((value) => {
-                return value.name
+                return value.name;
               })}
               selected={party}
               onChange={(index, items) => {
@@ -211,42 +234,6 @@ export default function StatementForm({
           />
         </div>
 
-        {/*<div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Document Hash:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={documentHash}
-            onChange={(event) => {
-              setDocumentHash(event.target.value);
-            }}
-          />
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            margin: '20px',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ flexBasis: '100%' }}> Document IPFS Hash:</div>
-          <TextInput
-            style={{ flexBasis: '100%' }}
-            value={documentIpfsHash}
-            onChange={(event) => {
-              setDocumentIpfsHash(event.target.value);
-            }}
-          />
-        </div>*/}
-
         <div
           style={{
             display: 'flex',
@@ -256,17 +243,17 @@ export default function StatementForm({
           }}
         >
           <div style={{ flexBasis: '100%' }}> Upload Document:</div>
-          <div style={{ flexBasis: '100%' }}> 
-          <Upload style={{ flexBasis: '100%' }} {...props}>
-              <Button icon={<IconUpload/>} label="Click to Upload" />
-          </Upload>
+          <div style={{ flexBasis: '100%' }}>
+            <Upload style={{ flexBasis: '100%' }} {...props}>
+              <Button icon={<IconUpload />} label='Click to Upload' />
+            </Upload>
           </div>
         </div>
 
         <Button
           label='SUBMIT'
           disabled={statementSubmitting}
-          children= {statementSubmitting ? <LoadingRing /> : null}
+          children={statementSubmitting ? <LoadingRing /> : null}
           style={{
             backgroundColor: theme.selected,
             color: 'white',

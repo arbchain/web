@@ -220,7 +220,6 @@ const ProcedureDetails = () => {
                       mode='strong'
                       onClick={() => {
                         openProcedureStatement();
-                        console.log('WORKSSSS');
                       }}
                       wide
                       css={`

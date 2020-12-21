@@ -22,7 +22,7 @@ export class Web3Contract {
   }
 
   async createPrivacyGroup(participants, account) {
-    console.log(account);
+
     const privacyGroup = await this.web3.privx.createPrivacyGroup({
       participants: [account.orionPublicKey],
       enclaveKey: account.orionPublicKey,
@@ -68,6 +68,7 @@ export class Web3Contract {
       account.orionPublicKey
     );
 
+    //console.log("RESDDD:",result)
     if (parseInt(result.output)) {
       return this.web3.eth.abi.decodeParameters(
         functionAbi.outputs,
@@ -113,11 +114,7 @@ export class Web3Contract {
     return result;
   }
 
-  async documentSigning(name, args, account) {
-    const functionAbi = this.Contract._jsonInterface.find((e) => {
-      return e.name === name;
-    });
-
+  async documentSigning(args, account) {
     const nonceFunctionAbi = this.Contract._jsonInterface.find((e) => {
       return e.name === 'replayNonce';
     });
@@ -146,44 +143,17 @@ export class Web3Contract {
       nonceResult.output
     );
     const replayNonce = resultOutput[0];
+    console.log("nonceValue:",replayNonce)
 
     const params = [
       ['bytes32', 'uint'],
-      [this.web3.utils.keccak256(args[0]), replayNonce],
+      [args[0], replayNonce],
     ];
     const paramsHash = this.web3.utils.keccak256(
       this.web3.eth.abi.encodeParameters(...params)
     );
-    const signature = await account.sign(paramsHash);
 
-    const functionArgs = this.web3.eth.abi
-      .encodeParameters(functionAbi.inputs, [
-        replayNonce,
-        signature.signature,
-        this.web3.utils.keccak256(args[0]),
-      ])
-      .slice(2);
-
-    const functionCall = {
-      to: this.contractAddress,
-      data: functionAbi.signature + functionArgs,
-      privateFrom: account.orionPublicKey,
-      privateKey: account.privateKey,
-      privacyGroupId: this.privacyGroupId,
-    };
-
-    const transactionHash = await this.web3.eea.sendRawTransaction(
-      functionCall
-    );
-    const result = await this.web3.priv.getTransactionReceipt(
-      transactionHash,
-      account.orionPublicKey
-    );
-    if (parseInt(result.output)) {
-      return this.web3.eth.abi.decodeParameters(
-        functionAbi.outputs,
-        result.output
-      );
-    }
+    const signature = await account.sign.sign(paramsHash);
+    return {replayNonce, signature}
   }
 }

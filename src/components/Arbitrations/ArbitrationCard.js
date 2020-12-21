@@ -75,7 +75,7 @@ const RespondantContainer = styled.div`
 function ArbitrationCard({ arbitration, procedureAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(procedureAddress.groupId);
-  console.log('Card logging', arbitration);
+
 
   return (
     <Main>
@@ -87,24 +87,24 @@ function ArbitrationCard({ arbitration, procedureAddress }) {
       >
         <OutterContainer>
           <FlexContainer>
-            <div className='image-block'>
-              <div className='image'>
-                <img src={Avatar} alt='' srcset='' />
+            <div className="image-block">
+              <div className="image">
+                <img src={Avatar} alt="" />
               </div>
-              <div className='texts'>
+              <div className="texts">
                 <h3>Created By</h3>
                 <h2>{arbitration.claimantName}</h2>
               </div>
             </div>
-            <div className='date'>
+            <div className="date">
               <h3>Created On</h3>
               <h2>{arbitration.createdAt}</h2>
             </div>
           </FlexContainer>
 
           <Description>
-            <h1 className='title'>{arbitration.name}</h1>
-            <p className='description'>{arbitration.description}</p>
+            <h1 className="title">{arbitration.name}</h1>
+            <p className="description">{arbitration.description}</p>
           </Description>
           <RespondantContainer>
             <div>

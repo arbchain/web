@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme, Button, LoadingRing, DropDown, Box } from '@aragon/ui';
 import { Table, Radio, Divider } from 'antd';
 import { nominateArbitrator } from '../../../lib/contracts/SPC';
@@ -9,7 +9,8 @@ const NominateWrapper = styled.div`
 `;
 
 function NominateArbitrator({contractAddress, groupId, node, account, nominatedArbitrator}) {
-  console.log('nominatedArbitrator:', nominatedArbitrator);
+  //console.log('nominatedArbitrator:', nominatedArbitrator);
+
   const theme = useTheme();
   const arbitratorList = ['arbitrator1', 'arbitrator2', 'arbitrator3'];
 
@@ -30,16 +31,15 @@ function NominateArbitrator({contractAddress, groupId, node, account, nominatedA
   ];
 
   const handleClick = async () => {
-    console.log('SElected arbitrator:', arbitratorList[arbitrator]);
     await arbitratorNomination('0xf17f52151EbEF6C7334FAD080c5704D77216b732', account);
     console.log('nominated!!!');
   };
 
   return (
     <>
-      <Box heading='Arbitrator Nomination'>
+      <Box heading="Arbitrator Nomination">
         <div
-          className='nomination__container'
+          className="nomination__container"
           css={`
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -56,14 +56,14 @@ function NominateArbitrator({contractAddress, groupId, node, account, nominatedA
               Select Arbitrator
             </h1>
             <DropDown
-              placeholder='Select an Arbitrator'
+              placeholder="Select an Arbitrator"
               style={{
                 flexBasis: '100%',
                 borderColor: '#D9D9D9',
               }}
               disabled={false}
               items={arbitratorList}
-              onChange={(index)=> setArbitrator(index)}
+              onChange={index => setArbitrator(index)}
               selected={arbitrator}
               wide
             />
@@ -75,7 +75,7 @@ function NominateArbitrator({contractAddress, groupId, node, account, nominatedA
             `}
           >
             <Button
-              mode='strong'
+              mode="strong"
               onClick={handleClick}
               wide
               css={`
@@ -87,24 +87,26 @@ function NominateArbitrator({contractAddress, groupId, node, account, nominatedA
           </div>
         </div>
 
-        {
-          nominatedArbitrator.length>=1 ? (
-            <NominateWrapper>
-              <div>
-                <h1
-                  css={`
-                color: ${theme.surfaceContentSecondary};
-              `}
-                >
-                  Nominated Arbitrators
-                </h1>
+        {nominatedArbitrator.length >= 1 ? (
+          <NominateWrapper>
+            <div>
+              <h1
+                css={`
+                  color: ${theme.surfaceContentSecondary};
+                `}
+              >
+                Nominated Arbitrators
+              </h1>
 
-                <Table columns={columns} dataSource={nominatedArbitrator} pagination={false} style={{overflow:'hidden'}} />
-              </div>
-            </NominateWrapper>
-          ) : null
-        }
-
+              <Table
+                columns={columns}
+                dataSource={nominatedArbitrator}
+                pagination={false}
+                style={{ overflow: 'hidden' }}
+              />
+            </div>
+          </NominateWrapper>
+        ) : null}
       </Box>
     </>
   );

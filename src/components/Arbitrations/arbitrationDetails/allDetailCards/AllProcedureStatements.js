@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { DropDown, GU, Text, textStyle, useTheme, Button } from '@aragon/ui';
+import React, {useEffect, useState} from 'react';
+import { DropDown, GU, Text, textStyle, useTheme, Button, Link } from '@aragon/ui';
 import styled from 'styled-components';
 import {downloadFile} from "../../../../lib/file-storage";
+import {getSignature, signDocuments} from "../../../../lib/contracts/SPC";
+import {Skeleton} from "antd";
 
 // styles
 
@@ -19,113 +21,160 @@ const Title = styled.h2`
   margin-bottom: ${2 * GU}px;
 `;
 
-function AllProcedureStatements({ seat, language, createdBy, documentLocation, documentName, cipherKey }) {
+function AllProcedureStatements({ seat, language, createdBy, documentLocation, documentName, cipherKey, hash,
+                                  account, contractAddress, groupId, node  }) {
   const theme = useTheme();
+  const [loading, setLoading] = useState(false);
+  const [signStatus, setSignStatus] = useState(false);
+  const [userSignStatus, setUserSignStatus] = useState(false)
 
-  const handleClick = async ()=>{
+  useEffect(() => {
+    async function getSignatureDetails() {
+      try {
+        setLoading(true);
+        const res = await getSignature(node, contractAddress, groupId, account, hash)
+        console.log("RESSS:",res[0])
+        if (res[0].signatures.length === res[0].signers.length){
+          setSignStatus(true)
+          setUserSignStatus(true)
+        }else{
+          for (let i=0; i< res[0].signatures.length; i++){
+            if (res[0].signatures[i].signer === account.address){
+              console.log("if")
+              setUserSignStatus(true)
+              break
+            }
+          }
+        }
+        setLoading(false);
+      } catch (err) {
+        return false;
+      }
+    }
+    getSignatureDetails();
+  }, [account]);
+
+  const downloadDoc = async ()=>{
     const res = await downloadFile(documentName, documentLocation, cipherKey)
+  }
+
+  const { connect, documentSign} = signDocuments(
+    node,
+    contractAddress,
+    groupId
+  )
+
+  const signStatement = async ()=>{
+    console.log("SignStatement:::")
+    await documentSign(
+      hash,
+      account,
+    )
   }
 
   return (
     <>
-      <section
-        css={`
-          align-items: center;
-          margin: 18px 0 18px 0;
-          width: 100%;
-        `}
-      >
-        <ProcedureWrapper>
-          <div
+      {loading ? (
+        <>
+          <Skeleton active/>
+          <Skeleton active/>
+        </>
+      ) : (
+        <>
+          <section
             css={`
+              align-items: center;
               margin: 18px 0 18px 0;
+              width: 100%;
             `}
           >
-            <Title>Created By</Title>
-            <Text
-              css={`
-                ${textStyle('body2')};
-              `}
-            >
-              {createdBy}
-            </Text>
-          </div>
+            <ProcedureWrapper>
+              <div
+                css={`
+                  margin: 18px 0 18px 0;
+                `}
+              >
+                <Title>Created By</Title>
+                <Text
+                  css={`
+                    ${textStyle('body2')};
+                  `}
+                >
+                  {createdBy}
+                </Text>
+              </div>
 
-          <div
-            css={`
-              margin: 18px 0 18px 0;
-            `}
-          >
-            <Title>Document </Title>
-            <Text
-              css={`
-                ${textStyle('body2')};
-                cursor: pointer;
-              `}
-              onClick = {handleClick}
-            >
-              {documentName}
-              <h2>Download btn</h2>
-            </Text>
-          </div>
-          <div>
-            <Title>Selected Language </Title>
-            <DropDown
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              disabled={true}
-              wide
-              items={[]}
-              placeholder={language}
-            />
-          </div>
+              <div
+                css={`
+                  margin: 18px 0 18px 0;
+                `}
+              >
+                <Title>Document </Title>
+                <Link external onClick={downloadDoc}> {documentName} </Link>
+              </div>
+              <div>
+                <Title>Selected Language </Title>
+                <DropDown
+                  style={{
+                    flexBasis: '100%',
+                    borderColor: '#D9D9D9',
+                    background: '#fff',
+                  }}
+                  disabled={true}
+                  wide
+                  items={[]}
+                  placeholder={language}
+                />
+              </div>
 
-          <div>
-            <Title>Selected Arbitration Seat</Title>
-            <DropDown
-              wide
-              disabled={true}
-              style={{
-                flexBasis: '100%',
-                borderColor: '#D9D9D9',
-                background: '#fff',
-              }}
-              items={[]}
-              placeholder={seat}
-            />
-          </div>
-        </ProcedureWrapper>
+              <div>
+                <Title>Selected Arbitration Seat</Title>
+                <DropDown
+                  wide
+                  disabled={true}
+                  style={{
+                    flexBasis: '100%',
+                    borderColor: '#D9D9D9',
+                    background: '#fff',
+                  }}
+                  items={[]}
+                  placeholder={seat}
+                />
+              </div>
+            </ProcedureWrapper>
 
-        <ProcedureWrapper>
-          <Button
-            mode='strong'
-            onClick={() => {
-              console.log('WORKSSSS');
-            }}
-            css={`
-              background: ${theme.selected};
-            `}
-          >
-            Agree and Continue
-          </Button>
+            {! userSignStatus ?
+              <>
+                <ProcedureWrapper>
+                    <Button
+                      mode='strong'
+                      onClick={signStatement}
+                      css={`background: ${theme.selected};`}
+                    >
+                      Agree
+                    </Button>
 
-          <Button
-            mode='strong'
-            onClick={() => {
-              console.log('WORKSSSS');
-            }}
-            css={`
-              background: white;
-              color: #637381;
-            `}
-          >
-            Agree and Reject
-          </Button>
-        </ProcedureWrapper>
-      </section>
+                    <Button
+                      mode='strong'
+                      onClick={() => {
+                        console.log('WORKSSSS');
+                      }}
+                      css={`
+                  background: white;
+                  color: #637381;
+                `}
+                    >
+                      Reject
+                    </Button>
+                  </ProcedureWrapper>
+              </>
+              :null
+            }
+
+          </section>
+        </>
+      )
+      }
     </>
   );
 }

@@ -76,7 +76,7 @@ function AgreementCard({ agreement, agreementAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(agreementAddress.groupId);
   const disputeType = ['Future', 'Existing'];
-  console.log('Card logging', agreement);
+
   return (
     <Main>
       <Link

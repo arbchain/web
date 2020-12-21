@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState, useCallback } from 'react';
 import {
   ButtonBase,
   ButtonIcon,
@@ -9,39 +9,45 @@ import {
   textStyle,
   useTheme,
   useViewport,
-} from '@aragon/ui'
+} from '@aragon/ui';
 
-import iconNetwork from '../../assets/global-preferences-network.svg'
+import { useHistory } from 'react-router-dom';
+import iconExit from '../../assets/exit.svg';
 
 function GlobalPreferencesButton({ onOpen }) {
-  const theme = useTheme()
-  const { below } = useViewport()
+  const theme = useTheme();
+  const { below } = useViewport();
 
-  const [opened, setOpened] = useState(false)
-  const containerRef = useRef()
-
-  const handleToggle = useCallback(() => setOpened(opened => !opened), [])
-  const handleClose = useCallback(() => setOpened(false), [])
+  const [opened, setOpened] = useState(false);
+  const containerRef = useRef();
+  const history = useHistory();
+  const handleToggle = useCallback(() => setOpened((opened) => !opened), []);
+  const handleClose = useCallback(() => setOpened(false), []);
   const handleItemClick = useCallback(
-    path => () => {
-      setOpened(false)
-      onOpen(path)
+    (path) => () => {
+      setOpened(false);
+      onOpen(path);
     },
     [onOpen]
-  )
+  );
+
+  const removePassword = function() {
+    localStorage.removeItem('wpassword');
+    history.push('/login');
+  };
 
   return (
     <React.Fragment>
       <div ref={containerRef}>
         <ButtonIcon
-          element="div"
+          element='div'
           onClick={handleToggle}
           css={`
             width: ${4.25 * GU}px;
             height: 100%;
             border-radius: 0;
           `}
-          label="Global preferences"
+          label='Global preferences'
         >
           <IconSettings
             css={`
@@ -52,7 +58,7 @@ function GlobalPreferencesButton({ onOpen }) {
       </div>
       <Popover
         closeOnOpenerFocus
-        placement="bottom-end"
+        placement='bottom-end'
         onClose={handleClose}
         visible={opened}
         opener={containerRef.current}
@@ -82,19 +88,16 @@ function GlobalPreferencesButton({ onOpen }) {
           >
             Global preferences
           </li>
-          <Item
-            onClick={handleItemClick('network')}
-            icon={iconNetwork}
-            label="Network"
-          />
+          <Item onClick={removePassword} icon={iconExit} label='Logout' />
+          {/* <IconPower /> */}
         </ul>
       </Popover>
     </React.Fragment>
-  )
+  );
 }
 
 function Item({ icon, label, onClick }) {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <li
@@ -128,7 +131,7 @@ function Item({ icon, label, onClick }) {
             }
           `}
         >
-          {icon && <img src={icon} alt="" />}
+          {icon && <img src={icon} alt='' />}
           <div
             css={`
               flex-grow: 1;
@@ -142,7 +145,7 @@ function Item({ icon, label, onClick }) {
         </div>
       </ButtonBase>
     </li>
-  )
+  );
 }
 
-export default React.memo(GlobalPreferencesButton)
+export default React.memo(GlobalPreferencesButton);
