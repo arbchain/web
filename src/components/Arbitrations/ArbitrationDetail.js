@@ -23,11 +23,8 @@ const ArbitrationDetail = (props) => {
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
   const walletAccount = useAccount();
-  // Procedure statement modal
-  // const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
-
-  // // Procedure Statement form
-  // const openProcedureStatement = () => setProcedureStatementModal(true);
+  const role = props.match.params.role;
+  console.log("Role:", role)
 
   const [tabs, setSelectTabs] = useState(0);
   const [dbClient, setClient] = useState(null);
@@ -114,6 +111,7 @@ const ArbitrationDetail = (props) => {
                     groupId={groupId}
                     NODE={NODES[0]}
                     account={walletAccount.account}
+                    role ={role}
                   />
                   {/* <AllProcedure /> */}
                 </>

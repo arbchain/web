@@ -190,12 +190,59 @@ function ArbDetails({
                       align-items: flex-start;
                     `}
                   >
-                    {details[6]}
+                    {details[6].name}
                   </div>
                 </div>
               </div>
 
-              <div>
+              <div
+                css={`
+                  display: grid;
+                  grid-template-columns: 1fr minmax(250px, auto);
+                  grid-gap: ${5 * GU}px;
+                  margin-bottom: ${2 * GU}px;
+                `}
+              >
+                <div>
+                  <h2
+                    css={`
+                      ${textStyle('label2')};
+                      color: ${theme.surfaceContentSecondary};
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    Respondent
+                  </h2>
+                  <Text
+                    css={`
+                      ${textStyle('body2')};
+                    `}
+                  >
+                    {details[7].name}
+                  </Text>
+                </div>
+                <div>
+                  <h2
+                    css={`
+                      ${textStyle('label2')};
+                      color: ${theme.surfaceContentSecondary};
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    ARBITRATION AGREEMENT
+                  </h2>
+                  <div
+                    css={`
+                      display: flex;
+                      align-items: flex-start;
+                    `}
+                  >
+                    {details[8]}
+                  </div>
+                </div>
+              </div>
+
+              {/*<div>
                 <h2
                   css={`
                     ${textStyle('label2')};
@@ -211,7 +258,7 @@ function ArbDetails({
                     ${textStyle('body2')};
                   `}
                 >
-                  {details[2]}
+                  {details[8]}
                 </Text>
               </div>
 
@@ -232,9 +279,9 @@ function ArbDetails({
                     ${textStyle('body2')};
                   `}
                 >
-                  {details[7]}
+                  {details[7].name}
                 </Text>
-              </div>
+              </div>*/}
 
               <Button
                 mode='strong'

@@ -7,7 +7,6 @@ import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 import styled from 'styled-components';
 import { uploadDoc } from '../../../lib/file-storage';
-import { signDocuments } from '../../../lib/contracts/SPC';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
 
@@ -70,9 +69,9 @@ export default function ProcedureForm({
   client,
   updateProcedureList,
   updateAddressList,
+  agreementContracts
 }) {
   const theme = useTheme();
-  // console.log('Caller:', caller);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [agreementAddress, setAgreementAddress] = useState(0);
@@ -108,6 +107,11 @@ export default function ProcedureForm({
       },
     ];
 
+    const court = {
+      partyAddress: courtAddr[courtAddress],
+      name: 'COURT NAME',
+    }
+
     const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'), 'AWS');
     console.log('UploadStatus:', fileDetails);
     const res = await createProcedureContract(
@@ -115,10 +119,11 @@ export default function ProcedureForm({
       [
         name,
         description,
-        ageementAddr[agreementAddress],
-        caller.address, // Add user public key not private key!//
-        counterParties[respondentAddress].address,
-        courtAddr[courtAddress],
+        agreementContracts[agreementAddress].metaData.title,
+        agreementContracts[agreementAddress].contractAddress,
+        partiesInvolved[0],
+        partiesInvolved[1],
+        court,
       ],
       client,
       caller,
@@ -134,13 +139,14 @@ export default function ProcedureForm({
       groupId: res.privacyGroupId,
     });
     updateProcedureList({
-      agreementAddress: ageementAddr[agreementAddress],
+      agreementAddress: agreementContracts[agreementAddress].contractAddress,
       claimantName: caller.name,
-      courtAddress: courtAddr[courtAddress],
+      courtAddress: court.name,
       createdAt: new Date().toDateString(),
       description: description,
       name: name,
       respondentName: counterParties[respondentAddress].name,
+      role: 0
     });
   };
 
@@ -219,7 +225,9 @@ export default function ProcedureForm({
               <DropDown
                 className="dropDown"
                 wide
-                items={ageementAddr}
+                items={agreementContracts.map(value => {
+                  return value.metaData.title;
+                })}
                 selected={agreementAddress}
                 onChange={(index, items) => {
                   setAgreementAddress(index);
@@ -241,7 +249,7 @@ export default function ProcedureForm({
           </div>
 
           <div className="inputGroups ">
-            <h3>Respondant Address</h3>
+            <h3>Respondent Address</h3>
             <DropDown
               className="dropDown"
               wide

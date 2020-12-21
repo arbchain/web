@@ -5,9 +5,9 @@ const fileDownload = require('js-file-download');
 
 AWS.config.update({
   region: 'ap-south-1',
-  accessKeyId: 'AKIAWRATGLMSCHON7VVK',
-  secretAccessKey: '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',
-});
+  accessKeyId: '*************',
+  secretAccessKey:  '**************'
+})
 const s3 = new AWS.S3();
 
 const fleekApiKey = 't8DYhMZ1ztjUtOFC8qEDqg==';

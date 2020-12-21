@@ -75,13 +75,12 @@ const RespondantContainer = styled.div`
 function ArbitrationCard({ arbitration, procedureAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(procedureAddress.groupId);
-
-
+  const role = arbitration.role
   return (
     <Main>
       <Link
         to={{
-          pathname: `/arbitrations/${procedureAddress.contractAddress}/${groupId}`,
+          pathname: `/arbitrations/${role}/${procedureAddress.contractAddress}/${groupId}`,
         }}
         style={{ color: '#000000d9' }}
       >
@@ -113,8 +112,8 @@ function ArbitrationCard({ arbitration, procedureAddress }) {
             </div>
 
             <div>
-              <h3>Court Address</h3>
-              <h2>{arbitration.courtAddress}</h2>
+              <h3>Court</h3>
+              <h2>{arbitration.courtName}</h2>
             </div>
           </RespondantContainer>
         </OutterContainer>

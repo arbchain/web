@@ -39,11 +39,11 @@ function App() {
                 <Route exact path='/agreements' component={Agreements} />
                 <Route path='/profile' component={Profile} />
                 <Route
-                  path='/arbitrations/:address/:groupId'
+                  path='/arbitrations/:role/:address/:groupId'
                   component={ArbitrationDetail}
                 />
                 <Route
-                  path='/agreements/:address/:groupId'
+                  path='/agreements/:role/:address/:groupId'
                   component={AgreementDetails}
                 />
                 <Route path='/proceduredetails' component={ProcedureDetails} />

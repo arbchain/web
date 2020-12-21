@@ -1,13 +1,14 @@
 /* eslint-disable */
 
-import { Result, Spin, message } from 'antd';
+import {Result, Spin, message, Upload} from 'antd';
 import React, { useState } from 'react';
 import { DropDown, Modal, TextInput, useTheme, Button } from '@aragon/ui';
 import '../../../css/result.css';
-import { LoadingOutlined } from '@ant-design/icons';
+import {LoadingOutlined, UploadOutlined} from '@ant-design/icons';
 import { createAgreement } from '../../../lib/contracts/DeployWorkflow';
 import styled from 'styled-components';
 import { authorizeUser } from '../../../lib/db/threadDB';
+import {uploadDoc} from "../../../lib/file-storage";
 
 const Web3 = require('web3');
 
@@ -68,24 +69,6 @@ const antIcon = (
 
 const languages = ['English', 'French', 'Spanish'];
 
-const props = {
-  name: 'file',
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  headers: {
-    authorization: 'authorization-text',
-  },
-  onChange(info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
-    } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-};
-
 export default function AgreementForm({
   agreementModal,
   setAgreementModal,
@@ -101,11 +84,29 @@ export default function AgreementForm({
   const theme = useTheme();
 
   const [disputeType, setDisputeType] = useState(0);
+  const [title, setTitle] = useState('');
   const [language, setLanguage] = useState(0);
   const [counterParty, setCounterParty] = useState(0);
   const [seat, setSeat] = useState('London');
   const [docHash, setDocHash] = useState(Web3.utils.keccak256('Sample Doc'));
   const [agreementSubmit, setAgreementSubmit] = useState(false);
+  const [document, setDocument] = useState(null);
+
+  // file upload
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    customRequest: data => {
+      setDocument(data.file);
+    },
+    onChange(status) {
+      if (status) {
+        message.success(` file uploaded successfully.`);
+      } else {
+        message.error(`file upload failed.`);
+      }
+    },
+  };
 
   const closeAgreement = () => {
     setAgreementModal(false);
@@ -124,19 +125,44 @@ export default function AgreementForm({
 
   const handleClick = async () => {
     setAgreementSubmit(true);
+    const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'), 'AWS');
+    console.log('UploadStatus:', fileDetails);
+
+    console.log("Caller:",caller.address)
+    console.log("counterParties:",counterParties[counterParty].address)
+    const claimant = {
+      partyAddress: caller.address,
+      name: caller.name,
+      signed: false
+    }
+
+    const respondent = {
+      partyAddress: counterParties[counterParty].address,
+      name: counterParties[counterParty].name,
+      signed: false
+    }
+
+    const doc = {
+      cipherKey: fileDetails.cipherKey,
+      fileLocation: fileDetails.fileLocation,
+      fileName: fileDetails.fileName
+    }
+
     const res = await create(
       account,
       [
         2,
+        title,
         seat,
         languages[language],
         'LCIA',
-        'Consenso Labs',
-        counterParties[counterParty].address,
-        'Apple Inc',
+        claimant,
+        respondent,
         disputeType,
-        docHash,
+        fileDetails.fileHash,
+        JSON.stringify(doc)
       ],
+      fileDetails,
       dbClient,
       caller,
       counterParties[counterParty]
@@ -173,7 +199,7 @@ export default function AgreementForm({
 
   return (
     <ModalWrapper
-      width='40rem'
+      width='45rem'
       visible={agreementModal}
       onClose={closeAgreement}
     >
@@ -207,6 +233,16 @@ export default function AgreementForm({
       ) : (
         <>
           <AgreementContainer>
+            <div className='inputGroups '>
+              <h3>Title</h3>
+              <TextInput
+                wide
+                value={title}
+                onChange={event => {
+                  setTitle(event.target.value);
+                }}
+              />
+            </div>
             <GridContainer>
               <div className='inputGroups '>
                 <h3>Dispute Type</h3>
@@ -266,15 +302,16 @@ export default function AgreementForm({
               </div>
             </GridContainer>
 
-            <div className='inputGroups '>
-              <h3>Agreement Document</h3>
-              <TextInput
-                wide
-                value={docHash}
-                onChange={(event) => {
-                  setDocHash(event.target.value);
-                }}
-              />
+            <div className="inputGroups ">
+              <h3>Upload Documents </h3>
+              <Upload className="upload" {...props}>
+                <Button
+                  className="upload"
+                  wide
+                  icon={<UploadOutlined style={{ color: '#212b36' }} />}
+                  label="Click to Upload"
+                />
+              </Upload>
             </div>
 
             <Button

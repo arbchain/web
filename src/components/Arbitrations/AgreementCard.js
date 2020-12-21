@@ -76,12 +76,12 @@ function AgreementCard({ agreement, agreementAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(agreementAddress.groupId);
   const disputeType = ['Future', 'Existing'];
-
+  const role = agreementAddress.metaData.role
   return (
     <Main>
       <Link
         to={{
-          pathname: `/agreements/${agreementAddress.contractAddress}/${groupId}`,
+          pathname: `/agreements/${role}/${agreementAddress.contractAddress}/${groupId}`,
         }}
         style={{ color: '#000000d9' }}
       >
@@ -94,8 +94,8 @@ function AgreementCard({ agreement, agreementAddress }) {
                     <img src={Avatar} alt='' srcset='' />
                   </div>
                   <div className='texts'>
-                    <h3>Claimant Name</h3>
-                    <h2>{agreement.claimantName}</h2>
+                    <h3>Agreement Title</h3>
+                    <h2>{agreement.title}</h2>
                   </div>
                 </div>
                 <div className='date'>
@@ -112,26 +112,28 @@ function AgreementCard({ agreement, agreementAddress }) {
                   <h3>Law</h3>
                   <h2>{agreement.law}</h2>
                 </div>
+
                 <div>
-                  <h3>Respondent Name</h3>
-                  <h2>{agreement.respondentName}</h2>
+                  <h3>Seat</h3>
+                  <h2>{agreement.seat}</h2>
                 </div>
+
               </DisputeContainer>
 
               <RespondentContainer>
                 <div>
-                  <h3>Document Name</h3>
-                  <h2>{agreement.documentName}</h2>
+                  <h3>Claimant Name</h3>
+                  <h2>{agreement.claimantName}</h2>
+                </div>
+
+                <div>
+                  <h3>Respondent Name</h3>
+                  <h2>{agreement.respondentName}</h2>
                 </div>
 
                 <div>
                   <h3>Language</h3>
                   <h2>{agreement.language}</h2>
-                </div>
-
-                <div>
-                  <h3>Seat</h3>
-                  <h2>{agreement.seat}</h2>
                 </div>
               </RespondentContainer>
             </OuterContainer>

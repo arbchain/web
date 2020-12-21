@@ -136,15 +136,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
         // Update the account context by using a callback function
+        const user = await web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
+          address: user.address,
+          sign: user,
         });
 
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         setClient(client);
         const users = await getAllUsers(client, account[0]);
-        const address = await getAgreementContractAddress(client, account[0]);
+        let address = []
+        if (users.caller.agreementContracts[0].id !== '-1') {
+          address = users.caller.agreementContracts
+        }
+        // const address = await getAgreementContractAddress(client, account[0]);
         setAgreementAddress(address);
         setAgreementsLoading(false);
         setParties(users.party);
@@ -180,10 +187,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
     agreementAddressCall();
   }, [agreementAddress]);
 
-  if (agreementDetails) {
+  /*if (agreementDetails) {
     console.log('Agreement Details', agreementDetails);
     console.log('Agreement Addresses', agreementAddress);
-  }
+  }*/
 
   return (
     <>
