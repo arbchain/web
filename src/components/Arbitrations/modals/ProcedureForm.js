@@ -7,9 +7,10 @@ import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import { deployProcedureContract } from '../../../lib/contracts/DeployWorkflow';
 import styled from 'styled-components';
 import { uploadDoc } from '../../../lib/file-storage';
-import { signDocuments } from '../../../lib/contracts/SPC';
 
-const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />;
+const antIcon = (
+  <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin />
+);
 
 const languages = ['English', 'French', 'Spanish'];
 const arbitrationSeats = ['London', 'lorem', 'lorem'];
@@ -72,10 +73,13 @@ export default function ProcedureForm({
   client,
   updateProcedureList,
   updateAddressList,
+<<<<<<< HEAD
   updateMetaData,
+=======
+  agreementContracts,
+>>>>>>> master
 }) {
   const theme = useTheme();
-  // console.log('Caller:', caller);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [agreementAddress, setAgreementAddress] = useState(0);
@@ -113,20 +117,24 @@ export default function ProcedureForm({
 
     const court = {
       partyAddress: courtAddr[courtAddress],
-      name: 'Court',
+      name: 'COURT NAME',
     };
 
-    const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'), 'AWS');
+    const fileDetails = await uploadDoc(
+      document,
+      localStorage.getItem('wpassword'),
+      'AWS'
+    );
     console.log('UploadStatus:', fileDetails);
     const res = await createProcedureContract(
       account,
       [
         name,
         description,
-        agreementName,
-        ageementAddr[agreementAddress],
+        agreementContracts[agreementAddress].metaData.title,
+        agreementContracts[agreementAddress].contractAddress,
         partiesInvolved[0],
-        partiesInvolved[1], // Add user public key not private key!//
+        partiesInvolved[1],
         court,
       ],
       client,
@@ -143,13 +151,14 @@ export default function ProcedureForm({
       groupId: res.privacyGroupId,
     });
     updateProcedureList({
-      agreementAddress: ageementAddr[agreementAddress],
+      agreementAddress: agreementContracts[agreementAddress].contractAddress,
       claimantName: caller.name,
-      courtAddress: courtAddr[courtAddress],
+      courtName: court.name,
       createdAt: new Date().toDateString(),
       description: description,
       name: name,
       respondentName: counterParties[respondentAddress].name,
+      role: 0,
     });
 
     updateMetaData({
@@ -175,7 +184,7 @@ export default function ProcedureForm({
   const props = {
     name: 'file',
     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    customRequest: data => {
+    customRequest: (data) => {
       setDocument(data.file);
     },
     onChange(status) {
@@ -188,7 +197,12 @@ export default function ProcedureForm({
   };
 
   return (
-    <Modal style={{ zIndex: '50' }} width="45rem" visible={procedureModal} onClose={closeProcedure}>
+    <Modal
+      style={{ zIndex: '50' }}
+      width='45rem'
+      visible={procedureModal}
+      onClose={closeProcedure}
+    >
       <div
         style={{
           fontSize: '1.5rem',
@@ -203,8 +217,8 @@ export default function ProcedureForm({
       {procedureSubmit ? (
         resultProcedureContract ? (
           <Result
-            status="success"
-            title="Successfully created Procedure Agreement!"
+            status='success'
+            title='Successfully created Procedure Agreement!'
             extra={[
               <Button
                 style={{
@@ -227,22 +241,24 @@ export default function ProcedureForm({
       ) : (
         <ProcedureContainer>
           <GridContainer>
-            <div className="inputGroups ">
+            <div className='inputGroups '>
               <h3>Name</h3>
               <TextInput
                 wide
                 value={name}
-                onChange={event => {
+                onChange={(event) => {
                   setName(event.target.value);
                 }}
               />
             </div>
-            <div className="inputGroups ">
-              <h3>Agreement Address</h3>
+            <div className='inputGroups '>
+              <h3>Agreement Name</h3>
               <DropDown
-                className="dropDown"
+                className='dropDown'
                 wide
-                items={ageementAddr}
+                items={agreementContracts.map((value) => {
+                  return value.metaData.title;
+                })}
                 selected={agreementAddress}
                 onChange={(index, items) => {
                   setAgreementAddress(index);
@@ -251,24 +267,24 @@ export default function ProcedureForm({
               />
             </div>
           </GridContainer>
-          <div className="inputGroups ">
+          <div className='inputGroups '>
             <h3>Description</h3>
             <TextInput
               multiline
               wide
               value={description}
-              onChange={event => {
+              onChange={(event) => {
                 setDescription(event.target.value);
               }}
             />
           </div>
 
-          <div className="inputGroups ">
-            <h3>Respondant Address</h3>
+          <div className='inputGroups '>
+            <h3>Respondent Address</h3>
             <DropDown
-              className="dropDown"
+              className='dropDown'
               wide
-              items={counterParties.map(party => {
+              items={counterParties.map((party) => {
                 // return party.address.slice(0, 15) + '...';
                 return party.name;
               })}
@@ -280,10 +296,10 @@ export default function ProcedureForm({
             />
           </div>
           <GridContainer>
-            <div className="inputGroups ">
+            <div className='inputGroups '>
               <h3>Seat</h3>
               <DropDown
-                className="dropDown"
+                className='dropDown'
                 wide
                 items={arbitrationSeats}
                 selected={seat}
@@ -293,10 +309,10 @@ export default function ProcedureForm({
                 }}
               />
             </div>
-            <div className="inputGroups ">
+            <div className='inputGroups '>
               <h3>Language</h3>
               <DropDown
-                className="dropDown"
+                className='dropDown'
                 wide
                 items={languages}
                 selected={language}
@@ -309,12 +325,12 @@ export default function ProcedureForm({
           </GridContainer>
 
           <GridContainer>
-            <div className="inputGroups ">
+            <div className='inputGroups '>
               <h3>Court Address</h3>
               <DropDown
-                className="dropDown"
+                className='dropDown'
                 wide
-                items={courtAddr.map(party => {
+                items={courtAddr.map((party) => {
                   return party.slice(0, 20) + '...';
                 })}
                 selected={courtAddress}
@@ -324,19 +340,24 @@ export default function ProcedureForm({
                 }}
               />
             </div>
-            <div className="inputGroups ">
+            <div className='inputGroups '>
               <h3>Upload Documents </h3>
-              <Upload className="upload" {...props}>
+              <Upload className='upload' {...props}>
                 <Button
-                  className="upload"
+                  className='upload'
                   wide
                   icon={<UploadOutlined style={{ color: '#212b36' }} />}
-                  label="Click to Upload"
+                  label='Click to Upload'
                 />
               </Upload>
             </div>
           </GridContainer>
-          <Button wide label="SUBMIT" className="submit-btn" onClick={handleClick} />
+          <Button
+            wide
+            label='SUBMIT'
+            className='submit-btn'
+            onClick={handleClick}
+          />
         </ProcedureContainer>
       )}
     </Modal>

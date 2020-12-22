@@ -138,7 +138,7 @@ export default function StatementForm({
       visible={statementModal}
       onClose={closeStatement}
     >
-      <Title> Create an Statement </Title>
+      <Title> Create an Statement. </Title>
 
       <div
         style={{
