@@ -5,8 +5,8 @@ const fileDownload = require('js-file-download');
 
 AWS.config.update({
   region: 'ap-south-1',
-  accessKeyId: 'AKIAWRATGLMSHCDUHDHL',
-  secretAccessKey: '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',
+  accessKeyId: '***',
+  secretAccessKey: '***',
 });
 const s3 = new AWS.S3();
 
