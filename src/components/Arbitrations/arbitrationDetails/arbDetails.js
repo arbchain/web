@@ -1,38 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  GU,
-  Text,
-  textStyle,
-  useTheme,
-  EmptyStateCard,
-} from '@aragon/ui';
+import { Box, GU, Text, textStyle, useTheme, EmptyStateCard } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
-import ProcedureStatementForm from '.././modals/ProcedureStatement';
-// import StatementForm from '../modals/StatementForm';
-import StatementForm from '.././modals/Forms/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 import Respond from './allDetailCards/Response';
 import Statement from './allDetailCards/Statement';
 
-function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
+function ArbDetails({
+  groupId,
+  contractAddress,
+  NODE,
+  account,
+  caller,
+  parties,
+}) {
   const history = useHistory();
   const theme = useTheme();
-  const [statementModal, setStatementModal] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
-  const [opened, setOpened] = useState(false);
-  const openStatement = () => setStatementModal(true);
 
   const status = ['Open', 'Close'];
-  // Procedure statement modal
-  const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
-
-  const openSidePanel = () => setOpened(true);
-  // Procedure Statement form
-  const openProcedureStatement = () => setProcedureStatementModal(true);
 
   useEffect(() => {
     async function getDetails() {
@@ -40,7 +29,12 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
+          const details = await getArbitrationDetails(
+            NODE,
+            contractAddress,
+            groupId,
+            account
+          );
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -56,26 +50,6 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          width: '100%',
-        }}
-      >
-        <StatementForm
-          // statementModal={statementModal}
-          // setStatementModal={setStatementModal}
-          contractAddress={contractAddress}
-          groupId={groupId}
-          account={account}
-          caller={caller}
-          parties={parties}
-          opened={opened}
-          setOpened={setOpened}
-        />
-      </div>
-
       {loading ? (
         <>
           <Skeleton active />
@@ -84,7 +58,7 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
         </>
       ) : details ? (
         <>
-          <Box heading="Arbitration Details">
+          <Box heading='Arbitration Details'>
             <section
               css={`
                 display: grid;
@@ -230,50 +204,9 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
                 </div>
               </div>
 
-              {/*<div>
-                <h2
-                  css={`
-                    ${textStyle('label2')};
-                    color: ${theme.surfaceContentSecondary};
-                    margin-bottom: ${2 * GU}px;
-                  `}
-                >
-                  ARBITRATION AGREEMENT
-                </h2>
-                <Text
-                  css={`
-                    display: inline-block;
-                    ${textStyle('body2')};
-                  `}
-                >
-                  {details[8]}
-                </Text>
-              </div>
-
-              <div>
-                <h2
-                  css={`
-                    ${textStyle('label2')};
-                    color: ${theme.surfaceContentSecondary};
-                    margin-bottom: ${2 * GU}px;
-                  `}
-                >
-                  Respondent
-                </h2>
-
-                <Text
-                  css={`
-                    display: inline-block;
-                    ${textStyle('body2')};
-                  `}
-                >
-                  {details[7].name}
-                </Text>
-              </div>*/}
-
               <Statement
-                stage="hearing"
-                role="respondant"
+                stage='hearing'
+                role='respondant'
                 contractAddress={contractAddress}
                 groupId={groupId}
                 account={account}
@@ -282,13 +215,13 @@ function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }
               />
 
               <div>
-                <Respond stage="response" role="respondant" />
+                <Respond stage='response' role='respondant' />
               </div>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard width="100%" text="No arbitrations details found." />
+        <EmptyStateCard width='100%' text='No arbitrations details found.' />
       )}
     </>
   );
