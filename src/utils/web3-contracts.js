@@ -68,7 +68,7 @@ export class Web3Contract {
       account.orionPublicKey
     );
 
-    //console.log("RESDDD:",result)
+    console.log("RESDDD:",result)
     if (parseInt(result.output)) {
       return this.web3.eth.abi.decodeParameters(
         functionAbi.outputs,

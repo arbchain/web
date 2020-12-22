@@ -9,7 +9,7 @@ import AllAgreementStatements from './allDetailCards/AllAgreementStatements';
 import { getAllStatements } from '../../../lib/contracts/SPC';
 import AllProcedureStatements from './allDetailCards/AllProcedureStatements';
 
-function AllStatements({ groupId, contractAddress, NODE, account }) {
+function AllStatements({ groupId, contractAddress, NODE, account, role }) {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
 

@@ -16,7 +16,7 @@ export function createAgreement(nodeSelected) {
   const [result, setResult] = useState(false);
   const { agreementAdditionStatus, agreementContractAddition } = addAgreementContract(nodeSelected);
   const create = useCallback(
-    async (account, args, dbClient, caller, counterParty) => {
+    async (account, args, fileDetails, dbClient, caller, counterParty) => {
       setConnected(await web3Contract.connect(nodeSelected));
       const res = await web3Contract.deploy(
         Agreement_ContractAbi,
@@ -26,7 +26,17 @@ export function createAgreement(nodeSelected) {
         account
       );
       await agreementContractAddition(res.contractAddress, res.privacyGroupId, account);
-      await updateAgreementContracts(dbClient, res.privacyGroupId, res.contractAddress, args, caller, counterParty)
+      await web3Contract.create(Agreement_ContractAbi, res.contractAddress, [], res.privacyGroupId);
+
+      console.log("Signing agreement")
+      //sign statement
+      const {replayNonce, signature} = await web3Contract.documentSigning([fileDetails.fileHash], account);
+      await web3Contract.call('signAgreement', [
+        replayNonce,
+        signature.signature
+      ], account)
+
+      await updateAgreementContracts(dbClient, res.privacyGroupId, res.contractAddress, args, caller, counterParty, fileDetails)
       setResult(res);
       return res
     },

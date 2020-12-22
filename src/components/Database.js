@@ -59,6 +59,7 @@ export default function Database() {
       respondentName: { type: 'string' },
       courtAddress: { type: 'string' },
       createdAt: { type: 'string' },
+      role: {type: 'number'}
     },
   };
 
@@ -76,6 +77,7 @@ export default function Database() {
       respondentName: { type: 'string' },
       documentName: { type: 'string' },
       createdAt: { type: 'string' },
+      role: {type: 'number'}
     },
   };
 

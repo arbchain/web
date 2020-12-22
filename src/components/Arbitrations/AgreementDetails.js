@@ -16,9 +16,9 @@ const NODES = Object.keys(networks).map((node) => {
 const AgreementDetails = (props) => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
-  console.log('address', contractAddress);
   const groupId = decodeURIComponent(props.match.params.groupId);
-  console.log('group', groupId);
+  const role = decodeURIComponent(props.match.params.role);
+  console.log("Role:", role)
   const walletAccount = useAccount();
   // Procedure statement modal
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);

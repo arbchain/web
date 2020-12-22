@@ -95,6 +95,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
+  const [agreementContracts, setAgreementContracts] = useState([]);
   const [procedureAddress, setProcedureAddress] = useState(metaDataContext.metadata);
   const [proceduresLoading, setProceduresLoading] = useState(!metaDataContext.metadata.length);
   const [opened, setOpened] = useState(false);
@@ -134,14 +135,23 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         setClient(client);
         const users = await getAllUsers(client, account[0]);
-        const address = await getProcedureContractAddress(client, account[0]);
+        let address = []
+        if (users.caller.procedureContract[0].id !== '-1') {
+          address = users.caller.procedureContract
+        }
+        if (users.caller.agreementContracts[0].id !== '-1') {
+          setAgreementContracts(users.caller.agreementContracts)
+        }
+        // console.log("Meta:",users.caller)
         setProcedureAddress(address);
         metaDataContext.changeMetaData(address);
         setProceduresLoading(false);
         setParties(users.party);
         setCaller(users.caller);
+        setParties(users.party);
         setArbitrator(users.arbitrator);
         setCourt(users.court);
+        setProceduresLoading(false);
       } catch (err) {
         return false;
       }
@@ -184,6 +194,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             client={dbClient}
             updateProcedureList={updateProcedureList}
             updateAddressList={updateAddressList}
+            agreementContracts={agreementContracts}
           />
         </div>
 

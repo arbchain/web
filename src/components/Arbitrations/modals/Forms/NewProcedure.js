@@ -37,7 +37,7 @@ function NewProcedure({ opened, setOpened }) {
               <TextInput wide />
             </div>
             <div className='inputGroups '>
-              <h3>Agreement Address</h3>
+              <h3>Agreement Name</h3>
               <TextInput wide />
             </div>
           </GridContainer>

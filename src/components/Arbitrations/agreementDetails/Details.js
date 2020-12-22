@@ -8,21 +8,25 @@ import {
   Button,
   LoadingRing,
   EmptyStateCard,
+  Link
 } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { fetchAgreement } from '../../../lib/contracts/Agreement';
+import {downloadFile} from "../../../lib/file-storage";
 import Agree from './Agree';
 
-
 function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
-  console.log('add', contractAddress);
+  //console.log('add', contractAddress);
   const history = useHistory();
   const theme = useTheme();
 
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
+  const [cipherKey, setCipherKey] = useState('');
+  const [docLocation, setDocLocation] = useState('');
+  const [docName, setDocName] = useState('');
 
   const status = ['Open', 'Close'];
 
@@ -41,6 +45,11 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
+            const json = JSON.parse(details[7])
+            console.log(json)
+            setCipherKey(json.cipherKey)
+            setDocLocation(json.fileLocation)
+            setDocName(json.fileName)
           }
           setLoading(false);
         }
@@ -50,6 +59,10 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
     }
     getDetails();
   }, [account]);
+
+  const handleClick = async () =>{
+    const res = await downloadFile(docName, docLocation, cipherKey)
+  }
 
   return (
     <>
@@ -103,7 +116,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                         ${textStyle('label2')};
                       `}
                     >
-                      {details[5]}
+                      {details[6]}
                     </Text>
                   </div>
                 </div>
@@ -209,6 +222,27 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                 </div>
               </div>
 
+              <div
+                css={`
+                  display: grid;
+                  grid-template-columns: 1fr minmax(250px, auto);
+                  grid-gap: ${5 * GU}px;
+                  margin-bottom: ${2 * GU}px;
+                `}
+              >
+                <div>
+                  <h2
+                    css={`
+                      ${textStyle('label2')};
+                      color: ${theme.surfaceContentSecondary};
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    Document
+                  </h2>
+                  <Link external onClick = {handleClick}> {docName} </Link>
+                </div>
+              </div>
               <Agree stage={'response'} role={'respondant'}/>
             </section>
           </Box>
