@@ -65,3 +65,22 @@ export async function fetchAgreement(
   }
   return res;
 }
+
+export function signAgreement(nodeSelected, contractAddress, privacyGroupId) {
+  const { connect } = useContract(nodeSelected, contractAddress, privacyGroupId);
+
+  const documentSign = useCallback(
+    async (document, account) => {
+      console.log('Signing Document:', document);
+      const { replayNonce, signature } = await web3Contract.documentSigning([document], account);
+      const res = await web3Contract.call('signAgreement', [
+        replayNonce,
+        signature.signature
+      ], account)
+      console.log('Signing status:', res);
+    },
+    [connect]
+  );
+
+  return { connect, documentSign };
+}

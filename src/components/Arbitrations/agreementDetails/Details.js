@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   GU,
+  Tag,
   Text,
   textStyle,
   useTheme,
@@ -16,9 +17,10 @@ import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { fetchAgreement } from '../../../lib/contracts/Agreement';
 import {downloadFile} from "../../../lib/file-storage";
 import Agree from './Agree';
+import {getSignature, getSignatureStatus} from "../../../lib/contracts/SPC";
 
 function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
-  //console.log('add', contractAddress);
+
   const history = useHistory();
   const theme = useTheme();
 
@@ -26,14 +28,17 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
   const [details, setDetails] = useState(null);
   const [cipherKey, setCipherKey] = useState('');
   const [docLocation, setDocLocation] = useState('');
+  const [documentHash, setDocumentHash] = useState('');
   const [docName, setDocName] = useState('');
+  const [signStatus, setSignStatus] = useState(false);
+  const [signStatusLoading, setSignStatusLoading] = useState(false);
+  const [userSignStatus, setUserSignStatus] = useState(false)
 
   const status = ['Open', 'Close'];
 
   useEffect(() => {
     async function getDetails() {
       try {
-        console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
           const details = await fetchAgreement(
@@ -44,12 +49,20 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
           );
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
+            setSignStatusLoading(true);
             setDetails(details);
-            const json = JSON.parse(details[7])
-            console.log(json)
-            setCipherKey(json.cipherKey)
-            setDocLocation(json.fileLocation)
-            setDocName(json.fileName)
+            const documentInfo = JSON.parse(details[7])
+            console.log(documentInfo)
+            setCipherKey(documentInfo.cipherKey)
+            setDocLocation(documentInfo.fileLocation)
+            setDocName(documentInfo.fileName)
+
+            const res = await getSignature(NODE, contractAddress, groupId, account, details[5])
+            const {signStatus, userSignStatus} = await getSignatureStatus(res[0], account)
+            setSignStatus(signStatus)
+            setUserSignStatus(userSignStatus)
+            setSignStatusLoading(false);
+            setDocumentHash(details[5])
           }
           setLoading(false);
         }
@@ -242,8 +255,44 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                   </h2>
                   <Link external onClick = {handleClick}> {docName} </Link>
                 </div>
+
+                <div>
+                  <h2
+                    css={`
+                      ${textStyle('label2')};
+                      color: ${theme.surfaceContentSecondary};
+                      margin-bottom: ${2 * GU}px;
+                    `}
+                  >
+                    Agreement Sign Status
+                  </h2>
+                  <Text
+                    css={`
+                      display: inline-block;
+                      ${textStyle('body2')};
+                    `}
+                  >
+                    {signStatus ? (
+                      <Tag mode="new">SIGNED</Tag>
+                    ) : (
+                      <Tag mode="new" color="#ff4d4f" background="#f2cfd0">
+                        PENDING
+                      </Tag>
+                    )}
+                  </Text>
+                </div>
+
               </div>
-              <Agree stage={'response'} role={'respondant'}/>
+                <Agree
+                  disable={userSignStatus || signStatusLoading }
+                  stage={'response'}
+                  role={'respondant'}
+                  account={account}
+                  contractAddress={contractAddress}
+                  groupId={groupId}
+                  documentHash={documentHash}
+                  node={NODE}
+                />
             </section>
           </Box>
         </>
