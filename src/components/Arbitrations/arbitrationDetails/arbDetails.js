@@ -5,8 +5,6 @@ import {
   Text,
   textStyle,
   useTheme,
-  Button,
-  LoadingRing,
   EmptyStateCard,
 } from '@aragon/ui';
 import { Skeleton } from 'antd';
@@ -16,15 +14,10 @@ import ProcedureStatementForm from '.././modals/ProcedureStatement';
 import StatementForm from '.././modals/Forms/StatementForm';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
+import Respond from './allDetailCards/Response';
+import Statement from './allDetailCards/Statement';
 
-function ArbDetails({
-  groupId,
-  contractAddress,
-  NODE,
-  account,
-  caller,
-  parties,
-}) {
+function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties }) {
   const history = useHistory();
   const theme = useTheme();
   const [statementModal, setStatementModal] = useState(false);
@@ -47,12 +40,7 @@ function ArbDetails({
         console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getArbitrationDetails(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
+          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -96,7 +84,7 @@ function ArbDetails({
         </>
       ) : details ? (
         <>
-          <Box heading='Agreement Details'>
+          <Box heading="Arbitration Details">
             <section
               css={`
                 display: grid;
@@ -283,23 +271,24 @@ function ArbDetails({
                 </Text>
               </div>*/}
 
-              <Button
-                mode='strong'
-                onClick={() => {
-                  openSidePanel();
-                }}
-                wide
-                css={`
-                  background: ${theme.selected};
-                `}
-              >
-                + NEW STATEMENT
-              </Button>
+              <Statement
+                stage="hearing"
+                role="respondant"
+                contractAddress={contractAddress}
+                groupId={groupId}
+                account={account}
+                caller={caller}
+                parties={parties}
+              />
+
+              <div>
+                <Respond stage="response" role="respondant" />
+              </div>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard width='100%' text='No arbitrations details found.' />
+        <EmptyStateCard width="100%" text="No arbitrations details found." />
       )}
     </>
   );
