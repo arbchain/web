@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   GU,
+  Tag,
   Text,
   textStyle,
   useTheme,
@@ -19,7 +20,7 @@ import Agree from './Agree';
 import {getSignature, getSignatureStatus} from "../../../lib/contracts/SPC";
 
 function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
-  //console.log('add', contractAddress);
+
   const history = useHistory();
   const theme = useTheme();
 
@@ -30,6 +31,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
   const [documentHash, setDocumentHash] = useState('');
   const [docName, setDocName] = useState('');
   const [signStatus, setSignStatus] = useState(false);
+  const [signStatusLoading, setSignStatusLoading] = useState(false);
   const [userSignStatus, setUserSignStatus] = useState(false)
 
   const status = ['Open', 'Close'];
@@ -37,7 +39,6 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
   useEffect(() => {
     async function getDetails() {
       try {
-        console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
           const details = await fetchAgreement(
@@ -48,6 +49,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
           );
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
+            setSignStatusLoading(true);
             setDetails(details);
             const documentInfo = JSON.parse(details[7])
             console.log(documentInfo)
@@ -59,6 +61,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
             const {signStatus, userSignStatus} = await getSignatureStatus(res[0], account)
             setSignStatus(signStatus)
             setUserSignStatus(userSignStatus)
+            setSignStatusLoading(false);
             setDocumentHash(details[5])
           }
           setLoading(false);
@@ -269,13 +272,19 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                       ${textStyle('body2')};
                     `}
                   >
-                    {signStatus.toString()}
+                    {signStatus ? (
+                      <Tag mode="new">SIGNED</Tag>
+                    ) : (
+                      <Tag mode="new" color="#ff4d4f" background="#f2cfd0">
+                        PENDING
+                      </Tag>
+                    )}
                   </Text>
                 </div>
 
               </div>
-              {!userSignStatus ?
                 <Agree
+                  disable={userSignStatus || signStatusLoading }
                   stage={'response'}
                   role={'respondant'}
                   account={account}
@@ -284,8 +293,6 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                   documentHash={documentHash}
                   node={NODE}
                 />
-                : null
-              }
             </section>
           </Box>
         </>

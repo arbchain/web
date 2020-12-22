@@ -6,12 +6,11 @@ import {
   Button,
   useTheme,
 } from '@aragon/ui';
-import {signDocuments} from "../../../lib/contracts/SPC";
 import {signAgreement} from "../../../lib/contracts/Agreement";
 
 const actions = require('../../../utils/actions/arbitration');
 
-function Agree({stage, role, node, contractAddress, groupId, documentHash, account}) {
+function Agree({disable, stage, role, node, contractAddress, groupId, documentHash, account}) {
   const theme = useTheme();
   const roleIndex = actions.roles[role]
   const stageAction = stage === 'response'
@@ -35,15 +34,15 @@ function Agree({stage, role, node, contractAddress, groupId, documentHash, accou
     <>
       {
       stage == 'response' ? <Button
-                disabled = { !roleAction }
+                disabled = { !roleAction || disable}
                 mode='strong'
                 onClick={() => {
                     handleClick();
                 }}
                 wide
-                css={roleAction ? `
-                  background: ${theme.selected};
-                ` : null}
+                css={! roleAction || disable ?
+                  null : 
+                  `background: ${theme.selected};`}
               >
                 ACCEPT
               </Button> : null
