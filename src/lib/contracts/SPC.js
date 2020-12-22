@@ -446,3 +446,23 @@ export async function getSignature(
   }
   return res;
 }
+
+export async function getSignatureStatus(document, account){
+  console.log("Document:",document)
+  console.log('add:',account.address)
+  let signStatus = false;
+  let userSignStatus = false;
+  if (document.signatures.length === document.signers.length){
+      signStatus = true
+      userSignStatus = true
+  }else{
+    for (let i=0; i< document.signatures.length; i++){
+      if (document.signatures[i].signer === account.address){
+        console.log("if")
+        userSignStatus = true
+        break
+      }
+    }
+  }
+  return {signStatus, userSignStatus}
+}

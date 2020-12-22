@@ -8,7 +8,8 @@ import { useAccount } from '../../wallet/Account';
 import wallet from 'wallet-besu';
 import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
 const networks = require('../../wallet/network');
-
+const Web3 = require('web3');
+const web3 = new Web3();
 const NODES = Object.keys(networks).map((node) => {
   return `${networks[node].host}:${networks[node].port}`;
 });
@@ -17,8 +18,8 @@ const AgreementDetails = (props) => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
-  const role = decodeURIComponent(props.match.params.role);
-  console.log("Role:", role)
+  // const role = decodeURIComponent(props.match.params.role);
+  // console.log("Role:", role)
   const walletAccount = useAccount();
   // Procedure statement modal
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
@@ -43,9 +44,12 @@ const AgreementDetails = (props) => {
         // Fetching the password locally. Need a secure way to do this for prod
         const account = await wallet.login(localStorage.getItem('wpassword'));
         // Update the account context by using a callback function
+        const user = await web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
         walletAccount.changeAccount({
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
+          address: user.address,
+          sign: user
         });
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         const users = await getAllUsers(client, account[0]);

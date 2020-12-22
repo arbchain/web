@@ -47,7 +47,7 @@ function App() {
                   component={ArbitrationDetail}
                 />
                 <Route
-                  path='/agreements/:role/:address/:groupId'
+                  path='/agreements/:address/:groupId'
                   component={AgreementDetails}
                 />
                 <Route path='/proceduredetails' component={ProcedureDetails} />
