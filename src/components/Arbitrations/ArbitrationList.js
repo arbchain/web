@@ -15,7 +15,7 @@ import {
 
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
-import { useMetaData } from '../../contexts/MetaData.js';
+import { useMetaData } from '../../contexts/arbitrationMetaData.js';
 import { authorizeUser, getAllUsers, getProcedureContractAddress } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
