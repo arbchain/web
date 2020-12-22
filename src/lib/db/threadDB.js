@@ -148,7 +148,8 @@ export const updateProcedureContracts = async (
   counterParty
 ) => {
   console.log('contractAddress:', contractAddress);
-  const partyAddress = [args[3], args[4]];
+  const partyAddress = [args[4].partyAddress, args[5].partyAddress];
+  console.log(partyAddress);
   const date = new Date();
   const metaData = {
     name: args[0],
@@ -156,13 +157,14 @@ export const updateProcedureContracts = async (
     agreementAddress: args[2],
     claimantName: caller.name,
     respondentName: counterParty.name,
-    courtAddress: args[5],
+    courtAddress: args[6].partyAddress,
     createdAt: date.toDateString(),
   };
 
   for (let i = 0; i < partyAddress.length; i++) {
     const query = new Where('address').eq(partyAddress[i]);
     const user = await db.findFromDB(dbClient, registerSchema, query);
+    console.log('USER', user);
     if (user[0].procedureContract.length === 1 && user[0].procedureContract[0].id === '-1') {
       user[0].procedureContract = [
         {

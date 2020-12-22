@@ -21,9 +21,45 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
   const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [timeline, setTimeLine] = useState(null);
-  const [stages, setStages] = useState(null);
+  const [stages, setStages] = useState([
+    {
+      label: 'Aribtration Created',
+      date: '',
+      Icon: IconFundraising,
+    },
+    {
+      label: 'Response Submitted',
+      date: '',
+      Icon: IconChat,
+    },
+    {
+      label: 'Tribunal Formed',
+      date: '',
+      Icon: IconChat,
+    },
+    {
+      label: 'Challenge Arbitrator',
+      date: '',
+      Icon: IconFolder,
+    },
+    {
+      label: 'Arbitration Started',
+      date: '',
+      Icon: IconFlag,
+    },
+    {
+      label: 'Nomination',
+      date: '',
+      Icon: IconGroup,
+    },
+    {
+      label: 'Award',
+      date: '',
+      Icon: IconFlag,
+    },
+  ]);
 
-  const getDate = (value) => {
+  const getDate = value => {
     const date = new Date(parseInt(value) * 1000);
     return date.toDateString();
   };
@@ -34,12 +70,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
         console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const res = await getTimeLine(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
+          const res = await getTimeLine(NODE, contractAddress, groupId, account);
           // There is an addition call detailsbeing made that replaces the details. A quick fix
           if (res) {
             console.log(res);
@@ -56,24 +87,24 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
                 Icon: IconChat,
               },
               {
-                label: 'Tribunal Formed',
+                label: 'Nomination',
                 date: res[3],
+                Icon: IconGroup,
+              },
+              {
+                label: 'Tribunal Formed',
+                date: res[4],
                 Icon: IconChat,
               },
               {
                 label: 'Challenge Arbitrator',
-                date: res[4],
+                date: res[5],
                 Icon: IconFolder,
               },
               {
                 label: 'Arbitration Started',
-                date: res[5],
-                Icon: IconFlag,
-              },
-              {
-                label: 'Nomination',
                 date: res[6],
-                Icon: IconGroup,
+                Icon: IconFlag,
               },
               {
                 label: 'Award',
@@ -90,7 +121,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
     }
     setTimeout(() => {
       getDetails();
-    }, 3000);
+    }, 1000);
   }, [account]);
 
   // const arbitrationCreation = new Date(contractTime * 1000);
@@ -168,7 +199,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
           })}
         </Stepper>
       ) : (
-        <EmptyStateCard width='100%' text='No Timeline details found.' />
+        <EmptyStateCard width="100%" text="No Timeline details found." />
       )}
     </div>
   );

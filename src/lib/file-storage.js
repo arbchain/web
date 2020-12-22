@@ -5,8 +5,8 @@ const fileDownload = require('js-file-download');
 
 AWS.config.update({
   region: 'ap-south-1',
-  accessKeyId: '***',
-  secretAccessKey: '***',
+  accessKeyId: process.env.REACT_APP_ACCESS_KEY,
+  secretAccessKey: process.env.REACT_APP_SECRET,
 });
 const s3 = new AWS.S3();
 

@@ -14,6 +14,8 @@ const antIcon = <LoadingOutlined style={{ fontSize: 50, color: '#4d4cbb' }} spin
 const languages = ['English', 'French', 'Spanish'];
 const arbitrationSeats = ['London', 'lorem', 'lorem'];
 
+const agreementName = 'Test Agreement';
+
 const ageementAddr = [
   '0x958543756A4c7AC6fB361f0efBfeCD98E4D297Db',
   '0xd5B5Ff46dEB4baA8a096DD0267C3b81Bda65e943',
@@ -70,6 +72,7 @@ export default function ProcedureForm({
   client,
   updateProcedureList,
   updateAddressList,
+  updateMetaData,
 }) {
   const theme = useTheme();
   // console.log('Caller:', caller);
@@ -108,6 +111,11 @@ export default function ProcedureForm({
       },
     ];
 
+    const court = {
+      partyAddress: courtAddr[courtAddress],
+      name: 'Court',
+    };
+
     const fileDetails = await uploadDoc(document, localStorage.getItem('wpassword'), 'AWS');
     console.log('UploadStatus:', fileDetails);
     const res = await createProcedureContract(
@@ -115,10 +123,11 @@ export default function ProcedureForm({
       [
         name,
         description,
+        agreementName,
         ageementAddr[agreementAddress],
-        caller.address, // Add user public key not private key!//
-        counterParties[respondentAddress].address,
-        courtAddr[courtAddress],
+        partiesInvolved[0],
+        partiesInvolved[1], // Add user public key not private key!//
+        court,
       ],
       client,
       caller,
@@ -141,6 +150,20 @@ export default function ProcedureForm({
       description: description,
       name: name,
       respondentName: counterParties[respondentAddress].name,
+    });
+
+    updateMetaData({
+      contractAddress: res.contractAddress,
+      groupId: res.privacyGroupId,
+      metaData: {
+        agreementAddress: agreementName,
+        claimantName: caller.name,
+        courtAddress: courtAddr[courtAddress],
+        createdAt: new Date().toDateString(),
+        description: description,
+        name: name,
+        respondentName: counterParties[respondentAddress].name,
+      },
     });
   };
 

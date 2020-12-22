@@ -103,19 +103,17 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
 
   useAuthentication();
 
-  const updateProcedureList = useCallback(
-    procedureData => {
-      setArbitrationDetails([...arbitrationDetails, procedureData]);
-    },
-    [arbitrationDetails]
-  );
+  const updateProcedureList = procedureData => {
+    setArbitrationDetails([...arbitrationDetails, procedureData]);
+  };
 
-  const updateAddressList = useCallback(
-    addressData => {
-      setProcedureAddress([...procedureAddress, addressData]);
-    },
-    [procedureAddress]
-  );
+  const updateAddressList = addressData => {
+    setProcedureAddress([...procedureAddress, addressData]);
+  };
+
+  const updateMetaData = data => {
+    metaDataContext.changeMetaData([...metaDataContext.metadata, data]);
+  };
 
   useEffect(() => {
     async function load() {
@@ -162,6 +160,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             setArbitrationDetails(allDetails);
           }
           setLoading(false);
+          console.log('Arbitration', arbitrationDetails);
         }
       } catch (err) {
         return false;
@@ -184,6 +183,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             client={dbClient}
             updateProcedureList={updateProcedureList}
             updateAddressList={updateAddressList}
+            updateMetaData={updateMetaData}
           />
         </div>
 
