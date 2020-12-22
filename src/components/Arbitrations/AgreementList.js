@@ -29,6 +29,7 @@ import {
 import useAuthentication from '../../utils/auth';
 import wallet from 'wallet-besu';
 import styled from 'styled-components';
+import { useMetaData } from '../../contexts/agreementMetaData';
 
 const Web3 = require('web3');
 const networks = require('../../wallet/network');
@@ -90,7 +91,8 @@ const ButtonContainer = styled.div`
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
-  const [loading, setLoading] = useState(false);
+  const metaDataContext = useMetaData();
+  const [loading, setLoading] = useState(!metaDataContext.metadata.length);
   const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementModal, setAgreementModal] = useState(false);
   const [caller, setCaller] = useState(null);
@@ -98,8 +100,8 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
-  const [agreementAddress, setAgreementAddress] = useState(null);
-  const [agreementsLoading, setAgreementsLoading] = useState(true);
+  const [agreementAddress, setAgreementAddress] = useState(metaDataContext.metadata);
+  const [agreementsLoading, setAgreementsLoading] = useState(!metaDataContext.metadata.length);
   const [opened, setOpened] = useState(false);
 
   const openAgreement = () => setAgreementModal(true);
@@ -108,27 +110,16 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const walletAccount = useAccount();
   useAuthentication();
 
-  // const updateAgreementData = useCallback(
-  //   (agreementData, addressData) => {
-  //     setAgreementAddress([...agreementAddress, addressData]);
-  //     setAgreementDetails([...agreementDetails, agreementData]);
-  //   },
-  //   [agreementDetails, agreementAddress]
-  // );
+  const updateAgreementList = agreementData => {
+    console.log(...agreementDetails);
+    console.log(agreementData);
+    setAgreementDetails([...agreementDetails, agreementData]);
+  };
 
-  const updateAgreementList = useCallback(
-    agreementData => {
-      setAgreementDetails([...agreementDetails, agreementData]);
-    },
-    [agreementDetails]
-  );
-
-  const updateAddressList = useCallback(
-    addressData => {
-      setAgreementAddress([...agreementAddress, addressData]);
-    },
-    [agreementAddress]
-  );
+  const updateAddressList = addressData => {
+    console.log(addressData);
+    setAgreementAddress([...agreementAddress, addressData]);
+  };
 
   useEffect(() => {
     async function load() {
@@ -147,12 +138,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         setClient(client);
         const users = await getAllUsers(client, account[0]);
-        let address = []
+        let address = [];
         if (users.caller.agreementContracts[0].id !== '-1') {
-          address = users.caller.agreementContracts
+          address = users.caller.agreementContracts;
         }
         // const address = await getAgreementContractAddress(client, account[0]);
         setAgreementAddress(address);
+        metaDataContext.changeMetaData(address);
         setAgreementsLoading(false);
         setParties(users.party);
         setCaller(users.caller);
@@ -175,22 +167,22 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           while (index < parseInt(agreementAddress.length)) {
             allDetails.push(agreementAddress[index].metaData);
             index++;
+            setAgreementDetails(allDetails);
           }
-          setAgreementDetails(allDetails);
-          console.log(allDetails);
           setLoading(false);
+          console.log('Details', allDetails);
         }
       } catch (err) {
         return false;
       }
     }
     agreementAddressCall();
-  }, [agreementAddress]);
+  }, [agreementsLoading]);
 
-  /*if (agreementDetails) {
+  /* if (agreementDetails) {
     console.log('Agreement Details', agreementDetails);
     console.log('Agreement Addresses', agreementAddress);
-  }*/
+  } */
 
   return (
     <>
