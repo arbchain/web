@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { DropDown, GU, Text, textStyle, useTheme, Button, Link } from '@aragon/ui';
 import styled from 'styled-components';
 import {downloadFile} from "../../../../lib/file-storage";
-import {getSignature, signDocuments} from "../../../../lib/contracts/SPC";
+import {getSignature, signDocuments, getSignatureStatus} from "../../../../lib/contracts/SPC";
 import {Skeleton} from "antd";
 
 // styles
@@ -33,19 +33,9 @@ function AllProcedureStatements({ seat, language, createdBy, documentLocation, d
       try {
         setLoading(true);
         const res = await getSignature(node, contractAddress, groupId, account, hash)
-        console.log("RESSS:",res[0])
-        if (res[0].signatures.length === res[0].signers.length){
-          setSignStatus(true)
-          setUserSignStatus(true)
-        }else{
-          for (let i=0; i< res[0].signatures.length; i++){
-            if (res[0].signatures[i].signer === account.address){
-              console.log("if")
-              setUserSignStatus(true)
-              break
-            }
-          }
-        }
+        const {signStatus, userSignStatus} = await getSignatureStatus(res[0], account)
+        setSignStatus(signStatus)
+        setUserSignStatus(userSignStatus)
         setLoading(false);
       } catch (err) {
         return false;
