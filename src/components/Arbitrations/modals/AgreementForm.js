@@ -78,7 +78,8 @@ export default function AgreementForm({
   caller,
   dbClient,
   updateAgreementList,
-  updateAddressList
+  updateAddressList,
+  updateMetaData
 }) {
   const theme = useTheme();
 
@@ -167,24 +168,42 @@ export default function AgreementForm({
       counterParties[counterParty]
     );
 
+    updateAddressList({
+      contractAddress: res.contractAddress,
+      groupId: res.privacyGroupId,
+    });
     
-      // updateAgreementList({
-      //   claimantName: caller.name,
-      //     createdAt: new Date().toDateString(),
-      //     disputeType: disputeType,
-      //     documentName: fileDetails.fileName,
-      //     language:  languages[language],
-      //     law: "LCIA",
-      //     respondentName: counterParties[counterParty].name,
-      //     seat: seat,
-      //     title: title,
-      //     role: 0
-      // });
+      updateAgreementList({
+        claimantName: caller.name,
+          createdAt: new Date().toDateString(),
+          disputeType: disputeType,
+          documentName: fileDetails.fileName,
+          language:  languages[language],
+          law: "LCIA",
+          respondentName: counterParties[counterParty].name,
+          seat: seat,
+          title: title,
+          role: 0
+      });
 
-      // updateAddressList({
-      //   contractAddress: res.contractAddress,
-      //   groupId: res.privacyGroupId,
-      // });
+
+    updateMetaData({
+      contractAddress: res.contractAddress,
+      groupId: res.privacyGroupId,
+      metaData: {
+          claimantName: caller.name,
+          createdAt: new Date().toDateString(),
+          disputeType: disputeType,
+          documentName: fileDetails.fileName,
+          language:  languages[language],
+          law: "LCIA",
+          respondentName: counterParties[counterParty].name,
+          seat: seat,
+          title: title,
+          role: 0
+      },
+    });
+     
    
 
     

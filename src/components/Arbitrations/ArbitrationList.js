@@ -15,7 +15,7 @@ import {
 
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
-import { useMetaData } from '../../contexts/arbitrationMetaData.js';
+import { useMetaData } from '../../contexts/metaData';
 import { authorizeUser, getAllUsers, getProcedureContractAddress } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
@@ -87,7 +87,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const walletAccount = useAccount();
   const metaDataContext = useMetaData();
 
-  const [loading, setLoading] = useState(!metaDataContext.metadata.length);
+  const [loading, setLoading] = useState(!metaDataContext.arbitrationMetadata.length);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
   const [caller, setCaller] = useState(null);
@@ -96,8 +96,10 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
   const [agreementContracts, setAgreementContracts] = useState([]);
-  const [procedureAddress, setProcedureAddress] = useState(metaDataContext.metadata);
-  const [proceduresLoading, setProceduresLoading] = useState(!metaDataContext.metadata.length);
+  const [procedureAddress, setProcedureAddress] = useState(metaDataContext.arbitrationMetadata);
+  const [proceduresLoading, setProceduresLoading] = useState(
+    !metaDataContext.arbitrationMetadata.length
+  );
   const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
@@ -113,7 +115,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   };
 
   const updateMetaData = data => {
-    metaDataContext.changeMetaData([...metaDataContext.metadata, data]);
+    metaDataContext.changeArbitrationMetaData([...metaDataContext.arbitrationMetadata, data]);
   };
 
   useEffect(() => {
@@ -142,7 +144,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         }
         // console.log("Meta:",users.caller)
         setProcedureAddress(address);
-        metaDataContext.changeMetaData(address);
+        metaDataContext.changeArbitrationMetaData(address);
         setProceduresLoading(false);
         setParties(users.party);
         setCaller(users.caller);

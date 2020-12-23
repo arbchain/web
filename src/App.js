@@ -22,13 +22,13 @@ import { ActivityProvider } from './components/Activity/ActivityProvider';
 import { AccountProvider } from './wallet/Account';
 import { ArbitrationMetaDataProvider } from './contexts/arbitrationMetaData';
 import {AgreementMetaDataProvider} from './contexts/agreementMetaData'
+import {MetaDataProvider} from './contexts/metaData'
 import Database from "./components/Database";
 
 function App() {
   return (
     <AccountProvider>
-      <ArbitrationMetaDataProvider>
-        <AgreementMetaDataProvider>
+      <MetaDataProvider>
       <BrowserRouter>
         <ActivityProvider>
           <Route exact path='/login' component={LoginPage} />
@@ -57,8 +57,7 @@ function App() {
           </Main>
         </ActivityProvider>
       </BrowserRouter>
-      </AgreementMetaDataProvider>
-      </ArbitrationMetaDataProvider>
+      </MetaDataProvider>
     </AccountProvider>
   );
 }
