@@ -19,6 +19,7 @@ import {
 import AgreementForm from './modals/AgreementForm';
 // import NewAgreement from './modals/Popovers/NewAgreement';
 import AgreementCard from './AgreementCard';
+import { useMetaData } from '../../contexts/metaData';
 import { useAccount } from '../../wallet/Account.js';
 import {
   authorizeUser,
@@ -90,7 +91,10 @@ const ButtonContainer = styled.div`
 
 function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const theme = useTheme();
-  const [loading, setLoading] = useState(false);
+  const walletAccount = useAccount();
+  const metaDataContext = useMetaData();
+
+  const [loading, setLoading] = useState(!metaDataContext.agreementMetadata.length);
   const [agreementDetails, setAgreementDetails] = useState([]);
   const [agreementModal, setAgreementModal] = useState(false);
   const [caller, setCaller] = useState(null);
@@ -98,14 +102,15 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
-  const [agreementAddress, setAgreementAddress] = useState(null);
-  const [agreementsLoading, setAgreementsLoading] = useState(true);
+  const [agreementAddress, setAgreementAddress] = useState(metaDataContext.agreementMetadata);
+  const [agreementsLoading, setAgreementsLoading] = useState(
+    !metaDataContext.agreementMetadata.length
+  );
   const [opened, setOpened] = useState(false);
 
   const openAgreement = () => setAgreementModal(true);
   const openSidePanel = () => setOpened(true);
 
-  const walletAccount = useAccount();
   useAuthentication();
 
   // const updateAgreementData = useCallback(
@@ -116,19 +121,19 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   //   [agreementDetails, agreementAddress]
   // );
 
-  const updateAgreementList = useCallback(
-    agreementData => {
-      setAgreementDetails([...agreementDetails, agreementData]);
-    },
-    [agreementDetails]
-  );
+  const updateAgreementList = agreementData => {
+    console.log('Data', agreementData);
+    setAgreementDetails([...agreementDetails, agreementData]);
+  };
 
-  const updateAddressList = useCallback(
-    addressData => {
-      setAgreementAddress([...agreementAddress, addressData]);
-    },
-    [agreementAddress]
-  );
+  const updateAddressList = addressData => {
+    console.log('Data', addressData);
+    setAgreementAddress([...agreementAddress, addressData]);
+  };
+
+  const updateMetaData = data => {
+    metaDataContext.changeAgreementMetaData([...metaDataContext.agreementMetadata, data]);
+  };
 
   useEffect(() => {
     async function load() {
@@ -147,12 +152,13 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         setClient(client);
         const users = await getAllUsers(client, account[0]);
-        let address = []
+        let address = [];
         if (users.caller.agreementContracts[0].id !== '-1') {
-          address = users.caller.agreementContracts
+          address = users.caller.agreementContracts;
         }
         // const address = await getAgreementContractAddress(client, account[0]);
         setAgreementAddress(address);
+        metaDataContext.changeAgreementMetaData(address);
         setAgreementsLoading(false);
         setParties(users.party);
         setCaller(users.caller);
@@ -168,8 +174,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   useEffect(() => {
     async function agreementAddressCall() {
       try {
-        if (agreementAddress.length) {
-          setLoading(true);
+        if (!agreementsLoading) {
           let index = 0;
           const allDetails = [];
           while (index < parseInt(agreementAddress.length)) {
@@ -185,12 +190,12 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
       }
     }
     agreementAddressCall();
-  }, [agreementAddress]);
+  }, [agreementsLoading]);
 
-  /*if (agreementDetails) {
+  /* if (agreementDetails) {
     console.log('Agreement Details', agreementDetails);
     console.log('Agreement Addresses', agreementAddress);
-  }*/
+  } */
 
   return (
     <>
@@ -205,6 +210,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           dbClient={dbClient}
           updateAgreementList={updateAgreementList}
           updateAddressList={updateAddressList}
+          updateMetaData={updateMetaData}
         />
 
         {/* <NewAgreement

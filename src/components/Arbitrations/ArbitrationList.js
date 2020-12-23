@@ -15,7 +15,7 @@ import {
 
 import ProcedureForm from './modals/ProcedureForm';
 import { useAccount } from '../../wallet/Account.js';
-import { useMetaData } from '../../contexts/MetaData.js';
+import { useMetaData } from '../../contexts/metaData';
 import { authorizeUser, getAllUsers, getProcedureContractAddress } from '../../lib/db/threadDB';
 import ArbitrationCard from './ArbitrationCard.js';
 import wallet from 'wallet-besu';
@@ -87,7 +87,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const walletAccount = useAccount();
   const metaDataContext = useMetaData();
 
-  const [loading, setLoading] = useState(!metaDataContext.metadata.length);
+  const [loading, setLoading] = useState(!metaDataContext.arbitrationMetadata.length);
   const [procedureModal, setProcedureModal] = useState(false);
   const [arbitrationDetails, setArbitrationDetails] = useState([]);
   const [caller, setCaller] = useState(null);
@@ -96,27 +96,27 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
   const [court, setCourt] = useState([]);
   const [dbClient, setClient] = useState(null);
   const [agreementContracts, setAgreementContracts] = useState([]);
-  const [procedureAddress, setProcedureAddress] = useState(metaDataContext.metadata);
-  const [proceduresLoading, setProceduresLoading] = useState(!metaDataContext.metadata.length);
+  const [procedureAddress, setProcedureAddress] = useState(metaDataContext.arbitrationMetadata);
+  const [proceduresLoading, setProceduresLoading] = useState(
+    !metaDataContext.arbitrationMetadata.length
+  );
   const [opened, setOpened] = useState(false);
 
   const openProcedure = () => setProcedureModal(true);
 
   useAuthentication();
 
-  const updateProcedureList = useCallback(
-    procedureData => {
-      setArbitrationDetails([...arbitrationDetails, procedureData]);
-    },
-    [arbitrationDetails]
-  );
+  const updateProcedureList = procedureData => {
+    setArbitrationDetails([...arbitrationDetails, procedureData]);
+  };
 
-  const updateAddressList = useCallback(
-    addressData => {
-      setProcedureAddress([...procedureAddress, addressData]);
-    },
-    [procedureAddress]
-  );
+  const updateAddressList = addressData => {
+    setProcedureAddress([...procedureAddress, addressData]);
+  };
+
+  const updateMetaData = data => {
+    metaDataContext.changeArbitrationMetaData([...metaDataContext.arbitrationMetadata, data]);
+  };
 
   useEffect(() => {
     async function load() {
@@ -135,16 +135,16 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         setClient(client);
         const users = await getAllUsers(client, account[0]);
-        let address = []
+        let address = [];
         if (users.caller.procedureContract[0].id !== '-1') {
-          address = users.caller.procedureContract
+          address = users.caller.procedureContract;
         }
         if (users.caller.agreementContracts[0].id !== '-1') {
-          setAgreementContracts(users.caller.agreementContracts)
+          setAgreementContracts(users.caller.agreementContracts);
         }
         // console.log("Meta:",users.caller)
         setProcedureAddress(address);
-        metaDataContext.changeMetaData(address);
+        metaDataContext.changeArbitrationMetaData(address);
         setProceduresLoading(false);
         setParties(users.party);
         setCaller(users.caller);
@@ -172,6 +172,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             setArbitrationDetails(allDetails);
           }
           setLoading(false);
+          console.log('Arbitration', arbitrationDetails);
         }
       } catch (err) {
         return false;
@@ -194,6 +195,7 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
             client={dbClient}
             updateProcedureList={updateProcedureList}
             updateAddressList={updateAddressList}
+            updateMetaData={updateMetaData}
             agreementContracts={agreementContracts}
           />
         </div>

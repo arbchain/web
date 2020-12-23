@@ -20,7 +20,9 @@ import ArbitrationDetail from './components/Arbitrations/ArbitrationDetail';
 import AgreementDetails from './components/Arbitrations/AgreementDetails';
 import { ActivityProvider } from './components/Activity/ActivityProvider';
 import { AccountProvider } from './wallet/Account';
-import { MetaDataProvider } from './contexts/MetaData';
+import { ArbitrationMetaDataProvider } from './contexts/arbitrationMetaData';
+import {AgreementMetaDataProvider} from './contexts/agreementMetaData'
+import {MetaDataProvider} from './contexts/metaData'
 import Database from "./components/Database";
 
 function App() {
