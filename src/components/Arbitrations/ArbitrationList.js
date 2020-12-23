@@ -207,12 +207,6 @@ function ArbitrationList({ disputes, arbitrations, selectDispute }) {
           }}
         />
 
-        {/* <Button
-          label='+NEW test Proc'
-          onClick={() => {
-            setOpened();
-          }}
-        /> */}
       </ButtonContainer>
 
       <Bar>
