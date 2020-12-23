@@ -10,9 +10,13 @@ import SectionWrapper, {
   Description,
   GridGroup,
   ProcedureDetails,
+  Actions,
 } from './styles';
 
 import user from '../../../assets/icons/user.png';
+
+import check from '../../../assets/icons/check.png';
+import Button from '@aragon/ui/dist/Button';
 
 function ArbDetails({
   groupId,
@@ -100,21 +104,21 @@ function ArbDetails({
                   <h2>Respondant</h2>
                   <Text className='description'>
                     {/* {details[1]} */}
-                    Koushith
+                    Shubam
                   </Text>
                 </div>
                 <div className='agreement'>
                   <h2>Arbitration Agreement</h2>
                   <Text className='description'>
                     {/* {details[1]} */}
-                    Koushith
+                    Rental
                   </Text>
                 </div>
               </GridGroup>
 
               <ProcedureDetails>
                 <div className='title__container-titleGroup'>
-                  <h2>Procedure Status</h2>
+                  <h2 className='title__heading'>Procedure Status</h2>
                 </div>
                 <div className='status'>
                   <h1>
@@ -122,6 +126,53 @@ function ArbDetails({
                   </h1>
                 </div>
               </ProcedureDetails>
+              <div className='procedure-status'>
+                <GridGroup>
+                  <div className='claiment'>
+                    <h2>CREATED ON</h2>
+                    <Text className='description mb-6'>
+                      {/* {details[1]} */}
+                      24-12-2020
+                    </Text>
+                  </div>
+                  <div className='respondant'>
+                    <h2>selected language</h2>
+                    <Text className='description mb-6'>
+                      {/* {details[1]} */}
+                      English
+                    </Text>
+                  </div>
+                  <div className='agreement'>
+                    <h2>selected arbitration seat</h2>
+                    <Text className='description mb-6'>
+                      {/* {details[1]} */}
+                      London
+                    </Text>
+                  </div>
+                  <div className='agreement '>
+                    <h2>Signed On</h2>
+                    <Text className='description mb-6'>
+                      {/* {details[1]} */}
+                      {/* conditional rendering for color */}
+                      pending
+                    </Text>
+                  </div>
+                  <div className='agreement'>
+                    <h2>Attached Documents</h2>
+                    <Text className='description mb-6'>
+                      {/* {details[1]} */}
+                      docs.png
+                    </Text>
+                  </div>
+                </GridGroup>
+
+                {/* conditional rendering for buttons */}
+
+                <Actions>
+                  <Button className='btn success'>Accept</Button>
+                  <Button className='btn error'>Reject</Button>
+                </Actions>
+              </div>
             </SectionWrapper>
           </Box>
         </>

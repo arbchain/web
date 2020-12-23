@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { GU, textStyle, theme } from '@aragon/ui';
 
 const SectionWrapper = styled.section`
+  overflow: hidden;
   display: grid;
   grid-template-columns: auto;
   grid-gap: ${2.5 * GU}px;
@@ -16,6 +17,10 @@ const SectionWrapper = styled.section`
     display: flex;
     margin-bottom: ${3 * GU}px;
     justify-content: space-between;
+  }
+  .procedure-status {
+    border: 1px solid #dde4e9;
+    padding: 20px;
   }
 
   .title__container {
@@ -62,6 +67,7 @@ export const Description = styled.div`
 export const GridGroup = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-row-gap: 30px;
   .description {
     ${textStyle('body2')};
     color: #3d4857;
@@ -75,12 +81,40 @@ export const ProcedureDetails = styled.div`
   } */
   display: flex;
   justify-content: space-between;
+  margin-top: 22px;
   .pro-status {
     background-color: rgba(251, 119, 119, 0.5);
     padding: 5px 20px;
     border-radius: 5px;
     text-align: center;
     color: #fff;
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin: 24px 0 24px 0;
+  .success {
+    width: 100px;
+    background-color: #21d48e;
+    color: #fff;
+    text-align: center;
+    justify-content: center;
+    height: 32px;
+    border: 1px solid #dde4e9;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+  .error {
+    width: 100px;
+    background-color: #fb7777;
+    color: #fff;
+    text-align: center;
+    justify-content: center;
+    height: 32px;
+    border: 1px solid #dde4e9;
+    border-radius: 3px;
   }
 `;
 
