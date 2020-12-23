@@ -52,7 +52,7 @@ const SectionWrapper = styled.section`
         height: auto;
         background-color: #ebdef0;
         padding: 5px 20px;
-        border-radius: 5px;
+        border-radius: 3px;
         text-align: center;
       }
     }
@@ -85,7 +85,7 @@ export const ProcedureDetails = styled.div`
   .pro-status {
     background-color: rgba(251, 119, 119, 0.5);
     padding: 5px 20px;
-    border-radius: 5px;
+    border-radius: 3px;
     text-align: center;
     color: #fff;
   }

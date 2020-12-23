@@ -122,6 +122,7 @@ function ArbDetails({
                 </div>
                 <div className='status'>
                   <h1>
+                    {/* conditional rendering for status */}
                     <span className='pro-status'>Pending</span>
                   </h1>
                 </div>
