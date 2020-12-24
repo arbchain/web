@@ -3,38 +3,24 @@ import { Box, GU, Text, textStyle, useTheme, EmptyStateCard } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
-import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 import Respond from './allDetailCards/Response';
 import Statement from './allDetailCards/Statement';
 
-function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties, role }) {
+function ArbDetails({
+  loading,
+  details,
+  groupId,
+  contractAddress,
+  NODE,
+  account,
+  caller,
+  parties,
+  role,
+}) {
   const history = useHistory();
   const theme = useTheme();
 
-  const [loading, setLoading] = useState(true);
-  const [details, setDetails] = useState(null);
-
   const status = ['Open', 'Close'];
-
-  useEffect(() => {
-    async function getDetails() {
-      try {
-        console.log(account);
-        if (Object.keys(account).length) {
-          setLoading(true);
-          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
-          // There is an addition call being made that replaces the details. A quick fix
-          if (details) {
-            setDetails(details);
-          }
-          setLoading(false);
-        }
-      } catch (err) {
-        return false;
-      }
-    }
-    getDetails();
-  }, [account]);
 
   return (
     <>

@@ -8,6 +8,7 @@ import AllStatements from './arbitrationDetails/allStatements';
 import NominationPage from './arbitrationDetails/NominationPage';
 import useAuthentication from '../../utils/auth';
 import { useAccount } from '../../wallet/Account';
+import { getArbitrationDetails } from '../../lib/contracts/SPC';
 import wallet from 'wallet-besu';
 
 import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
@@ -31,6 +32,8 @@ const ArbitrationDetail = props => {
   const [parties, setParties] = useState([]);
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState(null);
 
   const handleTabChange = tabs => {
     setSelectTabs(tabs);
@@ -64,6 +67,31 @@ const ArbitrationDetail = props => {
     load();
   }, []);
 
+  useEffect(() => {
+    async function getDetails() {
+      try {
+        console.log(walletAccount.account);
+        if (Object.keys(walletAccount.account).length) {
+          setLoading(true);
+          const details = await getArbitrationDetails(
+            NODES[0],
+            contractAddress,
+            groupId,
+            walletAccount.account
+          );
+          // There is an addition call being made that replaces the details. A quick fix
+          if (details) {
+            setDetails(details);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getDetails();
+  }, [walletAccount.account]);
+
   useAuthentication();
 
   return (
@@ -89,6 +117,8 @@ const ArbitrationDetail = props => {
               {tabs === 0 ? (
                 <>
                   <ArbDetails
+                    loading={loading}
+                    details={details}
                     contractAddress={contractAddress}
                     groupId={groupId}
                     NODE={NODES[0]}
@@ -120,6 +150,8 @@ const ArbitrationDetail = props => {
                     groupId={groupId}
                     NODE={NODES[0]}
                     account={walletAccount.account}
+                    role={role}
+                    details={details}
                   />
                 </>
               ) : null}
