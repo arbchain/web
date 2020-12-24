@@ -14,6 +14,8 @@ import { Upload, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
+import {uploadDoc} from "../../../../lib/file-storage";
+import {createArbitrationResponse, signDocuments} from "../../../../lib/contracts/SPC";
 
 // styled Component
 const ResponseContainer = styled.div`
@@ -57,12 +59,73 @@ const GridContainer = styled.div`
   }
 `;
 
-function AcceptResponse({ openResponse, setOpenResponse }) {
+function AcceptResponse({ openResponse, setOpenResponse, procedureDocHash, contractAddress, groupId, NODE , account}) {
   const [note, setNote] = useState('');
   const [upload, setUpload] = useState();
+  const [document, setDocument] = useState(null);
+
   const closePannel = () => {
     setOpenResponse(false);
   };
+
+  const { connected, arbitrationResponseCreation } = createArbitrationResponse(NODE, contractAddress, groupId)
+
+  const { connect, documentSign } = signDocuments(
+    NODE,
+    contractAddress,
+    groupId
+  );
+
+  const props = {
+    name: 'file',
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    customRequest: (data) => {
+      setDocument(data.file);
+    },
+    onChange(status) {
+      if (status) {
+        message.success(` file uploaded successfully.`);
+      } else {
+        message.error(`file upload failed.`);
+      }
+    },
+  };
+
+  const handleClick = async ()=>{
+    console.log("Signing procedure statement:")
+    await documentSign(procedureDocHash, account);
+
+    console.log("Document:", document)
+
+    const docInfo = await uploadDoc(
+      document,
+      localStorage.getItem('wpassword'),
+      'AWS'
+    );
+
+    const documentInfo = {
+      cipherKey: docInfo. cipherKey,
+      fileLocation: docInfo.fileLocation,
+      fileName: docInfo.fileName,
+      fileFormat: docInfo.fileFormat,
+    }
+
+    console.log('UploadStatus:', docInfo);
+    await arbitrationResponseCreation(
+      note,
+      docInfo.fileHash,
+      JSON.stringify(documentInfo),
+      docInfo.fileLocation,
+      100,
+      false,
+      0,
+      account
+    )
+
+    console.log("Signing response!!")
+    await documentSign(docInfo.fileHash, account);
+    console.log("DONE!!!")
+  }
 
   const theme = useTheme();
   return (
@@ -86,7 +149,7 @@ function AcceptResponse({ openResponse, setOpenResponse }) {
 
         <div className='inputGroups'>
           <h3>Upload Document</h3>
-          <Upload>
+          <Upload {...props}>
             <Button
               icon={<IconUpload />}
               label='Click to Upload'
@@ -96,7 +159,7 @@ function AcceptResponse({ openResponse, setOpenResponse }) {
         </div>
 
         <GridContainer>
-          <Button wide className='btn success'>
+          <Button wide className='btn success' onClick={handleClick}>
             Accept
           </Button>
           <Button wide className='btn error'>

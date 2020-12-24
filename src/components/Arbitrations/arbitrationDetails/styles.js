@@ -92,6 +92,13 @@ export const ProcedureDetails = styled.div`
     text-align: center;
     color: #fff;
   }
+  .accepted {
+    background-color: rgba(33, 212, 142, 0.3);
+    padding: 5px 20px;
+    border-radius: 3px;
+    text-align: center;
+    color: #fff;
+  }
 `;
 
 export const Actions = styled.div`

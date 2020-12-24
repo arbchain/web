@@ -1,26 +1,17 @@
-import React from 'react';
-import {
-  Box,
-  GU,
-  Text,
-  textStyle,
-  useTheme,
-  EmptyStateCard,
-  IconWarning,
-  IconUser,
-  IconFile,
-} from '@aragon/ui';
+import React, {useEffect, useState} from 'react';
+import { Text, Link} from '@aragon/ui';
 
-import SectionWrapper, {
-  Description,
-  GridGroup,
-  ProcedureDetails,
-  Actions,
-  Info,
-  SubmittedResponse,
-} from './styles';
+import SectionWrapper, { GridGroup, SubmittedResponse } from './styles';
+import {downloadFile} from "../../../lib/file-storage";
 
-function arbitrationResponse() {
+function ArbitrationResponse({ responseDetail, fileDetails }) {
+  console.log("response:", responseDetail)
+
+  const download = async ()=>{
+    const res = await downloadFile(fileDetails.fileName, fileDetails.fileLocation,
+      fileDetails.cipherKey)
+  }
+
   return (
     <>
       <SubmittedResponse>
@@ -33,10 +24,7 @@ function arbitrationResponse() {
           <h2>Summary</h2>
           <Text className='description' style={{ fontSize: '16px' }}>
             {/* {details[1]} */}
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias illo
-            consequatur velit aspernatur iusto quos porro saepe rem tenetur,
-            labore aliquam iste aperiam reprehenderit non debitis sint vel!
-            Dolorum, ex.
+            {responseDetail[0].description}
           </Text>
 
           <GridGroup>
@@ -44,7 +32,7 @@ function arbitrationResponse() {
               <h2>Attached Documents</h2>
               <Text className='description mb-6'>
                 {/* {details[1]} */}
-                docs.png
+                <Link external onClick={download}>{fileDetails.fileName}</Link>
               </Text>
             </div>
           </GridGroup>
@@ -54,4 +42,4 @@ function arbitrationResponse() {
   );
 }
 
-export default arbitrationResponse;
+export default ArbitrationResponse;
