@@ -135,4 +135,19 @@ export const Info = styled.div`
   overflow: hidden;
 `;
 
+export const SubmittedResponse = styled.div`
+  margin-top: 10px;
+  .heading-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .summary {
+    padding: 20px;
+    border: 1px solid #dde4e9;
+  }
+  .attachment {
+    margin-top: 20px;
+  }
+`;
+
 export default SectionWrapper;

@@ -16,6 +16,7 @@ import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 import AcceptResponse from '../modals/Forms/AcceptResponse';
 
+import ArbitrationResponse from './arbitrationResponse';
 import Respond from './allDetailCards/Response';
 import Statement from './allDetailCards/Statement';
 import SectionWrapper, {
@@ -24,11 +25,9 @@ import SectionWrapper, {
   ProcedureDetails,
   Actions,
   Info,
+  SubmittedResponse,
 } from './styles';
 
-import user from '../../../assets/icons/user.png';
-
-import check from '../../../assets/icons/check.png';
 import Button from '@aragon/ui/dist/Button';
 
 function ArbDetails({
@@ -108,7 +107,7 @@ function ArbDetails({
               </div>
               <Description>
                 <h2>Description</h2>
-                <Text className='description'>
+                <Text className='description' style={{ fontSize: '16px' }}>
                   {/* {details[1]} */}
                   Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias
                   illo consequatur velit aspernatur iusto quos porro saepe rem
@@ -206,6 +205,7 @@ function ArbDetails({
                   <IconWarning style={{ marginRight: '4px' }} />
                   <Text>You have accepted this xxx on DATEE</Text>
                 </Info>
+
                 {/* conditional rendering for buttons */}
 
                 <Actions>
@@ -220,6 +220,10 @@ function ArbDetails({
                   <Button className='btn error'>Reject</Button>
                 </Actions>
               </div>
+
+              {/* Response submitted by the user */}
+
+              <ArbitrationResponse />
             </SectionWrapper>
           </Box>
         </>
