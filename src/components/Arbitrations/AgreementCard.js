@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Main,
-  Split,
-  useTheme,
-  GU,
-  textStyle,
-  DropDown,
-  Text,
-} from '@aragon/ui';
+import { Main, Split, useTheme, GU, textStyle, DropDown, Text } from '@aragon/ui';
 
 import Avatar from '../../assets/avatar.png';
 
@@ -76,7 +68,7 @@ function AgreementCard({ agreement, agreementAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(agreementAddress.groupId);
   const disputeType = ['Future', 'Existing'];
-  const role = agreementAddress.metaData.role
+  const role = agreement.role;
   return (
     <Main>
       <Link
@@ -89,16 +81,16 @@ function AgreementCard({ agreement, agreementAddress }) {
           <section>
             <OuterContainer>
               <FlexContainer>
-                <div className='image-block'>
-                  <div className='image'>
-                    <img src={Avatar} alt='' srcset='' />
+                <div className="image-block">
+                  <div className="image">
+                    <img src={Avatar} alt="" srcSet="" />
                   </div>
-                  <div className='texts'>
+                  <div className="texts">
                     <h3>Agreement Title</h3>
                     <h2>{agreement.title}</h2>
                   </div>
                 </div>
-                <div className='date'>
+                <div className="date">
                   <h3>Created At</h3>
                   <h2>{agreement.createdAt}</h2>
                 </div>
@@ -117,7 +109,6 @@ function AgreementCard({ agreement, agreementAddress }) {
                   <h3>Seat</h3>
                   <h2>{agreement.seat}</h2>
                 </div>
-
               </DisputeContainer>
 
               <RespondentContainer>

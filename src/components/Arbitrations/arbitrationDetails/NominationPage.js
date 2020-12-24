@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import NominateArbitrator from './NominateArbitrator';
 import NominateWitness from './NominateWitness';
-import {getAllProposals} from "../../../lib/contracts/SPC";
+import Proposal from './allDetailCards/Proposal';
+import { getAllProposals } from '../../../lib/contracts/SPC';
 
-function NominationPage({groupId, contractAddress, NODE, account}) {
-
+function NominationPage({ groupId, contractAddress, NODE, account }) {
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
 
@@ -13,13 +13,8 @@ function NominationPage({groupId, contractAddress, NODE, account}) {
       try {
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getAllProposals(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
-          console.log("Proposals DETAILS:",details)
+          const details = await getAllProposals(NODE, contractAddress, groupId, account);
+          console.log('Proposals DETAILS:', details);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -35,44 +30,34 @@ function NominationPage({groupId, contractAddress, NODE, account}) {
 
   return (
     <>
+      <Proposal
+        stage="nomination"
+        role="respondant"
+        contractAddress={contractAddress}
+        groupId={groupId}
+        account={account}
+        node={NODE}
+      />
       {
-        details && details[0].length>=1 ? (
-          <NominateArbitrator
-            contractAddress={contractAddress}
-            groupId={groupId}
-            NODE={NODE}
-            account={account}
-            nominatedArbitrator={details[0]}
-          />
-        ) : (
-          <NominateArbitrator
-            contractAddress={contractAddress}
-            groupId={groupId}
-            NODE={NODE}
-            account={account}
-            nominatedArbitrator={[]}
-          />
-        )
+        <NominateArbitrator
+          contractAddress={contractAddress}
+          groupId={groupId}
+          NODE={NODE}
+          account={account}
+          nominatedArbitrator={details ? details[0].map((detail, index) => ( { key: index, arbitrator: detail.arbitrator, party: detail.party} )): []}
+          loading={loading}
+        />
       }
 
       {
-        details && details[1].length>=1 ? (
-          <NominateWitness
-            contractAddress={contractAddress}
-            groupId={groupId}
-            NODE={NODE}
-            account={account}
-            nominatedWitness={details[1]}
-          />
-        ) : (
-          <NominateWitness
-            contractAddress={contractAddress}
-            groupId={groupId}
-            NODE={NODE}
-            account={account}
-            nominatedWitness={[]}
-          />
-        )
+        <NominateWitness
+          contractAddress={contractAddress}
+          groupId={groupId}
+          NODE={NODE}
+          account={account}
+          nominatedWitness={details ? details[1] : []}
+          loading={loading}
+        />
       }
     </>
   );

@@ -146,7 +146,7 @@ export function nominateArbitrator(nodeSelected, contractAddress, privacyGroupId
     },
     [connected]
   );
-  return { connected, arbitratorNomination };
+  return { arbitratorNomination };
 }
 
 /**
@@ -161,7 +161,7 @@ export function appointArbitrator(nodeSelected) {
     },
     [connected]
   );
-  return { connected, arbitratorAppointment };
+  return { arbitratorAppointment };
 }
 
 /**
@@ -359,13 +359,13 @@ export function nominateWitness(nodeSelected, contractAddress, privacyGroupId) {
   const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
 
   const witnessNomination = useCallback(
-    async (arbitratorAddress, account) => {
-      const res = await web3Contract.call('submitWitness', [arbitratorAddress], account);
+    async (witnessAddress, account) => {
+      const res = await web3Contract.call('submitWitness', [witnessAddress], account);
       console.log('Nominate res:', res);
     },
     [connected]
   );
-  return { connected, witnessNomination };
+  return { witnessNomination };
 }
 
 export async function getAllStatements(nodeSelected, contractAddress, privacyGroupId, account) {

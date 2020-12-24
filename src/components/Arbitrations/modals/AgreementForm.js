@@ -79,7 +79,7 @@ export default function AgreementForm({
   dbClient,
   updateAgreementList,
   updateAddressList,
-  updateAgreementData
+  updateMetaData
 }) {
   const theme = useTheme();
 
@@ -168,33 +168,45 @@ export default function AgreementForm({
       counterParties[counterParty]
     );
 
-    // if(res){
-    //   updateAgreementData({claimantName: caller.name,
-    //     createdAt: new Date().toDateString(),
-    //     disputeType: disputeType,
-    //     documentName: "DEMO DOC",
-    //     language:  languages[language],
-    //     law: "LCIA",
-    //     respondentName: counterParties[counterParty].name,
-    //     seat: seat}, {contractAddress: res.contractAddress,
-    //       groupId: res.privacyGroupId,})
-    // }
+    updateAddressList({
+      contractAddress: res.contractAddress,
+      groupId: res.privacyGroupId,
+    });
+    
+      updateAgreementList({
+        claimantName: caller.name,
+          createdAt: new Date().toDateString(),
+          disputeType: disputeType,
+          documentName: fileDetails.fileName,
+          language:  languages[language],
+          law: "LCIA",
+          respondentName: counterParties[counterParty].name,
+          seat: seat,
+          title: title,
+          role: 0
+      });
 
-    // updateAddressList({
-    //   contractAddress: res.contractAddress,
-    //   groupId: res.privacyGroupId,
-    // });
 
-    // updateAgreementList({
-    //   claimantName: caller.name,
-    //   createdAt: new Date().toDateString(),
-    //   disputeType: disputeType,
-    //   documentName: "DEMO DOC",
-    //   language:  languages[language],
-    //   law: "LCIA",
-    //   respondentName: counterParties[counterParty].name,
-    //   seat: seat
-    // });
+    updateMetaData({
+      contractAddress: res.contractAddress,
+      groupId: res.privacyGroupId,
+      metaData: {
+          claimantName: caller.name,
+          createdAt: new Date().toDateString(),
+          disputeType: disputeType,
+          documentName: fileDetails.fileName,
+          language:  languages[language],
+          law: "LCIA",
+          respondentName: counterParties[counterParty].name,
+          seat: seat,
+          title: title,
+          role: 0
+      },
+    });
+     
+   
+
+    
   };
 
   return (
