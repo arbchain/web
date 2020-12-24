@@ -24,8 +24,8 @@ function MetaDataAugmented({ children }) {
   );
 }
 
-function MetaDataProvider({ children }) {
+function AgreementMetaDataProvider({ children }) {
   return <MetaDataAugmented>{children}</MetaDataAugmented>;
 }
 
-export { useMetaDataAugmented as useMetaData, MetaDataProvider };
+export { useMetaDataAugmented as useMetaData, AgreementMetaDataProvider };

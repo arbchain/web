@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-catch */
 const e2e = require('../../utils/e2e-encrypt');
 const db = require('../threadDB-utils');
 const { Where } = require('@textile/hub');
@@ -76,9 +77,9 @@ export const getAllUsers = async (dbClient, loggedUser) => {
     };
 
     if (userKey.toString('hex') === registeredUsers[i].publicKey) {
-      value.documentId = registeredUsers[i].documentId
-      value.agreementContracts = registeredUsers[i].agreementContracts
-      value.procedureContract = registeredUsers[i].procedureContract
+      value.documentId = registeredUsers[i].documentId;
+      value.agreementContracts = registeredUsers[i].agreementContracts;
+      value.procedureContract = registeredUsers[i].procedureContract;
       caller = value;
     } else if (registeredUsers[i].role === userType.party) {
       party.push(value);
@@ -109,7 +110,7 @@ export const updateAgreementContracts = async (
   const partyAddress = [caller.address, counterParty.address];
   const date = new Date();
   const metaData = {
-    title : args[1],
+    title: args[1],
     law: args[4],
     disputeType: args[7].toString(),
     seat: args[2],
@@ -122,11 +123,10 @@ export const updateAgreementContracts = async (
 
   for (let i = 0; i < partyAddress.length; i++) {
     const query = new Where('address').eq(partyAddress[i]);
-    if (partyAddress[i] === caller.address){
-      metaData.role = 0
-    }
-    else if (partyAddress[i] === counterParty.address){
-      metaData.role = 1
+    if (partyAddress[i] === caller.address) {
+      metaData.role = 0;
+    } else if (partyAddress[i] === counterParty.address) {
+      metaData.role = 1;
     }
     const user = await db.findFromDB(dbClient, registerSchema, query);
     console.log('USER:', user);
@@ -174,13 +174,13 @@ export const updateProcedureContracts = async (
 
   for (let i = 0; i < partyAddress.length; i++) {
     const query = new Where('address').eq(partyAddress[i]);
-    if (partyAddress[i] === caller.address){
-      metaData.role = 0
-    }
-    else if (partyAddress[i] === counterParty.address){
-      metaData.role = 1
+    if (partyAddress[i] === caller.address) {
+      metaData.role = 0;
+    } else if (partyAddress[i] === counterParty.address) {
+      metaData.role = 1;
     }
     const user = await db.findFromDB(dbClient, registerSchema, query);
+    console.log('USER', user);
     if (user[0].procedureContract.length === 1 && user[0].procedureContract[0].id === '-1') {
       user[0].procedureContract = [
         {
