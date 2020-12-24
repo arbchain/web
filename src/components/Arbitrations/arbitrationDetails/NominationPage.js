@@ -31,7 +31,7 @@ function NominationPage({ groupId, contractAddress, NODE, account }) {
   return (
     <>
       <Proposal
-        stage="hearing"
+        stage="nomination"
         role="respondant"
         contractAddress={contractAddress}
         groupId={groupId}
@@ -44,7 +44,7 @@ function NominationPage({ groupId, contractAddress, NODE, account }) {
           groupId={groupId}
           NODE={NODE}
           account={account}
-          nominatedArbitrator={details ? details[0] : []}
+          nominatedArbitrator={details ? details[0].map((detail, index) => ( { key: index, arbitrator: detail.arbitrator, party: detail.party} )): []}
           loading={loading}
         />
       }

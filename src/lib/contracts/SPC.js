@@ -152,7 +152,7 @@ export function appointArbitrator(nodeSelected) {
     },
     [connected]
   );
-  return { connected, arbitratorAppointment };
+  return { arbitratorAppointment };
 }
 
 /**

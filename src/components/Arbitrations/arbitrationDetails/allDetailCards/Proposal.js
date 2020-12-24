@@ -22,7 +22,7 @@ const ButtonContainer = styled.div`
 function Proposal({ stage, role, contractAddress, groupId, node, account }) {
   const theme = useTheme();
   const roleIndex = actions.roles[role];
-  const stageAction = stage === 'hearing';
+  const stageAction = stage === 'nomination';
   const roleAction = actions.stages[3].actions.statement.indexOf(roleIndex) >= 0;
 
   const [opened, setOpened] = useState(false);
