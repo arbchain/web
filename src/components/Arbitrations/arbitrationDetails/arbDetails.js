@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Box, GU, Text, textStyle, useTheme, EmptyStateCard } from '@aragon/ui';
+import {
+  Box,
+  GU,
+  Text,
+  textStyle,
+  useTheme,
+  EmptyStateCard,
+  IconWarning,
+  IconUser,
+  IconFile,
+} from '@aragon/ui';
 import { Skeleton } from 'antd';
 
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { getArbitrationDetails } from '../../../lib/contracts/SPC';
+import AcceptResponse from '../modals/Forms/AcceptResponse';
+
 import Respond from './allDetailCards/Response';
 import Statement from './allDetailCards/Statement';
 import SectionWrapper, {
@@ -11,6 +23,7 @@ import SectionWrapper, {
   GridGroup,
   ProcedureDetails,
   Actions,
+  Info,
 } from './styles';
 
 import user from '../../../assets/icons/user.png';
@@ -30,8 +43,15 @@ function ArbDetails({
 
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
+  const [openResponse, setOpenResponse] = useState(false);
+  const [openClaim, setOpenClaim] = useState(false);
 
   const status = ['Open', 'Close'];
+
+  // handlers
+  const openResponsePanel = () => setOpenResponse(true);
+
+  const openCounterClaimPanel = () => setOpenClaim(true);
 
   useEffect(() => {
     async function getDetails() {
@@ -70,6 +90,10 @@ function ArbDetails({
         <>
           <Box>
             <SectionWrapper>
+              <AcceptResponse
+                openResponse={openResponse}
+                setOpenResponse={setOpenResponse}
+              />
               <div className='title__container'>
                 <div className='title__container-titleGroup'>
                   <img src={ArbitrationCardDispute} />
@@ -97,13 +121,20 @@ function ArbDetails({
                   <h2>Claiment</h2>
                   <Text className='description'>
                     {/* {details[1]} */}
+                    <span>
+                      <IconUser style={{ marginRight: '2px' }} />
+                    </span>
                     Koushith
                   </Text>
                 </div>
                 <div className='respondant'>
                   <h2>Respondant</h2>
+
                   <Text className='description'>
                     {/* {details[1]} */}
+                    <span>
+                      <IconUser style={{ marginRight: '2px' }} />
+                    </span>
                     Shubam
                   </Text>
                 </div>
@@ -111,6 +142,9 @@ function ArbDetails({
                   <h2>Arbitration Agreement</h2>
                   <Text className='description'>
                     {/* {details[1]} */}
+                    <span>
+                      <IconFile style={{ marginRight: '2px' }} />
+                    </span>{' '}
                     Rental
                   </Text>
                 </div>
@@ -154,7 +188,7 @@ function ArbDetails({
                     <h2>Signed On</h2>
                     <Text className='description mb-6'>
                       {/* {details[1]} */}
-                      {/* conditional rendering for color */}
+                      {/* conditional rendering for color - change the property to success in className*/}
                       pending
                     </Text>
                   </div>
@@ -167,10 +201,22 @@ function ArbDetails({
                   </div>
                 </GridGroup>
 
+                {/* Conditional rendering for respondant- show this if this is accepted */}
+                <Info>
+                  <IconWarning style={{ marginRight: '4px' }} />
+                  <Text>You have accepted this xxx on DATEE</Text>
+                </Info>
                 {/* conditional rendering for buttons */}
 
                 <Actions>
-                  <Button className='btn success'>Accept</Button>
+                  <Button
+                    className='btn success'
+                    onClick={() => {
+                      openResponsePanel();
+                    }}
+                  >
+                    Accept
+                  </Button>
                   <Button className='btn error'>Reject</Button>
                 </Actions>
               </div>

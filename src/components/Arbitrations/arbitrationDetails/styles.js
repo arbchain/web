@@ -45,6 +45,7 @@ const SectionWrapper = styled.section`
       color: #3d4857;
       align-items: baseline;
       justify-content: center;
+      font-size: 16px !important;
     }
     .status {
       span {
@@ -69,6 +70,8 @@ export const GridGroup = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-row-gap: 30px;
   .description {
+    display: flex;
+    align-items: center;
     ${textStyle('body2')};
     color: #3d4857;
   }
@@ -116,6 +119,20 @@ export const Actions = styled.div`
     border: 1px solid #dde4e9;
     border-radius: 3px;
   }
+`;
+
+export const Info = styled.div`
+  border-radius: 3px;
+  margin-top: 25px;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  background-color: rgba(33, 212, 142, 0.3);
+  color: #3d4857;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  overflow: hidden;
 `;
 
 export default SectionWrapper;
