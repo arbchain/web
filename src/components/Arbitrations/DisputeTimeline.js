@@ -121,7 +121,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
     }
     setTimeout(() => {
       getDetails();
-    }, 1000);
+    }, 2000);
   }, [account]);
 
   // const arbitrationCreation = new Date(contractTime * 1000);

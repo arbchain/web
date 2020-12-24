@@ -73,7 +73,7 @@ function AgreementCard({ agreement, agreementAddress }) {
     <Main>
       <Link
         to={{
-          pathname: `/agreements/${agreementAddress.contractAddress}/${groupId}`,
+          pathname: `/agreements/${role}/${agreementAddress.contractAddress}/${groupId}`,
         }}
         style={{ color: '#000000d9' }}
       >

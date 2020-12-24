@@ -2,23 +2,14 @@ import React, { useState } from 'react';
 import { GU, Text, textStyle, Button, useTheme } from '@aragon/ui';
 import StatementForm from '../../modals/Forms/StatementForm';
 
-const actions = require('../../../../utils/actions/arbitration');
+import { roles, stages, actions } from '../../../../utils/actions/arbitration';
 
-function Statement({
-  stage,
-  role,
-  contractAddress,
-  groupId,
-  account,
-  caller,
-  parties,
-}) {
+function Statement({ currentStage, userRole, contractAddress, groupId, account, caller, parties }) {
   const theme = useTheme();
-  const roleIndex = actions.roles[role];
-  const stageAction = stage === 'hearing';
-  const roleAction =
-    actions.stages[3].actions.statement.indexOf(roleIndex) >= 0;
-
+  const role = roles[userRole];
+  const stage = stages[currentStage];
+  const actionRole = actions[role];
+  const stageAction = actionRole[stage] === 'statement';
   const [opened, setOpened] = useState(false);
   const openSidePanel = () => setOpened(true);
 
@@ -43,14 +34,14 @@ function Statement({
       </div>
       {stageAction ? (
         <Button
-          disabled={!roleAction}
-          mode='strong'
+          disabled={!stageAction}
+          mode="strong"
           onClick={() => {
             openSidePanel();
           }}
           wide
           css={
-            roleAction
+            stageAction
               ? `
                   background: ${theme.selected};
                 `

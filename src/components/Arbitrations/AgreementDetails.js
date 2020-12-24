@@ -10,16 +10,16 @@ import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
 const networks = require('../../wallet/network');
 const Web3 = require('web3');
 const web3 = new Web3();
-const NODES = Object.keys(networks).map((node) => {
+const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const AgreementDetails = (props) => {
+const AgreementDetails = props => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
-  // const role = decodeURIComponent(props.match.params.role);
-  // console.log("Role:", role)
+  const role = props.match.params.role;
+  console.log('Role:', role);
   const walletAccount = useAccount();
   // Procedure statement modal
   const [ProcedureStatementModal, setProcedureStatementModal] = useState(false);
@@ -34,7 +34,7 @@ const AgreementDetails = (props) => {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
 
-  const handleTabChange = (tabs) => {
+  const handleTabChange = tabs => {
     setSelectTabs(tabs);
   };
 
@@ -49,7 +49,7 @@ const AgreementDetails = (props) => {
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
           address: user.address,
-          sign: user
+          sign: user,
         });
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         const users = await getAllUsers(client, account[0]);
@@ -81,11 +81,7 @@ const AgreementDetails = (props) => {
           primary={
             <React.Fragment>
               <div style={{ marginTop: '14px' }}>
-                <Tabs
-                  items={['Agreement Details']}
-                  selected={tabs}
-                  onChange={handleTabChange}
-                />
+                <Tabs items={['Agreement Details']} selected={tabs} onChange={handleTabChange} />
               </div>
 
               {tabs === 0 ? (
@@ -97,6 +93,7 @@ const AgreementDetails = (props) => {
                     account={walletAccount.account}
                     caller={caller}
                     parties={parties}
+                    role={role}
                   />
                 </>
               ) : null}
@@ -104,7 +101,7 @@ const AgreementDetails = (props) => {
           }
           secondary={
             <React.Fragment>
-              <Box heading='Agreement timeline' padding={0}>
+              <Box heading="Agreement timeline" padding={0}>
                 TBD
               </Box>
             </React.Fragment>

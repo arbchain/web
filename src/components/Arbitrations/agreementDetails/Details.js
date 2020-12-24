@@ -9,18 +9,17 @@ import {
   Button,
   LoadingRing,
   EmptyStateCard,
-  Link
+  Link,
 } from '@aragon/ui';
 import { Skeleton } from 'antd';
 import { useHistory } from 'react-router-dom';
 import ArbitrationCardDispute from '../../../assets/ArbitrationCardDispute.svg';
 import { fetchAgreement } from '../../../lib/contracts/Agreement';
-import {downloadFile} from "../../../lib/file-storage";
+import { downloadFile } from '../../../lib/file-storage';
 import Agree from './Agree';
-import {getSignature, getSignatureStatus} from "../../../lib/contracts/SPC";
+import { getSignature, getSignatureStatus } from '../../../lib/contracts/SPC';
 
 function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
-
   const history = useHistory();
   const theme = useTheme();
 
@@ -32,7 +31,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
   const [docName, setDocName] = useState('');
   const [signStatus, setSignStatus] = useState(false);
   const [signStatusLoading, setSignStatusLoading] = useState(false);
-  const [userSignStatus, setUserSignStatus] = useState(false)
+  const [userSignStatus, setUserSignStatus] = useState(false);
 
   const status = ['Open', 'Close'];
 
@@ -41,28 +40,23 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
       try {
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await fetchAgreement(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
+          const details = await fetchAgreement(NODE, contractAddress, groupId, account);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setSignStatusLoading(true);
             setDetails(details);
-            const documentInfo = JSON.parse(details[7])
-            console.log(documentInfo)
-            setCipherKey(documentInfo.cipherKey)
-            setDocLocation(documentInfo.fileLocation)
-            setDocName(documentInfo.fileName)
+            const documentInfo = JSON.parse(details[7]);
+            console.log(documentInfo);
+            setCipherKey(documentInfo.cipherKey);
+            setDocLocation(documentInfo.fileLocation);
+            setDocName(documentInfo.fileName);
 
-            const res = await getSignature(NODE, contractAddress, groupId, account, details[5])
-            const {signStatus, userSignStatus} = await getSignatureStatus(res[0], account)
-            setSignStatus(signStatus)
-            setUserSignStatus(userSignStatus)
+            const res = await getSignature(NODE, contractAddress, groupId, account, details[5]);
+            const { signStatus, userSignStatus } = await getSignatureStatus(res[0], account);
+            setSignStatus(signStatus);
+            setUserSignStatus(userSignStatus);
             setSignStatusLoading(false);
-            setDocumentHash(details[5])
+            setDocumentHash(details[5]);
           }
           setLoading(false);
         }
@@ -73,9 +67,9 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
     getDetails();
   }, [account]);
 
-  const handleClick = async () =>{
-    const res = await downloadFile(docName, docLocation, cipherKey)
-  }
+  const handleClick = async () => {
+    const res = await downloadFile(docName, docLocation, cipherKey);
+  };
 
   return (
     <>
@@ -87,7 +81,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
         </>
       ) : details ? (
         <>
-          <Box heading='Agreement Details'>
+          <Box heading="Agreement Details">
             <section
               css={`
                 display: grid;
@@ -253,7 +247,10 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                   >
                     Document
                   </h2>
-                  <Link external onClick = {handleClick}> {docName} </Link>
+                  <Link external onClick={handleClick}>
+                    {' '}
+                    {docName}{' '}
+                  </Link>
                 </div>
 
                 <div>
@@ -281,23 +278,22 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
                     )}
                   </Text>
                 </div>
-
               </div>
-                <Agree
-                  disable={userSignStatus || signStatusLoading }
-                  stage={'response'}
-                  role={'respondant'}
-                  account={account}
-                  contractAddress={contractAddress}
-                  groupId={groupId}
-                  documentHash={documentHash}
-                  node={NODE}
-                />
+              <Agree
+                disable={userSignStatus || signStatusLoading}
+                stage="response"
+                role="respondant"
+                account={account}
+                contractAddress={contractAddress}
+                groupId={groupId}
+                documentHash={documentHash}
+                node={NODE}
+              />
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard width='100%' text='No agreement details found.' />
+        <EmptyStateCard width="100%" text="No agreement details found." />
       )}
     </>
   );

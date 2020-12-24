@@ -14,17 +14,16 @@ import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
 const networks = require('../../wallet/network');
 const Web3 = require('web3');
 const web3 = new Web3();
-const NODES = Object.keys(networks).map((node) => {
+const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ArbitrationDetail = (props) => {
+const ArbitrationDetail = props => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
   const walletAccount = useAccount();
   const role = props.match.params.role;
-  console.log("Role:", role)
 
   const [tabs, setSelectTabs] = useState(0);
   const [dbClient, setClient] = useState(null);
@@ -33,7 +32,7 @@ const ArbitrationDetail = (props) => {
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
 
-  const handleTabChange = (tabs) => {
+  const handleTabChange = tabs => {
     setSelectTabs(tabs);
   };
 
@@ -48,7 +47,7 @@ const ArbitrationDetail = (props) => {
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
           address: user.address,
-          sign: user
+          sign: user,
         });
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         const users = await getAllUsers(client, account[0]);
@@ -81,11 +80,7 @@ const ArbitrationDetail = (props) => {
             <React.Fragment>
               <div style={{ marginTop: '14px' }}>
                 <Tabs
-                  items={[
-                    'Arbitration Details',
-                    'All Statements',
-                    'All Proposals',
-                  ]}
+                  items={['Arbitration Details', 'All Statements', 'All Proposals']}
                   selected={tabs}
                   onChange={handleTabChange}
                 />
@@ -100,6 +95,7 @@ const ArbitrationDetail = (props) => {
                     caller={caller}
                     parties={parties}
                     account={walletAccount.account}
+                    role={role}
                   />
                 </>
               ) : null}
@@ -111,7 +107,7 @@ const ArbitrationDetail = (props) => {
                     groupId={groupId}
                     NODE={NODES[0]}
                     account={walletAccount.account}
-                    role ={role}
+                    role={role}
                   />
                   {/* <AllProcedure /> */}
                 </>
@@ -131,7 +127,7 @@ const ArbitrationDetail = (props) => {
           }
           secondary={
             <React.Fragment>
-              <Box heading='Dispute timeline' padding={0}>
+              <Box heading="Dispute timeline" padding={0}>
                 <DisputeTimeline
                   NODE={NODES[0]}
                   account={walletAccount.account}

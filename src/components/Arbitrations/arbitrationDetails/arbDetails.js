@@ -7,14 +7,7 @@ import { getArbitrationDetails } from '../../../lib/contracts/SPC';
 import Respond from './allDetailCards/Response';
 import Statement from './allDetailCards/Statement';
 
-function ArbDetails({
-  groupId,
-  contractAddress,
-  NODE,
-  account,
-  caller,
-  parties,
-}) {
+function ArbDetails({ groupId, contractAddress, NODE, account, caller, parties, role }) {
   const history = useHistory();
   const theme = useTheme();
 
@@ -29,12 +22,7 @@ function ArbDetails({
         console.log(account);
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getArbitrationDetails(
-            NODE,
-            contractAddress,
-            groupId,
-            account
-          );
+          const details = await getArbitrationDetails(NODE, contractAddress, groupId, account);
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
@@ -58,7 +46,7 @@ function ArbDetails({
         </>
       ) : details ? (
         <>
-          <Box heading='Arbitration Details'>
+          <Box heading="Arbitration Details">
             <section
               css={`
                 display: grid;
@@ -205,8 +193,8 @@ function ArbDetails({
               </div>
 
               <Statement
-                stage='hearing'
-                role='respondant'
+                currentStage={parseInt(details[4])}
+                userRole={parseInt(role)}
                 contractAddress={contractAddress}
                 groupId={groupId}
                 account={account}
@@ -215,13 +203,13 @@ function ArbDetails({
               />
 
               <div>
-                <Respond stage='response' role='respondant' />
+                <Respond currentStage={parseInt(details[4])} userRole={parseInt(role)} />
               </div>
             </section>
           </Box>
         </>
       ) : (
-        <EmptyStateCard width='100%' text='No arbitrations details found.' />
+        <EmptyStateCard width="100%" text="No arbitrations details found." />
       )}
     </>
   );
