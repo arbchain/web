@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { GU, Text, textStyle, Button, useTheme } from '@aragon/ui';
 import { signAgreement } from '../../../lib/contracts/Agreement';
 
-const actions = require('../../../utils/actions/agreement');
+import { roles, stages, actions } from '../../../utils/actions/agreement';
 
-function Agree({ disable, stage, role, node, contractAddress, groupId, documentHash, account }) {
+function Agree({ disable, userRole, node, contractAddress, groupId, documentHash, account }) {
   const theme = useTheme();
-  const roleIndex = actions.roles[role];
-  const stageAction = stage === 'response';
-  const roleAction = actions.stages[1].actions.respond.indexOf(roleIndex) >= 0;
+  const role = roles[userRole];
+  const stage = stages[1];
+  const actionRole = actions[role];
+  const stageAction = actionRole[stage] === 'respond';
 
   const { connect, documentSign } = signAgreement(node, contractAddress, groupId);
 
@@ -19,15 +20,15 @@ function Agree({ disable, stage, role, node, contractAddress, groupId, documentH
 
   return (
     <>
-      {stage == 'response' ? (
+      {stageAction ? (
         <Button
-          disabled={!roleAction || disable}
+          disabled={!stageAction || disable}
           mode="strong"
           onClick={() => {
             handleClick();
           }}
           wide
-          css={!roleAction || disable ? null : `background: ${theme.selected};`}
+          css={!stageAction || disable ? null : `background: ${theme.selected};`}
         >
           ACCEPT
         </Button>

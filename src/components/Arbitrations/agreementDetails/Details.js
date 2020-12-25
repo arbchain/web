@@ -19,7 +19,7 @@ import { downloadFile } from '../../../lib/file-storage';
 import Agree from './Agree';
 import { getSignature, getSignatureStatus } from '../../../lib/contracts/SPC';
 
-function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
+function Details({ groupId, contractAddress, NODE, account, caller, parties, role }) {
   const history = useHistory();
   const theme = useTheme();
 
@@ -281,13 +281,12 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties }) {
               </div>
               <Agree
                 disable={userSignStatus || signStatusLoading}
-                stage="response"
-                role="respondant"
                 account={account}
                 contractAddress={contractAddress}
                 groupId={groupId}
                 documentHash={documentHash}
                 node={NODE}
+                userRole={role}
               />
             </section>
           </Box>
