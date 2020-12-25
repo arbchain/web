@@ -8,23 +8,23 @@ import AllStatements from './arbitrationDetails/allStatements';
 import NominationPage from './arbitrationDetails/NominationPage';
 import useAuthentication from '../../utils/auth';
 import { useAccount } from '../../wallet/Account';
+import { getArbitrationDetails, getSignature, getSignatureStatus } from '../../lib/contracts/SPC';
 import wallet from 'wallet-besu';
 
 import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
 const networks = require('../../wallet/network');
 const Web3 = require('web3');
 const web3 = new Web3();
-const NODES = Object.keys(networks).map((node) => {
+const NODES = Object.keys(networks).map(node => {
   return `${networks[node].host}:${networks[node].port}`;
 });
 
-const ArbitrationDetail = (props) => {
+const ArbitrationDetail = props => {
   const history = useHistory();
   const contractAddress = props.match.params.address;
   const groupId = decodeURIComponent(props.match.params.groupId);
   const walletAccount = useAccount();
   const role = props.match.params.role;
-  console.log("Role:", role)
 
   const [tabs, setSelectTabs] = useState(0);
   const [dbClient, setClient] = useState(null);
@@ -32,8 +32,15 @@ const ArbitrationDetail = (props) => {
   const [parties, setParties] = useState([]);
   const [arbitrator, setArbitrator] = useState([]);
   const [court, setCourt] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState(null);
+  const [procedureStatement, setProcedureStatement] = useState('');
+  const [responseDetail, setResponseDetail] = useState([]);
+  const [fileDetails, setFileDetails] = useState(null);
+  const [signStatus, setSignStatus] = useState(false);
+  const [userSignStatus, setUserSignStatus] = useState(false);
 
-  const handleTabChange = (tabs) => {
+  const handleTabChange = tabs => {
     setSelectTabs(tabs);
   };
 
@@ -48,7 +55,7 @@ const ArbitrationDetail = (props) => {
           privateKey: account[0],
           orionPublicKey: localStorage.getItem('orionKey'),
           address: user.address,
-          sign: user
+          sign: user,
         });
         const client = await authorizeUser(localStorage.getItem('wpassword'));
         const users = await getAllUsers(client, account[0]);
@@ -64,6 +71,43 @@ const ArbitrationDetail = (props) => {
     }
     load();
   }, []);
+
+  useEffect(() => {
+    async function getDetails() {
+      try {
+        if (Object.keys(walletAccount.account).length) {
+          setLoading(true);
+          const details = await getArbitrationDetails(
+            NODES[0],
+            contractAddress,
+            groupId,
+            walletAccount.account
+          );
+          // There is an addition call being made that replaces the details. A quick fix
+          if (details) {
+            setDetails(details);
+            setProcedureStatement(details[9]);
+            setResponseDetail(details[11]);
+            if (details[11].length >= 1) {
+              const docInfo = JSON.parse(details[11][0].document);
+              setFileDetails(docInfo);
+            }
+            const { signStatus, userSignStatus } = await getSignatureStatus(
+              details[10],
+              walletAccount.account
+            );
+            console.log('STATUS:', signStatus, userSignStatus);
+            setSignStatus(signStatus);
+            setUserSignStatus(userSignStatus);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        return false;
+      }
+    }
+    getDetails();
+  }, [walletAccount.account]);
 
   useAuthentication();
 
@@ -81,11 +125,7 @@ const ArbitrationDetail = (props) => {
             <React.Fragment>
               <div style={{ marginTop: '14px' }}>
                 <Tabs
-                  items={[
-                    'Arbitration Details',
-                    'All Statements',
-                    'All Proposals',
-                  ]}
+                  items={['Arbitration Details', 'All Statements', 'All Proposals']}
                   selected={tabs}
                   onChange={handleTabChange}
                 />
@@ -100,6 +140,14 @@ const ArbitrationDetail = (props) => {
                     caller={caller}
                     parties={parties}
                     account={walletAccount.account}
+                    role={role}
+                    loading={loading}
+                    details={details}
+                    procedureStatement={procedureStatement}
+                    responseDetail={responseDetail}
+                    fileDetails={fileDetails}
+                    signStatus={signStatus}
+                    userSignStatus={userSignStatus}
                   />
                 </>
               ) : null}
@@ -111,7 +159,7 @@ const ArbitrationDetail = (props) => {
                     groupId={groupId}
                     NODE={NODES[0]}
                     account={walletAccount.account}
-                    role ={role}
+                    role={role}
                   />
                   {/* <AllProcedure /> */}
                 </>
@@ -124,6 +172,9 @@ const ArbitrationDetail = (props) => {
                     groupId={groupId}
                     NODE={NODES[0]}
                     account={walletAccount.account}
+                    role={role}
+                    details={details}
+                    arbitrator={arbitrator}
                   />
                 </>
               ) : null}
@@ -131,7 +182,7 @@ const ArbitrationDetail = (props) => {
           }
           secondary={
             <React.Fragment>
-              <Box heading='Dispute timeline' padding={0}>
+              <Box heading="Dispute timeline" padding={0}>
                 <DisputeTimeline
                   NODE={NODES[0]}
                   account={walletAccount.account}

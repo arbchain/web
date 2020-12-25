@@ -10,6 +10,7 @@ import {
   IconFundraising,
   EmptyStateCard,
 } from '@aragon/ui';
+import { dateFormat } from '../../utils/date-utils';
 
 import Stepper from '../Stepper';
 import Step from '../Step';
@@ -61,7 +62,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
 
   const getDate = value => {
     const date = new Date(parseInt(value) * 1000);
-    return date.toDateString();
+    return dateFormat(date, 'onlyDate');
   };
 
   useEffect(() => {
@@ -121,7 +122,7 @@ function DisputeTimeline({ NODE, account, contractAddress, groupId }) {
     }
     setTimeout(() => {
       getDetails();
-    }, 1000);
+    }, 2000);
   }, [account]);
 
   // const arbitrationCreation = new Date(contractTime * 1000);

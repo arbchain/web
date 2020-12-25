@@ -3,7 +3,7 @@ import { Button, useTheme } from '@aragon/ui';
 import styled from 'styled-components';
 import ProposalForm from '../../modals/Forms/ProposalForm';
 
-const actions = require('../../../../utils/actions/arbitration');
+import { roles, stages, actions } from '../../../../utils/actions/arbitration';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -19,12 +19,12 @@ const ButtonContainer = styled.div`
   }
 `;
 
-function Proposal({ stage, role, contractAddress, groupId, node, account }) {
+function Proposal({ currentStage, userRole, contractAddress, groupId, node, account,arbitrator }) {
   const theme = useTheme();
-  const roleIndex = actions.roles[role];
-  const stageAction = stage === 'nomination';
-  const roleAction = actions.stages[3].actions.statement.indexOf(roleIndex) >= 0;
-
+  const role = roles[userRole];
+  const stage = stages[currentStage];
+  const actionRole = actions[role];
+  const stageAction = actionRole[stage] === 'nominate';
   const [opened, setOpened] = useState(false);
   const openSidePanel = () => setOpened(true);
 
@@ -44,19 +44,20 @@ function Proposal({ stage, role, contractAddress, groupId, node, account }) {
           groupId={groupId}
           account={account}
           node={node}
+          arbitrator={arbitrator}
         />
       </div>
       {stageAction ? (
         <ButtonContainer>
           <Button
-            disabled={!roleAction}
+            disabled={!stageAction}
             mode="strong"
             onClick={() => {
               openSidePanel();
             }}
             wide
             css={
-              roleAction
+              stageAction
                 ? `
                   background: ${theme.selected};
                 `

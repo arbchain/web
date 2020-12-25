@@ -1,10 +1,8 @@
 import React from 'react';
 import { Main, Split, useTheme, GU, textStyle } from '@aragon/ui';
 import Avatar from '../../assets/avatar.png';
-
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
 const OutterContainer = styled.div`
   border: 1px solid #dde4e9;
   padding: 1.5rem;
@@ -75,12 +73,13 @@ const RespondantContainer = styled.div`
 function ArbitrationCard({ arbitration, procedureAddress }) {
   const theme = useTheme();
   const groupId = encodeURIComponent(procedureAddress.groupId);
-  const role = arbitration.role
+  const currentRole = arbitration.role;
+
   return (
     <Main>
       <Link
         to={{
-          pathname: `/arbitrations/${role}/${procedureAddress.contractAddress}/${groupId}`,
+          pathname: `/arbitrations/${currentRole}/${procedureAddress.contractAddress}/${groupId}`,
         }}
         style={{ color: '#000000d9' }}
       >

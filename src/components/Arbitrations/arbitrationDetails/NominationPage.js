@@ -4,20 +4,20 @@ import NominateWitness from './NominateWitness';
 import Proposal from './allDetailCards/Proposal';
 import { getAllProposals } from '../../../lib/contracts/SPC';
 
-function NominationPage({ groupId, contractAddress, NODE, account }) {
+function NominationPage({ groupId, contractAddress, NODE, account, role, details, arbitrator }) {
   const [loading, setLoading] = useState(true);
-  const [details, setDetails] = useState(null);
+  const [proposals, setDetails] = useState(null);
 
   useEffect(() => {
     async function getDetails() {
       try {
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await getAllProposals(NODE, contractAddress, groupId, account);
-          console.log('Proposals DETAILS:', details);
+          const res = await getAllProposals(NODE, contractAddress, groupId, account);
+          console.log('Proposals DETAILS:', res);
           // There is an addition call being made that replaces the details. A quick fix
-          if (details) {
-            setDetails(details);
+          if (res) {
+            setDetails(res);
           }
           setLoading(false);
         }
@@ -31,12 +31,13 @@ function NominationPage({ groupId, contractAddress, NODE, account }) {
   return (
     <>
       <Proposal
-        stage="nomination"
-        role="respondant"
+        currentStage={details ? parseInt(details[4]) : null}
+        userRole={role}
         contractAddress={contractAddress}
         groupId={groupId}
         account={account}
         node={NODE}
+        arbitrator={arbitrator}
       />
       {
         <NominateArbitrator
@@ -44,7 +45,15 @@ function NominationPage({ groupId, contractAddress, NODE, account }) {
           groupId={groupId}
           NODE={NODE}
           account={account}
-          nominatedArbitrator={details ? details[0].map((detail, index) => ( { key: index, arbitrator: detail.arbitrator, party: detail.party} )): []}
+          nominatedArbitrator={
+            proposals
+              ? proposals[0].map((proposal, index) => ({
+                  key: index,
+                  arbitrator: proposal.arbitrator,
+                  party: proposal.party,
+                }))
+              : []
+          }
           loading={loading}
         />
       }
@@ -55,7 +64,7 @@ function NominationPage({ groupId, contractAddress, NODE, account }) {
           groupId={groupId}
           NODE={NODE}
           account={account}
-          nominatedWitness={details ? details[1] : []}
+          nominatedWitness={proposals ? proposals[1] : []}
           loading={loading}
         />
       }
