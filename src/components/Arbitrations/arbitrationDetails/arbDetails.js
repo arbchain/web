@@ -206,7 +206,7 @@ function ArbDetails({
                 {/* Conditional rendering for respondant- show this if this is accepted */}
                 <Info>
                   <IconWarning style={{ marginRight: '4px' }} />
-                  <Text>You have accepted this xxx on DATEE</Text>
+                  <Text>You have accepted this xxx on DATE</Text>
                 </Info>
 
                 {/* conditional rendering for buttons */}
