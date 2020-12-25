@@ -8,7 +8,7 @@ import AllStatements from './arbitrationDetails/allStatements';
 import NominationPage from './arbitrationDetails/NominationPage';
 import useAuthentication from '../../utils/auth';
 import { useAccount } from '../../wallet/Account';
-import { getArbitrationDetails } from '../../lib/contracts/SPC';
+import { getArbitrationDetails, getSignature, getSignatureStatus } from '../../lib/contracts/SPC';
 import wallet from 'wallet-besu';
 
 import { authorizeUser, getAllUsers } from '../../lib/db/threadDB';
@@ -34,6 +34,11 @@ const ArbitrationDetail = props => {
   const [court, setCourt] = useState([]);
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState(null);
+  const [procedureStatement, setProcedureStatement] = useState('');
+  const [responseDetail, setResponseDetail] = useState([]);
+  const [fileDetails, setFileDetails] = useState(null);
+  const [signStatus, setSignStatus] = useState(false);
+  const [userSignStatus, setUserSignStatus] = useState(false);
 
   const handleTabChange = tabs => {
     setSelectTabs(tabs);
@@ -70,7 +75,6 @@ const ArbitrationDetail = props => {
   useEffect(() => {
     async function getDetails() {
       try {
-        console.log(walletAccount.account);
         if (Object.keys(walletAccount.account).length) {
           setLoading(true);
           const details = await getArbitrationDetails(
@@ -82,6 +86,19 @@ const ArbitrationDetail = props => {
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setDetails(details);
+            setProcedureStatement(details[9]);
+            setResponseDetail(details[11]);
+            if (details[11].length >= 1) {
+              const docInfo = JSON.parse(details[11][0].document);
+              setFileDetails(docInfo);
+            }
+            const { signStatus, userSignStatus } = await getSignatureStatus(
+              details[10],
+              walletAccount.account
+            );
+            console.log('STATUS:', signStatus, userSignStatus);
+            setSignStatus(signStatus);
+            setUserSignStatus(userSignStatus);
           }
           setLoading(false);
         }
@@ -117,8 +134,6 @@ const ArbitrationDetail = props => {
               {tabs === 0 ? (
                 <>
                   <ArbDetails
-                    loading={loading}
-                    details={details}
                     contractAddress={contractAddress}
                     groupId={groupId}
                     NODE={NODES[0]}
@@ -126,6 +141,13 @@ const ArbitrationDetail = props => {
                     parties={parties}
                     account={walletAccount.account}
                     role={role}
+                    loading={loading}
+                    details={details}
+                    procedureStatement={procedureStatement}
+                    responseDetail={responseDetail}
+                    fileDetails={fileDetails}
+                    signStatus={signStatus}
+                    userSignStatus={userSignStatus}
                   />
                 </>
               ) : null}

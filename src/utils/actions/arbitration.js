@@ -2,9 +2,9 @@ export const roles = ['claimant', 'respondant', 'arbitrator', 'court', 'witness'
 export const stages = [
   'response',
   'nomination',
+  'hearing',
   'tribunal_formation',
   'challenge_arbitrator',
-  'hearing',
   'witness',
   'award',
 ];
