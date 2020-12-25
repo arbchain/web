@@ -54,17 +54,26 @@ export function createArbitrationResponse(nodeSelected, contractAddress, privacy
 
   const arbitrationResponseCreation = useCallback(
     async (
+      description,
       documentHash,
-      documentIpfsHash,
+      documentInfo,
+      documentLocation,
       monetaryAmount,
       crossClaim,
-      requestId,
       claimId,
       account
     ) => {
       return web3Contract.call(
         'createArbitrationResponse',
-        [documentHash, documentIpfsHash, monetaryAmount, crossClaim, requestId, claimId],
+        [
+          description,
+          documentHash,
+          documentInfo,
+          documentLocation,
+          monetaryAmount,
+          crossClaim,
+          claimId
+        ],
         account
       );
     },
