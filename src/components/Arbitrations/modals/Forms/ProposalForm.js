@@ -29,7 +29,7 @@ const Panel = styled(SidePanel)`
   width: 50%;
 `;
 
-function ProposalForm({ opened, setOpened, contractAddress, groupId, account, node }) {
+function ProposalForm({ opened, setOpened, contractAddress, groupId, account, node, arbitrator }) {
   const theme = useTheme();
 
   const [proposalType, setProposalType] = useState(0);
@@ -49,7 +49,7 @@ function ProposalForm({ opened, setOpened, contractAddress, groupId, account, no
   const handleClick = async () => {
     setStatementSubmitting(true);
     if (nominationType === 0) {
-      await arbitratorNomination(nominationParties[nominationParty], account);
+      await arbitratorNomination(arbitrator[nominationParty].address, account);
     } else {
       await witnessNomination(nominationParties[nominationParty], account);
     }
@@ -97,7 +97,9 @@ function ProposalForm({ opened, setOpened, contractAddress, groupId, account, no
                 <DropDown
                   className="DropDown"
                   wide
-                  items={nominationParties}
+                  items={arbitrator.map((value) =>{
+                    return value.name;
+                  })}
                   selected={nominationParty}
                   onChange={(index, items) => {
                     setNominationParty(index);

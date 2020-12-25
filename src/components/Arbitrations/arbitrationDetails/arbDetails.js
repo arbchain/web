@@ -153,6 +153,8 @@ function ArbDetails({
                 contractAddress={contractAddress}
                 groupId={groupId}
                 account={account}
+                caller={caller}
+                parties={parties}
               />
 
               <ProcedureDetails>

@@ -174,6 +174,7 @@ const ArbitrationDetail = props => {
                     account={walletAccount.account}
                     role={role}
                     details={details}
+                    arbitrator={arbitrator}
                   />
                 </>
               ) : null}

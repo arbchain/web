@@ -4,7 +4,7 @@ import NominateWitness from './NominateWitness';
 import Proposal from './allDetailCards/Proposal';
 import { getAllProposals } from '../../../lib/contracts/SPC';
 
-function NominationPage({ groupId, contractAddress, NODE, account, role, details }) {
+function NominationPage({ groupId, contractAddress, NODE, account, role, details, arbitrator }) {
   const [loading, setLoading] = useState(true);
   const [proposals, setDetails] = useState(null);
 
@@ -37,6 +37,7 @@ function NominationPage({ groupId, contractAddress, NODE, account, role, details
         groupId={groupId}
         account={account}
         node={NODE}
+        arbitrator={arbitrator}
       />
       {
         <NominateArbitrator

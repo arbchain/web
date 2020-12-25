@@ -19,7 +19,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-function Proposal({ currentStage, userRole, contractAddress, groupId, node, account }) {
+function Proposal({ currentStage, userRole, contractAddress, groupId, node, account,arbitrator }) {
   const theme = useTheme();
   const role = roles[userRole];
   const stage = stages[currentStage];
@@ -44,6 +44,7 @@ function Proposal({ currentStage, userRole, contractAddress, groupId, node, acco
           groupId={groupId}
           account={account}
           node={node}
+          arbitrator={arbitrator}
         />
       </div>
       {stageAction ? (

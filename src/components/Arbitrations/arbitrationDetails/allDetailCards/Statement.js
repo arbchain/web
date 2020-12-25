@@ -21,7 +21,17 @@ function Statement({ currentStage, userRole, contractAddress, groupId, account, 
           justifyContent: 'space-between',
           width: '100%',
         }}
-      />
+      >
+        <StatementForm
+          opened={opened}
+          setOpened={setOpened}
+          contractAddress={contractAddress}
+          groupId={groupId}
+          account={account}
+          caller={caller}
+          parties={parties}
+        />
+      </div>
       {stageAction ? (
         <Button
           disabled={!stageAction}
