@@ -10,10 +10,11 @@ AWS.config.update({
 });
 const s3 = new AWS.S3();
 
-const fleekApiKey = 't8DYhMZ1ztjUtOFC8qEDqg==';
-const fleekApiSecret = 'XwZyU7RZ3H2Z1QHhUdFdi4MJx8j1axJm2hEq1olRWeU=';
+const fleekApiKey = 'X/4RLmp8YcASeLgs1FoLMg==';
+const fleekApiSecret = 'OLIEagFmWpNAErPWJArWwHUXsw3Yh7o2qvXwv03cKA0=';
 
 const storeFileFleek = async (fileName, encryptedDoc) => {
+  console.log("Storing file fleek!!")
   return await fleekStorage.upload({
     apiKey: fleekApiKey,
     apiSecret: fleekApiSecret,
@@ -23,6 +24,7 @@ const storeFileFleek = async (fileName, encryptedDoc) => {
 };
 
 const getFileFleek = async (fileName) => {
+  console.log("Getting file fleek!!")
   const file = await fleekStorage.get({
     apiKey: fleekApiKey,
     apiSecret: fleekApiSecret,
@@ -74,6 +76,8 @@ export const uploadDoc = async (file, password, storageType) => {
   const reader = new FileReader();
   reader.readAsArrayBuffer(file);
 
+  storageType = process.env.REACT_APP_STORAGE;
+
   return new Promise((resolve, reject) => {
     reader.onload = async (val) => {
       const fileInput = new Uint8Array(val.target.result);
@@ -92,7 +96,7 @@ export const uploadDoc = async (file, password, storageType) => {
         .concat('.')
         .concat(fileFormat);
 
-      if (storageType === 'Fleek') {
+      if (storageType === 'FLEEK') {
         await storeFileFleek(fileKey, encryptedFile);
       } else {
         await storeFileAWS(fileKey, encryptedFile);
@@ -117,7 +121,6 @@ export const downloadFile = async (name, documentLocation, cipherKey) => {
     if (storageType === 'AWS') {
       getFileAWS(documentLocation).then((encryptedFile) => {
         console.log('enc:', encryptedFile);
-        console.log(typeof cipherKey);
         cipherKey = Buffer.from(cipherKey, 'hex');
         e2e.decryptData(encryptedFile, cipherKey).then((decryptedFile) => {
           fileDownload(decryptedFile, name);
@@ -126,6 +129,8 @@ export const downloadFile = async (name, documentLocation, cipherKey) => {
       });
     } else {
       getFileFleek(documentLocation).then((encryptedFile) => {
+        console.log('enc:', encryptedFile);
+        cipherKey = Buffer.from(cipherKey, 'hex');
         e2e.decryptData(encryptedFile, cipherKey).then((decryptedFile) => {
           fileDownload(decryptedFile, name);
           resolve(true);
