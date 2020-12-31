@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {  HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Main } from '@aragon/ui';
 
 import theme from './theme-court';
@@ -29,7 +29,7 @@ function App() {
   return (
     <AccountProvider>
       <MetaDataProvider>
-      <BrowserRouter>
+      <Router>
         <ActivityProvider>
           <Route exact path='/login' component={LoginPage} />
           <Route exact path='/signup' component={SignUp} />
@@ -56,7 +56,7 @@ function App() {
             </MainView>
           </Main>
         </ActivityProvider>
-      </BrowserRouter>
+      </Router>
       </MetaDataProvider>
     </AccountProvider>
   );
