@@ -1,18 +1,19 @@
 /* eslint-disable */
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { Steps, Select, Form, Button, Input, notification } from 'antd';
+import { Select, Form, Button, Input, notification } from 'antd';
 import wallet from 'wallet-besu';
 import { Main, Header } from '@aragon/ui';
 import { createUser } from '../../lib/contracts/MasterContract';
 import Logo from '../../assets/mainLogo.png';
 import 'antd/dist/antd.css';
 import './SingnUp.Style.css';
-import {authorizeUser, registerNewUser} from "../../lib/db/threadDB";
+import { authorizeUser, registerNewUser } from '../../lib/db/threadDB';
+import { RegistrationContainer } from './styles';
+
 const Web3 = require('web3');
 const web3 = new Web3();
 
-const { Step } = Steps;
 const { Option, OptGroup } = Select;
 
 const accounts = require('../../wallet/keys.js');
@@ -110,10 +111,19 @@ const Signup = () => {
               orionPublicKey: 'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
             }
           );
-          const dbClient = await authorizeUser(password)
+          const dbClient = await authorizeUser(password);
           const user = web3.eth.accounts.privateKeyToAccount(`0x${account[0]}`);
-          await registerNewUser(name, email, zip, phone, user.address,
-            'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=', role, account[0], dbClient)
+          await registerNewUser(
+            name,
+            email,
+            zip,
+            phone,
+            user.address,
+            'A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=',
+            role,
+            account[0],
+            dbClient
+          );
           setSpinner(false);
           openSuccessNotification('success');
 
@@ -125,19 +135,10 @@ const Signup = () => {
   }
 
   return (
-    <Main layout={true}>
-      <Header
-        primary={<img src={Logo} alt='LOGO' srcset='' />}
-        secondary={
-          <>
-            <h1>
-              Having Trouble? <Link>Request Help </Link>
-            </h1>
-          </>
-        }
-      />
+    <Main>
+      <Header primary={<img src={Logo} alt='LOGO' srcset='' />} />
 
-      <div className='registration__container'>
+      <RegistrationContainer>
         <Form
           className='form__container'
           layout='vertical'
@@ -159,7 +160,11 @@ const Signup = () => {
                 },
               ]}
             >
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className='input'
+              />
             </Form.Item>
 
             <Form.Item
@@ -173,7 +178,11 @@ const Signup = () => {
                 },
               ]}
             >
-              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                className='input'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </Form.Item>
             {/* </Form> */}
 
@@ -188,7 +197,11 @@ const Signup = () => {
                 },
               ]}
             >
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
+              <Input
+                className='input'
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
             </Form.Item>
 
             <Form.Item
@@ -201,7 +214,11 @@ const Signup = () => {
                 },
               ]}
             >
-              <Input value={zip} onChange={(e) => setZip(e.target.value)} />
+              <Input
+                className='input'
+                value={zip}
+                onChange={(e) => setZip(e.target.value)}
+              />
             </Form.Item>
             {/* </Form> */}
           </div>
@@ -214,7 +231,12 @@ const Signup = () => {
               },
             ]}
           >
-            <Select label='Role' defaultValue='Role' onChange={selectRole}>
+            <Select
+              label='Role'
+              defaultValue='Role'
+              onChange={selectRole}
+              style={{ height: '40px !important' }}
+            >
               <OptGroup label='Roles'>
                 <Option value={0}>Party</Option>
                 <Option value={1}>Arbitrator</Option>
@@ -233,10 +255,12 @@ const Signup = () => {
             <Input.Password
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className='input'
             />
           </Form.Item>
           {spinner == false ? (
             <Button
+              className='input'
               type='primary'
               style={{ width: '100%' }}
               onClick={registerUser}
@@ -244,7 +268,12 @@ const Signup = () => {
               Sign up
             </Button>
           ) : (
-            <Button loading type='primary' style={{ width: '100%' }}>
+            <Button
+              loading
+              type='primary'
+              style={{ width: '100%' }}
+              className='input'
+            >
               Registering Account
             </Button>
           )}
@@ -262,7 +291,7 @@ const Signup = () => {
             </h1>
           </div>
         </Form>
-      </div>
+      </RegistrationContainer>
     </Main>
   );
 };

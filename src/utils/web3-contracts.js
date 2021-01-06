@@ -22,7 +22,6 @@ export class Web3Contract {
   }
 
   async createPrivacyGroup(participants, account) {
-
     const privacyGroup = await this.web3.privx.createPrivacyGroup({
       participants: [account.orionPublicKey],
       enclaveKey: account.orionPublicKey,
@@ -68,12 +67,16 @@ export class Web3Contract {
       account.orionPublicKey
     );
 
-    console.log("RESDDD:",result)
-    if (parseInt(result.output)) {
-      return this.web3.eth.abi.decodeParameters(
-        functionAbi.outputs,
-        result.output
-      );
+    console.log('RESDDD:', result);
+    if (result.status === '0x1') {
+      if (parseInt(result.output)) {
+        return this.web3.eth.abi.decodeParameters(
+          functionAbi.outputs,
+          result.output
+        );
+      } else {
+        return true;
+      }
     } else {
       return false;
     }
@@ -143,7 +146,7 @@ export class Web3Contract {
       nonceResult.output
     );
     const replayNonce = resultOutput[0];
-    console.log("nonceValue:",replayNonce)
+    console.log('nonceValue:', replayNonce);
 
     const params = [
       ['bytes32', 'uint'],
@@ -154,6 +157,6 @@ export class Web3Contract {
     );
 
     const signature = await account.sign.sign(paramsHash);
-    return {replayNonce, signature}
+    return { replayNonce, signature };
   }
 }

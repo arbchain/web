@@ -27,11 +27,17 @@ export function deployProcedureContract(nodeSelected) {
   const createProcedureContract = useCallback(
     async (account, args) => {
       setConnected(await web3Contract.connect(nodeSelected));
-      setResultProcedure(await web3Contract.deploy(ContractAbi, ContractBin, args, [], account));
+      setResultProcedure(
+        await web3Contract.deploy(ContractAbi, ContractBin, args, [], account)
+      );
     },
     [nodeSelected]
   );
-  return { resultProcedureContract, setResultProcedure, createProcedureContract };
+  return {
+    resultProcedureContract,
+    setResultProcedure,
+    createProcedureContract,
+  };
 }
 
 export function useContract(nodeSelected, contractAddress, privacyGroupId) {
@@ -49,8 +55,16 @@ export function useContract(nodeSelected, contractAddress, privacyGroupId) {
 /**
  * Function 1: createArbitrationResponse
  */
-export function createArbitrationResponse(nodeSelected, contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+export function createArbitrationResponse(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId
+) {
+  const { connected } = useContract(
+    nodeSelected,
+    contractAddress,
+    privacyGroupId
+  );
 
   const arbitrationResponseCreation = useCallback(
     async (
@@ -63,7 +77,7 @@ export function createArbitrationResponse(nodeSelected, contractAddress, privacy
       claimId,
       account
     ) => {
-      return web3Contract.call(
+      const res = await web3Contract.call(
         'createArbitrationResponse',
         [
           description,
@@ -72,10 +86,11 @@ export function createArbitrationResponse(nodeSelected, contractAddress, privacy
           documentLocation,
           monetaryAmount,
           crossClaim,
-          claimId
+          claimId,
         ],
         account
       );
+      return res;
     },
     [connected]
   );
@@ -90,7 +105,14 @@ export function createClaim(nodeSelected) {
   const { connected } = useContract(nodeSelected);
 
   const claimCreation = useCallback(
-    async (claimId, respondent, documentHash, documentIpfsHash, description, account) => {
+    async (
+      claimId,
+      respondent,
+      documentHash,
+      documentIpfsHash,
+      description,
+      account
+    ) => {
       return web3Contract.call(
         'createClaim',
         [claimId, respondent, documentHash, documentIpfsHash, description],
@@ -106,8 +128,16 @@ export function createClaim(nodeSelected) {
 /**
  * Function 3: createProcedureStatement
  */
-export function createProcedureStatement(nodeSelected, contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+export function createProcedureStatement(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId
+) {
+  const { connected } = useContract(
+    nodeSelected,
+    contractAddress,
+    privacyGroupId
+  );
 
   const procedureStatementCreation = useCallback(
     async (
@@ -122,7 +152,15 @@ export function createProcedureStatement(nodeSelected, contractAddress, privacyG
     ) => {
       const res = await web3Contract.call(
         'createProcedureStatement',
-        [parties, seat, language, documentLocation, documentName, documentHash, cipherKey],
+        [
+          parties,
+          seat,
+          language,
+          documentLocation,
+          documentName,
+          documentHash,
+          cipherKey,
+        ],
         account
       );
       console.log('RES:', res);
@@ -136,12 +174,24 @@ export function createProcedureStatement(nodeSelected, contractAddress, privacyG
 /**
  * Function 4: nominateArbitrator
  */
-export function nominateArbitrator(nodeSelected, contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+export function nominateArbitrator(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId
+) {
+  const { connected } = useContract(
+    nodeSelected,
+    contractAddress,
+    privacyGroupId
+  );
 
   const arbitratorNomination = useCallback(
     async (arbitratorAddress, account) => {
-      const res = await web3Contract.call('nominateArbitrator', [arbitratorAddress], account);
+      const res = await web3Contract.call(
+        'nominateArbitrator',
+        [arbitratorAddress],
+        account
+      );
       console.log('Nominate res:', res);
     },
     [connected]
@@ -157,7 +207,11 @@ export function appointArbitrator(nodeSelected) {
 
   const arbitratorAppointment = useCallback(
     async (arbitratorAddress, requestId, account) => {
-      return web3Contract.call('appointArbitrator', [arbitratorAddress, requestId], account);
+      return web3Contract.call(
+        'appointArbitrator',
+        [arbitratorAddress, requestId],
+        account
+      );
     },
     [connected]
   );
@@ -172,7 +226,11 @@ export function challengeAppointment(nodeSelected) {
 
   const appointmentChallenge = useCallback(
     async (arbitratorAddress, reason, account) => {
-      return web3Contract.call('challengeAppointment', [arbitratorAddress, reason], account);
+      return web3Contract.call(
+        'challengeAppointment',
+        [arbitratorAddress, reason],
+        account
+      );
     },
     [connected]
   );
@@ -198,7 +256,11 @@ export function revokeArbitrator(nodeSelected) {
  * Function 8: createStatement
  */
 export function createStatement(nodeSelected, contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+  const { connected } = useContract(
+    nodeSelected,
+    contractAddress,
+    privacyGroupId
+  );
 
   const statementCreation = useCallback(
     async (
@@ -257,7 +319,11 @@ export function appointExpert(nodeSelected) {
 
   const expertAppointment = useCallback(
     async (expertAddress, requestId, account) => {
-      return web3Contract.call('appointExpert', [expertAddress, requestId], account);
+      return web3Contract.call(
+        'appointExpert',
+        [expertAddress, requestId],
+        account
+      );
     },
     [connected]
   );
@@ -272,7 +338,11 @@ export function issueAward(nodeSelected) {
 
   const awardIssue = useCallback(
     async (name, requestId, documentHash, account) => {
-      return web3Contract.call('issueAward', [name, requestId, documentHash], account);
+      return web3Contract.call(
+        'issueAward',
+        [name, requestId, documentHash],
+        account
+      );
     },
     [connected]
   );
@@ -283,12 +353,19 @@ export function issueAward(nodeSelected) {
  * Function 12: signDocuments
  */
 export function signDocuments(nodeSelected, contractAddress, privacyGroupId) {
-  const { connect } = useContract(nodeSelected, contractAddress, privacyGroupId);
+  const { connect } = useContract(
+    nodeSelected,
+    contractAddress,
+    privacyGroupId
+  );
 
   const documentSign = useCallback(
     async (document, account) => {
       console.log('Signing Document:', document);
-      const { replayNonce, signature } = await web3Contract.documentSigning([document], account);
+      const { replayNonce, signature } = await web3Contract.documentSigning(
+        [document],
+        account
+      );
       const res = await web3Contract.call(
         'signDocuments',
         [replayNonce, signature.signature, document],
@@ -310,7 +387,11 @@ export function agreeProcedureStatement(nodeSelected) {
 
   const procedureStatementSigning = useCallback(
     async (document, account) => {
-      return web3Contract.documentSigning('agreeProcedureStatement', [document], account);
+      return web3Contract.documentSigning(
+        'agreeProcedureStatement',
+        [document],
+        account
+      );
     },
     [connected]
   );
@@ -356,11 +437,19 @@ export function setLanguage(nodeSelected) {
  * Function 16: nominateWitness
  */
 export function nominateWitness(nodeSelected, contractAddress, privacyGroupId) {
-  const { connected } = useContract(nodeSelected, contractAddress, privacyGroupId);
+  const { connected } = useContract(
+    nodeSelected,
+    contractAddress,
+    privacyGroupId
+  );
 
   const witnessNomination = useCallback(
     async (witnessAddress, account) => {
-      const res = await web3Contract.call('submitWitness', [witnessAddress], account);
+      const res = await web3Contract.call(
+        'submitWitness',
+        [witnessAddress],
+        account
+      );
       console.log('Nominate res:', res);
     },
     [connected]
@@ -368,12 +457,22 @@ export function nominateWitness(nodeSelected, contractAddress, privacyGroupId) {
   return { witnessNomination };
 }
 
-export async function getAllStatements(nodeSelected, contractAddress, privacyGroupId, account) {
+export async function getAllStatements(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
     if (connected) {
-      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      await web3Contract.create(
+        ContractAbi,
+        contractAddress,
+        [],
+        privacyGroupId
+      );
       res = await web3Contract.call('getAllStatements', [], account);
       console.log(res);
     }
@@ -383,12 +482,22 @@ export async function getAllStatements(nodeSelected, contractAddress, privacyGro
   return res;
 }
 
-export async function getAllProposals(nodeSelected, contractAddress, privacyGroupId, account) {
+export async function getAllProposals(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
     if (connected) {
-      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      await web3Contract.create(
+        ContractAbi,
+        contractAddress,
+        [],
+        privacyGroupId
+      );
       res = await web3Contract.call('getAllProposals', [], account);
       console.log(res);
     }
@@ -409,7 +518,12 @@ export async function getArbitrationDetails(
   let res = null;
   try {
     if (connected) {
-      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      await web3Contract.create(
+        ContractAbi,
+        contractAddress,
+        [],
+        privacyGroupId
+      );
       res = await web3Contract.call('getArbitrationDetails', [], account);
       console.log(res);
     }
@@ -419,12 +533,22 @@ export async function getArbitrationDetails(
   return res;
 }
 
-export async function getTimeLine(nodeSelected, contractAddress, privacyGroupId, account) {
+export async function getTimeLine(
+  nodeSelected,
+  contractAddress,
+  privacyGroupId,
+  account
+) {
   const connected = await web3Contract.connect(nodeSelected);
   let res = null;
   try {
     if (connected) {
-      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      await web3Contract.create(
+        ContractAbi,
+        contractAddress,
+        [],
+        privacyGroupId
+      );
       res = await web3Contract.call('getTimeLine', [], account);
       console.log(res);
     }
@@ -446,7 +570,12 @@ export async function getSignature(
   try {
     if (connected) {
       console.log('GEtting sig');
-      await web3Contract.create(ContractAbi, contractAddress, [], privacyGroupId);
+      await web3Contract.create(
+        ContractAbi,
+        contractAddress,
+        [],
+        privacyGroupId
+      );
       res = await web3Contract.call('getDocumentDetails', [fileHash], account);
       // console.log(res);
     }
@@ -456,22 +585,22 @@ export async function getSignature(
   return res;
 }
 
-export async function getSignatureStatus(document, account){
-  console.log("Document:",document)
-  console.log('add:',account.address)
+export async function getSignatureStatus(document, account) {
+  console.log('Document:', document);
+  console.log('add:', account.address);
   let signStatus = false;
   let userSignStatus = false;
-  if (document.signatures.length === document.signers.length){
-      signStatus = true
-      userSignStatus = true
-  }else{
-    for (let i=0; i< document.signatures.length; i++){
-      if (document.signatures[i].signer === account.address){
-        console.log("if")
-        userSignStatus = true
-        break
+  if (document.signatures.length === document.signers.length) {
+    signStatus = true;
+    userSignStatus = true;
+  } else {
+    for (let i = 0; i < document.signatures.length; i++) {
+      if (document.signatures[i].signer === account.address) {
+        console.log('if');
+        userSignStatus = true;
+        break;
       }
     }
   }
-  return {signStatus, userSignStatus}
+  return { signStatus, userSignStatus };
 }

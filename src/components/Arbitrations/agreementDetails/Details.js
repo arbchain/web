@@ -19,7 +19,15 @@ import { downloadFile } from '../../../lib/file-storage';
 import Agree from './Agree';
 import { getSignature, getSignatureStatus } from '../../../lib/contracts/SPC';
 
-function Details({ groupId, contractAddress, NODE, account, caller, parties, role }) {
+function Details({
+  groupId,
+  contractAddress,
+  NODE,
+  account,
+  caller,
+  parties,
+  role,
+}) {
   const history = useHistory();
   const theme = useTheme();
 
@@ -40,7 +48,12 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties, rol
       try {
         if (Object.keys(account).length) {
           setLoading(true);
-          const details = await fetchAgreement(NODE, contractAddress, groupId, account);
+          const details = await fetchAgreement(
+            NODE,
+            contractAddress,
+            groupId,
+            account
+          );
           // There is an addition call being made that replaces the details. A quick fix
           if (details) {
             setSignStatusLoading(true);
@@ -51,8 +64,17 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties, rol
             setDocLocation(documentInfo.fileLocation);
             setDocName(documentInfo.fileName);
 
-            const res = await getSignature(NODE, contractAddress, groupId, account, details[5]);
-            const { signStatus, userSignStatus } = await getSignatureStatus(res[0], account);
+            const res = await getSignature(
+              NODE,
+              contractAddress,
+              groupId,
+              account,
+              details[5]
+            );
+            const { signStatus, userSignStatus } = await getSignatureStatus(
+              res[0],
+              account
+            );
             setSignStatus(signStatus);
             setUserSignStatus(userSignStatus);
             setSignStatusLoading(false);
@@ -69,6 +91,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties, rol
 
   const handleClick = async () => {
     const res = await downloadFile(docName, docLocation, cipherKey);
+    console.log('RES from Details', res);
   };
 
   return (
@@ -81,7 +104,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties, rol
         </>
       ) : details ? (
         <>
-          <Box heading="Agreement Details">
+          <Box heading='Agreement Details'>
             <section
               css={`
                 display: grid;
@@ -270,9 +293,9 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties, rol
                     `}
                   >
                     {signStatus ? (
-                      <Tag mode="new">SIGNED</Tag>
+                      <Tag mode='new'>SIGNED</Tag>
                     ) : (
-                      <Tag mode="new" color="#ff4d4f" background="#f2cfd0">
+                      <Tag mode='new' color='#ff4d4f' background='#f2cfd0'>
                         PENDING
                       </Tag>
                     )}
@@ -292,7 +315,7 @@ function Details({ groupId, contractAddress, NODE, account, caller, parties, rol
           </Box>
         </>
       ) : (
-        <EmptyStateCard width="100%" text="No agreement details found." />
+        <EmptyStateCard width='100%' text='No agreement details found.' />
       )}
     </>
   );

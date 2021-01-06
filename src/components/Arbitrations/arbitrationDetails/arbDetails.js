@@ -61,6 +61,7 @@ function ArbDetails({
   // const [fileDetails, setFileDetails] = useState(null);
   // const [signStatus, setSignStatus] = useState(false);
   // const [userSignStatus, setUserSignStatus] = useState(false);
+  const [signResult, setSignResult] = useState(false);
 
   const status = ['Open', 'Close'];
 
@@ -75,6 +76,9 @@ function ArbDetails({
       procedureStatement.documentLocation,
       procedureStatement.cipherKey
     );
+    if (signResult) {
+      setSignResult(true);
+    }
   };
 
   return (
@@ -90,7 +94,8 @@ function ArbDetails({
           <Box>
             <SectionWrapper>
               <AcceptResponse
-                openResponse={openResponse}
+                // signResult={signResult}
+
                 setOpenResponse={setOpenResponse}
                 procedureDocHash={procedureStatement.documentHash}
                 groupId={groupId}
@@ -98,13 +103,13 @@ function ArbDetails({
                 NODE={NODE}
                 account={account}
               />
-              <div className="title__container">
-                <div className="title__container-titleGroup">
+              <div className='title__container'>
+                <div className='title__container-titleGroup'>
                   <img src={ArbitrationCardDispute} />
 
-                  <Text className="title__heading">{details[0]}</Text>
+                  <Text className='title__heading'>{details[0]}</Text>
                 </div>
-                <div className="status">
+                <div className='status'>
                   <h1>
                     <span default>{status[details[3]]}</span>
                   </h1>
@@ -112,33 +117,33 @@ function ArbDetails({
               </div>
               <Description>
                 <h2>Description</h2>
-                <Text className="description" style={{ fontSize: '16px' }}>
+                <Text className='description' style={{ fontSize: '16px' }}>
                   {details[1]}
                 </Text>
               </Description>
               <GridGroup>
-                <div className="claiment">
+                <div className='claiment'>
                   <h2>Claimant</h2>
-                  <Text className="description">
+                  <Text className='description'>
                     <span>
                       <IconUser style={{ marginRight: '2px' }} />
                     </span>
                     {details[6].name}
                   </Text>
                 </div>
-                <div className="respondant">
+                <div className='respondant'>
                   <h2>Respondent</h2>
 
-                  <Text className="description">
+                  <Text className='description'>
                     <span>
                       <IconUser style={{ marginRight: '2px' }} />
                     </span>
                     {details[7].name}
                   </Text>
                 </div>
-                <div className="agreement">
+                <div className='agreement'>
                   <h2>Arbitration Agreement</h2>
-                  <Text className="description">
+                  <Text className='description'>
                     <span>
                       <IconFile style={{ marginRight: '2px' }} />
                     </span>{' '}
@@ -158,43 +163,49 @@ function ArbDetails({
               />
 
               <ProcedureDetails>
-                <div className="title__container-titleGroup">
-                  <h2 className="title__heading">Procedure Status</h2>
+                <div className='title__container-titleGroup'>
+                  <h2 className='title__heading'>Procedure Status</h2>
                 </div>
-                <div className="status">
+                <div className='status'>
                   <h1>
                     {/* conditional rendering for status */}
                     {!signStatus ? (
-                      <span className="pro-status">Pending</span>
+                      <span className='pro-status'>Pending</span>
                     ) : (
-                      <span className="pro-status accepted">Accepted</span>
+                      <span className='pro-status accepted'>Accepted</span>
                     )}
                   </h1>
                 </div>
               </ProcedureDetails>
-              <div className="procedure-status">
+              <div className='procedure-status'>
                 <GridGroup>
-                  <div className="claiment">
+                  <div className='claiment'>
                     <h2>CREATED BY</h2>
-                    <Text className="description mb-6">{procedureStatement.parties[0].name}</Text>
+                    <Text className='description mb-6'>
+                      {procedureStatement.parties[0].name}
+                    </Text>
                   </div>
-                  <div className="respondant">
+                  <div className='respondant'>
                     <h2>selected language</h2>
-                    <Text className="description mb-6">{procedureStatement.language}</Text>
+                    <Text className='description mb-6'>
+                      {procedureStatement.language}
+                    </Text>
                   </div>
-                  <div className="agreement">
+                  <div className='agreement'>
                     <h2>selected seat</h2>
-                    <Text className="description mb-6">{procedureStatement.seat}</Text>
+                    <Text className='description mb-6'>
+                      {procedureStatement.seat}
+                    </Text>
                   </div>
-                  <div className="agreement ">
+                  <div className='agreement '>
                     <h2>Signed</h2>
-                    <Text className="description mb-6">
+                    <Text className='description mb-6'>
                       {userSignStatus.toString().toUpperCase()}
                     </Text>
                   </div>
-                  <div className="agreement">
+                  <div className='agreement'>
                     <h2>Attached Documents</h2>
-                    <Text className="description mb-6">
+                    <Text className='description mb-6'>
                       <Link external onClick={downloadDoc}>
                         {' '}
                         {procedureStatement.documentName}{' '}
@@ -210,18 +221,25 @@ function ArbDetails({
                 </Info>
 
                 {/* conditional rendering for buttons */}
-
+                <Button
+                  className='btn success'
+                  onClick={() => {
+                    openResponsePanel();
+                  }}
+                >
+                  accept
+                </Button>
                 {!userSignStatus ? (
                   <Actions>
                     <Button
-                      className="btn success"
+                      className='btn success'
                       onClick={() => {
                         openResponsePanel();
                       }}
                     >
                       Accept
                     </Button>
-                    <Button className="btn error">Reject</Button>
+                    <Button className='btn error'>Reject</Button>
                   </Actions>
                 ) : null}
               </div>
@@ -229,13 +247,16 @@ function ArbDetails({
               {/* Response submitted by the user */}
 
               {responseDetail.length >= 1 ? (
-                <ArbitrationResponse responseDetail={responseDetail} fileDetails={fileDetails} />
+                <ArbitrationResponse
+                  responseDetail={responseDetail}
+                  fileDetails={fileDetails}
+                />
               ) : null}
             </SectionWrapper>
           </Box>
         </>
       ) : (
-        <EmptyStateCard width="100%" text="No arbitrations details found." />
+        <EmptyStateCard width='100%' text='No arbitrations details found.' />
       )}
     </>
   );

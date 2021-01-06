@@ -386,3 +386,7 @@ section h2 {
     padding: 48px;
   }
 }
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 40px;
+}

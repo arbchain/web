@@ -14,8 +14,11 @@ import { Upload, message } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import styled from 'styled-components';
-import {uploadDoc} from "../../../../lib/file-storage";
-import {createArbitrationResponse, signDocuments} from "../../../../lib/contracts/SPC";
+import { uploadDoc } from '../../../../lib/file-storage';
+import {
+  createArbitrationResponse,
+  signDocuments,
+} from '../../../../lib/contracts/SPC';
 
 // styled Component
 const ResponseContainer = styled.div`
@@ -59,7 +62,16 @@ const GridContainer = styled.div`
   }
 `;
 
-function AcceptResponse({ openResponse, setOpenResponse, procedureDocHash, contractAddress, groupId, NODE , account}) {
+function AcceptResponse({
+  openResponse,
+  setOpenResponse,
+  procedureDocHash,
+  contractAddress,
+  groupId,
+  NODE,
+  account,
+  signResult,
+}) {
   const [note, setNote] = useState('');
   const [upload, setUpload] = useState();
   const [document, setDocument] = useState(null);
@@ -68,7 +80,11 @@ function AcceptResponse({ openResponse, setOpenResponse, procedureDocHash, contr
     setOpenResponse(false);
   };
 
-  const { connected, arbitrationResponseCreation } = createArbitrationResponse(NODE, contractAddress, groupId)
+  const { connected, arbitrationResponseCreation } = createArbitrationResponse(
+    NODE,
+    contractAddress,
+    groupId
+  );
 
   const { connect, documentSign } = signDocuments(
     NODE,
@@ -91,11 +107,11 @@ function AcceptResponse({ openResponse, setOpenResponse, procedureDocHash, contr
     },
   };
 
-  const handleClick = async ()=>{
-    console.log("Signing procedure statement:")
+  const handleClick = async () => {
+    console.log('Signing procedure statement:');
     await documentSign(procedureDocHash, account);
 
-    console.log("Document:", document)
+    console.log('Document:', document);
 
     const docInfo = await uploadDoc(
       document,
@@ -104,14 +120,14 @@ function AcceptResponse({ openResponse, setOpenResponse, procedureDocHash, contr
     );
 
     const documentInfo = {
-      cipherKey: docInfo. cipherKey,
+      cipherKey: docInfo.cipherKey,
       fileLocation: docInfo.fileLocation,
       fileName: docInfo.fileName,
       fileFormat: docInfo.fileFormat,
-    }
+    };
 
     console.log('UploadStatus:', docInfo);
-    await arbitrationResponseCreation(
+    const res = await arbitrationResponseCreation(
       note,
       docInfo.fileHash,
       JSON.stringify(documentInfo),
@@ -120,12 +136,14 @@ function AcceptResponse({ openResponse, setOpenResponse, procedureDocHash, contr
       false,
       0,
       account
-    )
-
-    console.log("Signing response!!")
+    );
+    // if (res) {
+    //   setOpenResponse(false);
+    // }
+    console.log('Signing response!!');
     await documentSign(docInfo.fileHash, account);
-    console.log("DONE!!!")
-  }
+    console.log('DONE!!!');
+  };
 
   const theme = useTheme();
   return (

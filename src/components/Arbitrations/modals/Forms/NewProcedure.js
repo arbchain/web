@@ -29,7 +29,11 @@ function NewProcedure({ opened, setOpened }) {
   };
   return (
     <>
-      <Panel title='Create New Procedure' opened={opened} onClose={closePannel}>
+      <Panel
+        title='Create New Arbitration'
+        opened={opened}
+        onClose={closePannel}
+      >
         <ProcedureForm>
           <GridContainer>
             <div className='inputGroups '>
